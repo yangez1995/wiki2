@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.user.dao.SecurityResourcesDao">
+	<resultMap type="com.yez.wiki.entity.security.SecurityResources" id="ResourcesResultMap">
+		<id column="resources_id" property="id" jdbcType="INTEGER"/>
+		<result column="resources_name" property="name" jdbcType="VARCHAR"/>
+		<result column="resources_url" property="url" jdbcType="VARCHAR"/>
+		<result column="resources_type" property="type" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getAllResources" resultMap="ResourcesResultMap">
+		SELECT * FROM t_resources
+	</select>
+	
+	<select id="loadAuthoritiesByResource" parameterType="int" resultType="String">
+		SELECT authority_mark FROM t_authority
+		WHERE authority_id IN (SELECT authority_id FROM t_resources_authorities 
+		WHERE resources_id = #{id, jdbcType=INTEGER})
+	</select>
+</mapper>

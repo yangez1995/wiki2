@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.user.dao.RoleAuthMapper">
+	<resultMap type="com.yez.wiki.entity.user.RoleAuthority" id="RoleAuthMap">
+		<id column="role_id" property="id" jdbcType="INTEGER"/>
+		<result column="role_name" property="name" jdbcType="VARCHAR"/>
+		<collection column="role_id" property="authorities" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.user.Authority" select="getAuths"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.user.Authority" id="AuthMap">
+		<id column="authority_id" property="id" jdbcType="INTEGER"/>
+		<result column="authority_name" property="name" jdbcType="VARCHAR"/>
+		<result column="authority_mark" property="mark" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getPage" parameterType="java.util.HashMap" resultMap="RoleAuthMap">
+		SELECT role_id, role_name FROM t_role
+		WHERE 1=1
+		<if test="id != '' and id != null">
+			AND role_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND role_name = #{name, jdbcType=VARCHAR}
+		</if>
+		<if test="authId != '' and authId != null">
+			AND role_id IN (SELECT role_id FROM t_role_authorities
+			WHERE authority_id = #{authId, jdbcType=INTEGER})
+		</if>
+		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAuths" parameterType="java.lang.Integer" resultMap="AuthMap">
+		SELECT authority_id,authority_name,authority_mark 
+		FROM t_authority WHERE authority_id IN (
+		SELECT authority_id FROM t_role_authorities
+		WHERE role_id = #{role_id, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_role
+		WHERE 1 = 1 
+		<if test="id != '' and id != null">
+			AND role_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND role_name = #{name, jdbcType=VARCHAR}
+		</if>
+		<if test="authId != '' and authId != null">
+			AND role_id IN (SELECT role_id FROM t_role_authorities
+			WHERE authority_id = #{authId, jdbcType=INTEGER})
+		</if>
+	</select>
+	
+	<select id="getOtherAuths" resultMap="AuthMap">
+		SELECT * FROM t_authority
+		WHERE authority_id NOT IN 
+		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
+            #{authId}
+        </foreach>
+	</select>
+	
+	<select id="getAuthsId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT authority_id FROM t_role_authorities
+		WHERE role_id = #{roleId, jdbcType=INTEGER}
+	</select>
+	
+	<insert id="addAuths" parameterType="java.util.HashMap">
+		INSERT INTO t_role_authorities 
+		(role_id, authority_id)
+		VALUES
+		<foreach collection="list" item="authId" index="index" separator="," >  
+        	(#{roleId, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})  
+    	</foreach>
+	</insert>
+	
+	<delete id="deleteAuths" parameterType="java.util.HashMap">
+		DELETE FROM t_role_authorities
+		WHERE role_id = #{roleId, jdbcType=INTEGER}
+		AND authority_id NOT IN 
+		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
+            #{authId, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<delete id="deleteAllAuths" parameterType="java.lang.Integer">
+		DELETE FROM t_role_authorities
+		WHERE role_id = #{roleId, jdbcType=INTEGER}
+	</delete>
+</mapper>

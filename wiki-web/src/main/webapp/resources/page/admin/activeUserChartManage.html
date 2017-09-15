@@ -1,0 +1,10 @@
+<script src="../resources/js/admin/activeUserChartManage.js"></script>
+<select class="form-control" id="choose-chart" style="width: 200px; float: left;" onchange="changeChart()">
+  <option value="week-line">周用户活跃图</option>
+  <option value="month-line">月用户活跃图</option>
+  <option value="year-line">年用户活跃图</option>
+</select>
+<select class="form-control" id="choose-week" style="width: 100px; float: left; margin-left: 60px;" onchange="weekLine()"></select>
+<select class="form-control hidden" id="choose-year" style="width: 100px; float: left; margin-left: 60px;" onchange="changeYear()"></select>
+<select class="form-control hidden" id="choose-month" style="width: 100px; float: left; margin-left: 60px;" onchange="monthLine()"></select>
+<div id="chart"></div>

@@ -1,0 +1,176 @@
+/* 描述 */
+#main-des p {
+	word-wrap:break-word; 
+	word-break:normal; 
+}
+
+/*信息栏*/
+.msg-lab {
+	margin-bottom: 0px;
+}
+
+.msg-lab dt {
+	float: left;
+	width: 90px;
+	overflow: hidden;
+	clear: left;
+	font-size: 13px;
+	color: #999999;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.msg-lab dd {
+	margin-left: 90px;
+	text-align: left;
+	font-size: 13px;
+}
+
+.msg-lab hr {
+	margin-top: 0px;
+	margin-bottom: 5px;
+	border-top: #CCCCCC dashed 1px;
+}
+/*目录*/
+.catal {
+	margin-bottom: 0px;
+}
+
+.catal dt{
+	margin-top: 5px;
+	font-size: 17px;
+	font-family: Microsoft YaHei;
+	color: #559CD9;
+	font-weight: 400;
+}
+
+.catal dt a:hover {
+	color: #559CD9;
+}
+
+.catal dd span {
+	margin-left: 10px;
+	color: #BBBBBB;
+	font-size: 15px;
+	font-weight: 900;
+}
+
+.catal dd a {
+	margin-top: 2px;
+	font-size: 13px;
+	color: #555555;
+}
+/* 章节 */
+.chapters {
+	margin-top: 30px;
+}
+
+.chapters h3 {
+	font-family: Microsoft YaHei;
+}
+
+.chapters h4 {
+	font-size: 20px;
+	font-family: Microsoft YaHei;
+}
+
+.chapters hr {
+	margin: 0px;
+	border-color: #CCCCCC;
+}
+
+.chapters p {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	word-wrap:break-word; 
+	word-break:normal; 
+}
+.chapters img {
+	max-width: 300px;
+	max-height: 200px;
+}
+/* 附加目录 */
+.sub-catal {
+	position: absolute;
+	display: block;
+}
+
+.sub-catal dt {
+	margin-top: 3px;
+	position: relative;
+	cursor: pointer;
+}
+
+.sub-catal dt:hover em {
+	background: #7FB80E;
+}
+.sub-catal dt:hover a {
+	color: #7FB80E;
+}
+
+.sub-catal dt em {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	top: 7px;
+	left: 1px;
+	background: #AAA;
+	border: #FCFCFC solid 2px;
+	border-radius: 5px;
+}
+
+.sub-catal dt a {
+	margin-left: 30px;
+	font-size: 16px;
+	font-family: SimSun;
+	color: #555;
+}
+
+.sub-catal dt a:hover {
+	text-decoration: none;
+}
+
+.sub-catal dt a span{
+	padding-right: 10px;
+	font-size: 16px;
+	color: #999;
+	cursor: pointer;
+}
+
+.sub-catal dd {
+	position: relative;
+	margin-top: 3px;
+	cursor: pointer;
+}
+
+.sub-catal dd:hover a {
+	color: #7FB80E;
+}
+
+.sub-catal dd a {
+	margin-left: 30px;
+	font-size: 15px;
+	font-family: SimSun;
+	font-weight: 500;
+	color: #555;
+}
+
+.sub-catal dd a:hover {
+	text-decoration: none;
+}
+
+.sub-catal dd a span{
+	padding-right: 10px;
+	padding-left: 10px;
+	font-size: 15px;
+	color: #999;
+	cursor: pointer;
+}
+
+#buoy {
+	transition: top 0.3s;
+	-moz-transition: top 0.3s;	/* Firefox 4 */
+	-webkit-transition: top 0.3s;	/* Safari 和 Chrome */
+	-o-transition: top 0.3s;	/* Opera */
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.yez.wiki.user.dao.UserRoleMapper">
+	<resultMap type="com.yez.wiki.entity.user.UserRole" id="UserRoleMap">
+		<id column="user_id" property="id" jdbcType="INTEGER"/>
+		<result column="username" property="username" jdbcType="VARCHAR"/>
+		<collection column="user_id" property="roles" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.user.Role" select="getUserRoles"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.user.Role" id="RoleMap">
+		<id column="role_id" property="id" jdbcType="INTEGER"/>
+		<result column="role_name" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="addRoles" parameterType="java.util.HashMap">
+		INSERT INTO t_user_roles
+		(user_id, role_id)
+		VALUES
+		<foreach collection="list" item="roleId" index="index" separator="," >  
+        	(#{userId, jdbcType=INTEGER}, #{roleId, jdbcType=INTEGER})  
+    	</foreach>
+	</insert>
+	
+	<delete id="deleteRoles" parameterType="java.util.HashMap">
+		DELETE FROM t_user_roles
+		WHERE user_id = #{userId, jdbcType=INTEGER}
+		AND role_id NOT IN 
+		<foreach collection="list" item="roleId" index="index" open="(" close=")" separator=",">
+            #{roleId, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<delete id="deleteAllRoles" parameterType="java.lang.Integer">
+		DELETE FROM t_user_roles
+		WHERE user_id = #{userId, jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 获取符合条件的用户角色信息列表 -->
+	<select id="getPage" parameterType="java.util.HashMap" resultMap="UserRoleMap">
+		SELECT user_id,username FROM t_user
+		WHERE 1=1
+		<if test="id != '' and id != null">
+			AND user_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="username != '' and username != null">
+			AND username LIKE CONCAT('%',#{username, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="roleId != '' and roleId != null">
+			AND user_id IN (SELECT user_id FROM t_user_roles
+			WHERE role_id = #{roleId, jdbcType=INTEGER})
+		</if>
+		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+	<!-- 获取符合条件的用户角色信息数量 -->
+	<select id="getNumber" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_user
+		WHERE 1=1
+		<if test="id != '' and id != null">
+			AND user_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="username != '' and username != null">
+			AND username LIKE CONCAT('%',#{username, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="roleId != '' and roleId != null">
+			AND user_id IN (SELECT user_id FROM t_user_roles
+			WHERE role_id = #{roleId, jdbcType=INTEGER})
+		</if>
+	</select>
+	<!-- 根据id得到用户对应的权限列表 -->
+	<select id="getUserRoles" parameterType="java.lang.Integer" resultMap="RoleMap">
+		SELECT role_id,role_name FROM t_role
+		WHERE role_id IN (SELECT role_id FROM t_user_roles
+		WHERE user_id = #{user_id, jdbcType=INTEGER})
+	</select>
+	<!-- 等到用户没有的角色列表 -->
+	<select id="getOtherRoles" resultMap="RoleMap">
+		SELECT * FROM t_role
+		WHERE role_id NOT IN 
+		<foreach collection="list" item="roleId" index="index" open="(" close=")" separator=",">
+            #{roleId, jdbcType=INTEGER}
+        </foreach>
+	</select>
+	
+	<select id="getRolesId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT role_id FROM t_user_roles
+		WHERE user_id = #{userId, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getRoles" resultType="java.util.HashMap">
+		SELECT role_id AS id,role_name AS name FROM t_role
+	</select>
+</mapper>

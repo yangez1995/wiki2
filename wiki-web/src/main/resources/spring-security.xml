@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+               http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+            http://www.springframework.org/schema/security 
+            http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+            
+	<security:http pattern="/resources/**" security="none"/>
+	<security:http pattern="/regist" security="none"/>
+	<security:http pattern="/checkUserExist" security="none"/>
+	
+	<security:http auto-config="false"> 
+		<security:form-login 
+			login-page="/user/login"
+			login-processing-url="/login"
+			username-parameter="username"
+			password-parameter="password"
+			authentication-failure-url="/loginError" 
+			authentication-success-handler-ref="loginSuccessHandler"
+			always-use-default-target="true" />   
+		<security:logout logout-url="/user/logout" logout-success-url="/user/login" invalidate-session="true"/>
+		<security:csrf disabled="true"/>
+		<!-- <security:access-denied-handler ref="accessDeniedHandler"/> -->
+		<security:custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+	</security:http>
+	
+	<security:authentication-manager alias="authenticationManager">          
+    	<security:authentication-provider ref="authenticationProvider"/>
+	</security:authentication-manager>  
+  
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">  
+	    <property name="hideUserNotFoundExceptions" value="false" />  
+	    <property name="userDetailsService" ref="userDetailsServiceImpl" />
+	    <property name="passwordEncoder" ref="BCryptPasswordEncoder"/>
+	</bean>
+	
+	<bean id="userDetailsServiceImpl" class="com.yez.wiki.user.service.impl.UserDetailsServiceImpl" />
+	
+	<!-- <bean id="accessDeniedHandler" class="com.yez.wiki.security.AccessDeniedHandlerImpl"/> -->
+	 
+	<bean id="BCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		<constructor-arg name="strength" value="4"/>
+	</bean>
+	
+	<bean id="myFilter" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="accessDecisionManager" ref="accessDecisionManagerimpl"/>
+		<property name="securityMetadataSource" ref="securityMetadataSourceImpl"></property>
+	</bean>
+	
+	<bean id="accessDecisionManagerimpl" class="com.yez.wiki.user.security.AccessDecisionManagerimpl"></bean>
+	
+	<bean id="securityMetadataSourceImpl" class="com.yez.wiki.user.security.SecurityMetadataSourceImpl">
+		<constructor-arg ref="securityResourcesService"/>
+	</bean>
+	
+	<bean id="loginSuccessHandler" class="com.yez.wiki.user.security.LoginSuccessHandler"></bean>
+</beans>

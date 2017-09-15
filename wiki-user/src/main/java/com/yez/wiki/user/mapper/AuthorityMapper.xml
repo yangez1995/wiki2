@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.user.dao.AuthorityMapper">
+	<resultMap type="com.yez.wiki.entity.user.Authority" id="AuthorityResultMap">
+		<id column="authority_id" property="id" jdbcType="INTEGER"/>
+		<result column="authority_name" property="name" jdbcType="VARCHAR"/>
+		<result column="authority_mark" property="mark" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.yez.wiki.entity.user.Authority">
+		INSERT INTO t_authority (authority_name, authority_mark, des) 
+		VALUES (#{name, jdbcType=VARCHAR}, #{mark, jdbcType=VARCHAR}, #{describe, jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM t_authority 
+		WHERE authority_id = #{id, jdbcType=INTEGER}
+	</delete>
+	
+	<update id="update" parameterType="com.yez.wiki.entity.user.Authority">
+		UPDATE t_authority SET 
+		authority_name = #{name, jdbcType=VARCHAR},
+		des = #{describe, jdbcType=VARCHAR} 
+		WHERE authority_id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="getPage" parameterType="java.util.HashMap" resultMap="AuthorityResultMap">
+		SELECT * FROM t_authority
+		WHERE 1 = 1
+		<if test="id != '' and id != null">
+			AND authority_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND authority_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="mark != '' and mark != null">
+			AND authority_mark LIKE CONCAT('%',#{mark, jdbcType=VARCHAR},'%')
+		</if>
+		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getNumber" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_authority
+		WHERE 1 = 1
+		<if test="id != '' and id != null">
+			AND authority_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND authority_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="mark != '' and mark != null">
+			AND authority_mark LIKE CONCAT('%',#{mark, jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+	
+	<select id="checkAuthorityNameExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_authority 
+		WHERE authority_name = #{name, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="checkAuthorityMarkExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_authority 
+		WHERE authority_mark = #{mark, jdbcType=VARCHAR}
+	</select>
+</mapper>

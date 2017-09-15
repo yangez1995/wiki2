@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.main.dao.WikiUpdateMapper">
+	<select id="getWikiVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT version FROM t_wiki WHERE id = #{id, jdbcType=INTEGER} 
+	</select>
+	<update id="wikiUpgrade" parameterType="java.lang.Integer">
+		UPDATE t_wiki SET version = version + 1 
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	<insert id="insertWikiHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_wiki_history (wiki_id, version, change_table, edit_by, edit_time)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{version, jdbcType=INTEGER}, #{changeTable, jdbcType=VARCHAR},
+		#{editBy, jdbcType=INTEGER}, #{editTime, jdbcType=CHAR})
+		<selectKey keyProperty="historyId" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+	
+	<!-- 修改wiki名片部分 -->
+	<update id="cardUpdate" parameterType="java.util.HashMap">
+		UPDATE t_wiki SET 
+		sub_title = #{subTitle, jdbcType=VARCHAR},
+		des = #{describe, jdbcType=VARCHAR},	
+		version = #{version, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="getWikiCard" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT sub_title AS subTitle,des AS des, version
+		FROM t_wiki WHERE id = #{id, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getCardVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_card_history WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
+	</select>
+	<insert id="insertCardHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_card_history (wiki_id, sub_title, des, version, history_id)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{subTitle, jdbcType=VARCHAR}, 
+		#{describe, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER}, #{historyId, jdbcType=INTEGER})
+	</insert>
+	<!-- 修改wiki名片部分结束 -->
+	
+	<!-- 修改标签部分 -->
+	<resultMap type="com.yez.wiki.entity.wiki.Label" id="LabelMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getWikiLabels" parameterType="java.lang.Integer" resultMap="LabelMap">
+		SELECT * FROM t_label WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
+	</select>
+	
+	<update id="updateLabel" parameterType="com.yez.wiki.entity.wiki.Label">
+		UPDATE t_label SET
+		ser_num = #{serNum, jdbcType=INTEGER},
+		name = #{name, jdbcType=VARCHAR},
+		content = #{content, jdbcType=VARCHAR}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<insert id="insertLabel" parameterType="com.yez.wiki.entity.wiki.Label">
+		INSERT INTO t_label (wiki_id, ser_num, name, content)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		#{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
+		<selectKey keyProperty="labelId" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+	
+	<delete id="deleteLabel" parameterType="java.util.HashMap">
+		DELETE FROM t_label WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
+		AND id IN 
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<select id="selectLabelVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_label_history WHERE label_id = #{labelId, jdbcType=INTEGER}
+	</select>
+	<insert id="insertLabelHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_label_history
+		(wiki_id, label_id, version, ser_num, name, content, change_type, history_id)
+		VALUES(#{wikiId, jdbcType=INTEGER}, #{labelId, jdbcType=INTEGER}, #{version, jdbcType=INTEGER},
+		#{serNum, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR},
+		#{changeType, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+	</insert>
+	<!-- 修改标签部分结束 -->
+	
+	<!-- 修改目录部分 -->
+	<resultMap type="com.yez.wiki.entity.wiki.Chapter" id="CatalMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getWikiChapters" parameterType="java.lang.Integer" resultMap="CatalMap">
+		SELECT * FROM t_chapter WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
+	</select>
+	
+	<update id="updateCatal" parameterType="com.yez.wiki.entity.wiki.Chapter">
+		UPDATE t_chapter 
+		SET title = #{title, jdbcType=VARCHAR},
+		ser_num = #{serNum, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<insert id="insertCatal" parameterType="com.yez.wiki.entity.wiki.Chapter">
+		INSERT INTO t_chapter (wiki_id, ser_num, title)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		#{title, jdbcType=VARCHAR})
+		<selectKey keyProperty="id" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_ID()  
+        </selectKey>
+	</insert>
+	
+	<delete id="deleteCatal" parameterType="java.util.HashMap">
+		DELETE FROM t_chapter WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
+		AND id IN 
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<select id="selectChapterVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_chapter_history WHERE chapter_id = #{chapterId, jdbcType=INTEGER}
+	</select>
+	<insert id="insertChapterHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_chapter_history (wiki_id, chapter_id, ser_num, title, content, 
+		version, change_type, history_id)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{chapterId, jdbcType=INTEGER},#{serNum, jdbcType=INTEGER},
+		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
+		#{changeType, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+	</insert>
+	<!-- 修改目录部分结束 -->
+	
+	<!-- 修改段落部分 -->
+	<resultMap type="com.yez.wiki.entity.wiki.Chapter" id="ChapterMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<collection column="id" property="childs" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.ChildChapter" select="getChildChapter"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.wiki.ChildChapter" id="ChildChapterMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getChildChapter" parameterType="java.lang.Integer" resultMap="ChildChapterMap">
+		SELECT * FROM t_chapter_child
+		WHERE parent_id = #{id, jdbcType=INTEGER}
+		ORDER BY ser_num ASC
+	</select>
+	
+	<select id="getChapter" parameterType="java.lang.Integer" resultMap="ChapterMap">
+		SELECT * FROM t_chapter WHERE id = #{id, jdbcType=INTEGER}
+	</select>
+	
+	<update id="updateChapter" parameterType="com.yez.wiki.entity.wiki.Chapter">
+		UPDATE t_chapter SET title = #{title, jdbcType=VARCHAR},
+		content = #{content, jdbcType=VARCHAR}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateChildChapter" parameterType="com.yez.wiki.entity.wiki.ChildChapter">
+		UPDATE t_chapter_child SET title = #{title, jdbcType=VARCHAR},
+		content = #{content, jdbcType=VARCHAR},
+		ser_num = #{serNum, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<insert id="insertChildChapter" parameterType="com.yez.wiki.entity.wiki.ChildChapter">
+		INSERT INTO t_chapter_child (parent_id, ser_num, title, content)
+		VALUES (#{parentId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
+		<selectKey keyProperty="id" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_ID()  
+        </selectKey>
+	</insert>
+	
+	<delete id="deleteChildChapter" parameterType="java.util.HashMap">
+		DELETE FROM t_chapter_child WHERE parent_id = #{parentId, jdbcType=INTEGER}
+		AND id IN 
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<insert id="insertChildHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_chapter_child_history (parent_id, child_id, ser_num, 
+		title, content, version, change_type, history_id)
+		VALUES (#{parentId, jdbcType=INTEGER}, #{childId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
+		#{changeType, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+	</insert>
+	<!-- 修改段落部分结束 -->
+</mapper>

@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+.chapter {
+	margin-top: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-top: #CCC solid 1px;
+	border-bottom: #CCC solid 1px;
+}
+
+.nav li {
+	padding-right: 10px;
+	border-bottom: #DFDFDF solid 1px;
+}
+
+.nav li a {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.nav li a:hover {
+	background: #FCFCFC;
+	color: #7FB80E;
+}
+
+.nav li button {
+	margin-top: 5px;
+	width: 32px;
+	height: 32px;
+	background: #FFFFFF;
+	border: 0px;
+	border-radius: 16px;
+}
+
+.nav li button img{
+	width: 20px;
+	height: 20px;
+}
+
+.chapter-edit button {
+	margin: 5px;
+}

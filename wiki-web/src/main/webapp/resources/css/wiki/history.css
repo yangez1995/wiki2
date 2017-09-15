@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+table tbody tr:hover{
+	background: rgba(164,190,19,0.1);
+}
+
+a {
+	cursor: pointer;
+}

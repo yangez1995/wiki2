@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+.nav-dl {
+	margin-top: 1px;
+	margin-bottom: 0px;
+}
+
+.nav-dl dt{
+  height: 36px;
+  width: 100%;
+  padding-left: 20px;
+  background: var(--mcolor);
+  font-size: 15px;
+  line-height: 36px;
+  color: #DDD;
+  cursor: pointer;
+}
+
+.nav-dl dt:hover {
+	background: var(--mcolor-hover);
+}
+
+.nav-dl dd {
+  height: 0px;
+  width: 100%;
+  padding-left: 25px;
+  background: var(--mcolor-shallow);
+  line-height: 30px;
+  color: #EEE;
+  cursor: pointer;
+  overflow: hidden;
+  
+  transition: height 0.5s;
+  -moz-transition: height 0.5s;
+  -webkit-transition: height 0.5s;
+  -o-transition: height 0.5s;
+}
+
+.nav-dl dd:hover {
+	background: var(--mcolor);
+}
+
+.dl-act dd{
+	height: 30px;
+}

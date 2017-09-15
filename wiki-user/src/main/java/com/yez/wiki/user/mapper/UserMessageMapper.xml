@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.user.dao.UserMessageMapper">
+	<!-- 根据搜索条件获取一页用户个人信息数据 -->
+	<select id="getPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT user_id AS id,nickname,age,sex FROM t_user_message 
+		WHERE 1=1
+		<if test="id != '' and id != null">
+			AND user_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="nickname != '' and nickname != null">
+			AND nickname LIKE CONCAT('%',#{nickname, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="minAge != '' and minAge != null">
+			AND age &gt;= #{minAge, jdbcType=INTEGER}
+		</if>
+		<if test="maxAge != '' and maxAge != null">
+			AND age &lt;= #{maxAge, jdbcType=INTEGER}
+		</if>
+		<if test="sex != '' and sex != null">
+			AND sex = #{sex, jdbcType=CHAR}
+		</if>
+		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取符合搜索条件的用户个人信息数据数量 -->
+	<select id="getNumber" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM t_user_message
+		WHERE 1=1
+		<if test="id != '' and id != null">
+			AND user_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="nickname != '' and nickname != null">
+			AND nickname LIKE CONCAT('%', #{nickname, jdbcType=VARCHAR}, '%')
+		</if>
+		<if test="minAge != '' and minAge != null">
+			AND age &gt;= #{minAge, jdbcType=INTEGER}
+		</if>
+		<if test="maxAge != '' and maxAge != null">
+			AND age &lt;= #{maxAge, jdbcType=INTEGER}
+		</if>
+		<if test="sex != '' and sex != null">
+			AND sex = #{sex, jdbcType=CHAR}
+		</if> 
+	</select>
+	
+	<select id="getNicknameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT nickname FROM t_user_message 
+		WHERE user_id = #{id, jdbcType=INTEGER}
+	</select>
+</mapper>

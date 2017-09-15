@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.main.dao.WikiMapper">
+	<resultMap type="com.yez.wiki.entity.wiki.Wiki" id="WikiMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="main_title" property="mainTitle" jdbcType="VARCHAR"/>
+		<result column="synonym_title" property="synonymTitle" jdbcType="VARCHAR"/>
+		<result column="sub_title" property="subTitle" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+		<result column="level" property="level" jdbcType="CHAR"/>
+		<result column="version" property="version" jdbcType="INTEGER"/>
+		<result column="create_by" property="createBy" jdbcType="INTEGER"/>
+		<result column="create_date" property="createDate" jdbcType="CHAR"/>
+		<collection column="id" property="labels" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.Label" select="getLabel"/>
+		<collection column="id" property="gene" javaType="ArrayList" 
+			ofType="java.lang.String" select="getGene"/>
+		<collection column="id" property="chapters" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.Chapter" select="getChapter"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.wiki.Label" id="LabelMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.wiki.Chapter" id="ChapterMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<collection column="id" property="childs" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.ChildChapter" select="getChildChapter"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.wiki.ChildChapter" id="ChildChapterMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- 获取wiki数据部分 -->
+	<select id="getChildChapter" parameterType="java.lang.Integer" resultMap="ChildChapterMap">
+		SELECT * FROM t_chapter_child
+		WHERE parent_id = #{id, jdbcType=INTEGER}
+		ORDER BY ser_num ASC
+	</select>
+	
+	<select id="getLabel" parameterType="java.lang.Integer" resultMap="LabelMap">
+		SELECT * FROM t_label
+		WHERE wiki_Id = #{id, jdbcType=INTEGER}
+		ORDER BY ser_num ASC
+	</select>
+	
+	<select id="getGene" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT name FROM t_gene 
+		WHERE id IN 
+		(SELECT gene_id FROM t_wiki_gene
+		WHERE wiki_id = #{id, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getChapter" parameterType="java.lang.Integer" resultMap="ChapterMap">
+		SELECT * FROM t_chapter
+		WHERE wiki_Id = #{id, jdbcType=INTEGER}
+		ORDER BY ser_num ASC
+	</select>
+	
+	<select id="getWikiById" parameterType="java.lang.Integer" resultMap="WikiMap">
+		SELECT * FROM t_wiki 
+		WHERE id = #{id, jdbcType=INTEGER}
+	</select>
+	<!-- 获取wiki数据部分结束 -->
+	
+	<!-- 新建简单wiki -->
+	<insert id="newSimpleWiki" parameterType="java.util.HashMap">
+		INSERT INTO t_wiki (main_title, level)
+		VALUES (#{mainTitle, jdbcType=VARCHAR}, '1')
+		<selectKey keyProperty="id" resultType="java.lang.Integer">  
+            SELECT LAST_INSERT_ID()  
+        </selectKey>  
+	</insert>
+</mapper>

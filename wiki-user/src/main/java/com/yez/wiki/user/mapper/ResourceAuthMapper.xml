@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yez.wiki.user.dao.ResourceAuthMapper">
+	<resultMap type="com.yez.wiki.entity.user.ResourceAuthority" id="ResourceAuthMap">
+		<id column="resources_id" property="id" jdbcType="INTEGER"/>
+		<result column="resources_name" property="name" jdbcType="VARCHAR"/>
+		<result column="resources_url" property="url" jdbcType="VARCHAR"/>
+		<collection column="resources_id" property="auths" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.user.Authority" select="getAuths"/>
+	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.user.Authority" id="AuthMap">
+		<id column="authority_id" property="id" jdbcType="INTEGER"/>
+		<result column="authority_name" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="searchPage" parameterType="java.util.HashMap" resultMap="ResourceAuthMap">
+		SELECT resources_id,resources_name,resources_url 
+		FROM t_resources WHERE 1=1
+		<if test="id != '' and id != null">
+			AND resources_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND resources_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="url != '' and url != null">
+			AND resources_url LIKE CONCAT('%',#{url, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="authId != '' and authId != null">
+			AND resources_id IN (SELECT resources_id FROM t_resources_authorities
+			WHERE authority_id = #{authId, jdbcType=INTEGER})
+		</if>
+		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
+	</select>
+	
+	<select id="searchNumber" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_resources WHERE 1=1
+		<if test="id != '' and id != null">
+			AND resources_id = #{id, jdbcType=INTEGER}
+		</if>
+		<if test="name != '' and name != null">
+			AND resources_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="url != '' and url != null">
+			AND resources_url LIKE CONCAT('%',#{url, jdbcType=VARCHAR},'%')
+		</if>
+		<if test="authId != '' and authId != null">
+			AND resources_id IN (SELECT resources_id FROM t_resources_authorities
+			WHERE authority_id = #{authId, jdbcType=INTEGER})
+		</if>
+	</select>
+	
+	<select id="getAuths" parameterType="java.lang.Integer" resultMap="AuthMap">
+		SELECT authority_id,authority_name FROM t_authority
+		WHERE authority_id IN (SELECT authority_id FROM t_resources_authorities
+		WHERE resources_id = #{resources_id, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getOtherAuths" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT authority_id AS id, authority_name AS name 
+		FROM t_authority WHERE authority_id NOT IN 
+		(SELECT authority_id FROM t_resources_authorities
+		WHERE resources_id = #{id, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getAuthsByResourceId" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT authority_id AS id, authority_name AS name 
+		FROM t_authority WHERE authority_id IN
+		(SELECT authority_id FROM t_resources_authorities
+		WHERE resources_id = #{id, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getAllAuths" resultType="java.util.HashMap">
+		SELECT authority_id AS id, authority_name AS name 
+		FROM t_authority
+	</select>
+	
+	<delete id="delete" parameterType="java.util.HashMap">
+		DELETE FROM t_resources_authorities
+		WHERE resources_id = #{resourceId, jdbcType=INTEGER}
+		AND authority_id = #{authId, jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO t_resources_authorities (resources_id, authority_id)
+		VALUES (#{resourceId, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})
+	</insert>
+</mapper>
