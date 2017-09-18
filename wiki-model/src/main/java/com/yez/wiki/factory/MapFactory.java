@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.yez.wiki.entity.user.RoleAuthsId;
-import com.yez.wiki.entity.user.UserRolesId;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.entity.wiki.Wiki;
 import com.yez.wiki.util.PageUtil;
 import com.yez.wiki.util.StringUtil;
@@ -38,17 +37,10 @@ public class MapFactory {
 		}
 	}
 	
-	public static Map<String, Object> roleAuthsIdMap(RoleAuthsId ids) {
+	public static Map<String, Object> oneToMoreIdsMap(OneToMoreIds ids) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("roleId", ids.getRoleId());
-		map.put("list", ids.getAuthsId());
-		return map;
-	}
-	
-	public static Map<String, Object> userRolesIdMap(UserRolesId ids) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", ids.getUserId());
-		map.put("list", ids.getRolesId());
+		map.put("id", ids.getId());
+		map.put("list", ids.getIds());
 		return map;
 	}
 	

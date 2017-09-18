@@ -5,12 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yez.wiki.entity.user.Authority;
+
 public interface ResourceAuthMapper {
+	public void addAuths(Map<String, Object> map);
+	public void deleteAuths(Map<String, Object> map);
+	public void deleteAllAuths(@Param("resourceId")int resourceId);
+	
 	public List<Object> searchPage(Map<String, Object> map);
 	public int searchNumber(Map<String, Object> map);
-	public List<Object> getOtherAuths(@Param("id")int id);
-	public List<Object> getAuthsByResourceId(@Param("id")int id);
+	public List<Authority> getOtherAuths(List<Integer> list);
 	public List<Object> getAllAuths();
-	public void delete(Map<String, Object> map);
-	public void insert(Map<String, Object> map);
+	public List<Integer> getAuthsId(@Param("resourceId") int resourceId);
 }

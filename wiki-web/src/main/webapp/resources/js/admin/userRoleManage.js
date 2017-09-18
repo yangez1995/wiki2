@@ -192,8 +192,8 @@ function updateRoles() {
 		ids.push($(tr).attr('id'));
 	});
 	var params = {};
-	params.userId = nowSetUserId;
-	params.rolesId = ids;
+	params.id = nowSetUserId;
+	params.ids = ids;
 	$.ajax({
 		type : 'POST',
 		url : 'user/role/update',

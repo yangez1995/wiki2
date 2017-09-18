@@ -1,16 +1,19 @@
 package com.yez.wiki.controller.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yez.wiki.entity.ResponseMessage;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.service.IResourceAuthService;
 
@@ -19,6 +22,12 @@ import com.yez.wiki.user.service.IResourceAuthService;
 public class AdminResourceAuthController {
 	@Autowired
 	private IResourceAuthService resourceAuthService;
+	
+	@ResponseBody
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public ResponseMessage update(@RequestBody OneToMoreIds ids) {
+		return resourceAuthService.update(ids);
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
@@ -43,38 +52,18 @@ public class AdminResourceAuthController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public ResponseMessage delete(int resourceId, int authId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("resourceId", resourceId);
-		map.put("authId", authId);
-		return resourceAuthService.delete(map);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public ResponseMessage insert(int resourceId, int authId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("resourceId", resourceId);
-		map.put("authId", authId);
-		return resourceAuthService.insert(map);
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/getOtherAuths", method = RequestMethod.POST)
-	public List<Object> getOtherAuths(int id) {
-		return resourceAuthService.getOtherAuths(id);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/getAuthsByResourceId", method = RequestMethod.POST)
-	public List<Object> getAuthsByResourceId(int id) {
-		return resourceAuthService.getAuthsByResourceId(id);
+	public ResponseMessage getOtherAuths(@RequestBody List<Map<String, Integer>> ids) {
+		List<Integer> list = new ArrayList<Integer>();
+		for(Map<String, Integer> id : ids) {
+			list.add(id.get("value"));
+		}
+		return resourceAuthService.getOtherAuths(list);
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/getAllAuths", method = RequestMethod.GET)
-	public List<Object> getAllAuths() {
+	public ResponseMessage getAllAuths() {
 		return resourceAuthService.getAllAuths();
 	}
 }

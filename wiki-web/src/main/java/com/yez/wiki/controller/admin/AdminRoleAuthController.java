@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Authority;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.entity.user.RoleAuthority;
-import com.yez.wiki.entity.user.RoleAuthsId;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.service.IRoleAuthService;
 import com.yez.wiki.util.PageUtil;
@@ -74,7 +74,7 @@ public class AdminRoleAuthController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ResponseMessage update(@RequestBody RoleAuthsId ids) {
+	public ResponseMessage update(@RequestBody OneToMoreIds ids) {
 		return roleAuthService.update(ids);
 	}
 }

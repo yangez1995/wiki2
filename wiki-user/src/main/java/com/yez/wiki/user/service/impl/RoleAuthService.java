@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Authority;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.entity.user.RoleAuthority;
-import com.yez.wiki.entity.user.RoleAuthsId;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.RoleAuthMapper;
 import com.yez.wiki.user.service.IRoleAuthService;
@@ -18,6 +18,29 @@ import com.yez.wiki.user.service.IRoleAuthService;
 public class RoleAuthService implements IRoleAuthService {
 	@Autowired
 	private RoleAuthMapper roleAuthMapper;
+	
+	@Override
+	public ResponseMessage update(OneToMoreIds ids) {
+		if(ids.getIds().isEmpty()) {
+			roleAuthMapper.deleteAllAuths(ids.getId());
+		} else {
+			List<Integer> nowList = roleAuthMapper.getAuthsId(ids.getId());
+			if(nowList.isEmpty()) {
+				Map<String, Object> insertMap = MapFactory.oneToMoreIdsMap(ids);
+				roleAuthMapper.addAuths(insertMap);
+			} else {
+				Map<String, Object> deleteMap = MapFactory.oneToMoreIdsMap(ids);
+				roleAuthMapper.deleteAuths(deleteMap);
+				
+				ids.getIds().removeAll(nowList);
+				if(!ids.getIds().isEmpty()) {
+					Map<String, Object> insertMap = MapFactory.oneToMoreIdsMap(ids);
+					roleAuthMapper.addAuths(insertMap);
+				}
+			}
+		}
+		return ResponseMessage.success();
+	}
 	
 	@Override
 	public List<RoleAuthority> getPage(Map<String, Object> map) {
@@ -32,28 +55,5 @@ public class RoleAuthService implements IRoleAuthService {
 	@Override
 	public List<Authority> getOtherAuths(List<Integer> list) {
 		return roleAuthMapper.getOtherAuths(list);
-	}
-
-	@Override
-	public ResponseMessage update(RoleAuthsId ids) {
-		if(ids.getAuthsId().isEmpty()) {
-			roleAuthMapper.deleteAllAuths(ids.getRoleId());
-		} else {
-			List<Integer> nowList = roleAuthMapper.getAuthsId(ids.getRoleId());
-			if(nowList.isEmpty()) {
-				Map<String, Object> insertMap = MapFactory.roleAuthsIdMap(ids);
-				roleAuthMapper.addAuths(insertMap);
-			} else {
-				Map<String, Object> deleteMap = MapFactory.roleAuthsIdMap(ids);
-				roleAuthMapper.deleteAuths(deleteMap);
-				
-				ids.getAuthsId().removeAll(nowList);
-				if(!ids.getAuthsId().isEmpty()) {
-					Map<String, Object> insertMap = MapFactory.roleAuthsIdMap(ids);
-					roleAuthMapper.addAuths(insertMap);
-				}
-			}
-		}
-		return ResponseMessage.success();
 	}
 }

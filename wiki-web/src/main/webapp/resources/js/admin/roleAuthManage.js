@@ -147,8 +147,8 @@ function updateAuth() {
 		ids.push($(tr).attr('id'));
 	});
 	var params = {};
-	params.roleId = nowSetRoleId;
-	params.authsId = ids;
+	params.id = nowSetRoleId;
+	params.ids = ids;
 	$.ajax({
 		type : 'POST',
 		url : 'role/auth/update',

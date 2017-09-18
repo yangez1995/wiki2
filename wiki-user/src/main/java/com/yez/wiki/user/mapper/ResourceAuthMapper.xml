@@ -14,6 +14,29 @@
 		<result column="authority_name" property="name" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	<insert id="addAuths" parameterType="java.util.HashMap">
+		INSERT INTO t_resources_authorities
+		(resources_id, authority_id)
+		VALUES
+		<foreach collection="list" item="authId" index="index" separator="," >  
+        	(#{id, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})  
+    	</foreach>
+	</insert>
+	
+	<delete id="deleteAuths" parameterType="java.util.HashMap">
+		DELETE FROM t_resources_authorities
+		WHERE resources_id = #{id, jdbcType=INTEGER}
+		AND authority_id NOT IN 
+		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
+            #{authId, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<delete id="deleteAllAuths" parameterType="java.lang.Integer">
+		DELETE FROM t_resources_authorities
+		WHERE resources_id = #{resourceId, jdbcType=INTEGER}
+	</delete>
+	
 	<select id="searchPage" parameterType="java.util.HashMap" resultMap="ResourceAuthMap">
 		SELECT resources_id,resources_name,resources_url 
 		FROM t_resources WHERE 1=1
@@ -56,18 +79,12 @@
 		WHERE resources_id = #{resources_id, jdbcType=INTEGER})
 	</select>
 	
-	<select id="getOtherAuths" parameterType="java.lang.Integer" resultType="java.util.HashMap">
-		SELECT authority_id AS id, authority_name AS name 
-		FROM t_authority WHERE authority_id NOT IN 
-		(SELECT authority_id FROM t_resources_authorities
-		WHERE resources_id = #{id, jdbcType=INTEGER})
-	</select>
-	
-	<select id="getAuthsByResourceId" parameterType="java.lang.Integer" resultType="java.util.HashMap">
-		SELECT authority_id AS id, authority_name AS name 
-		FROM t_authority WHERE authority_id IN
-		(SELECT authority_id FROM t_resources_authorities
-		WHERE resources_id = #{id, jdbcType=INTEGER})
+	<select id="getOtherAuths" resultMap="AuthMap">
+		SELECT * FROM t_authority
+		WHERE authority_id NOT IN 
+		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
+            #{authId, jdbcType=INTEGER}
+        </foreach>
 	</select>
 	
 	<select id="getAllAuths" resultType="java.util.HashMap">
@@ -75,14 +92,8 @@
 		FROM t_authority
 	</select>
 	
-	<delete id="delete" parameterType="java.util.HashMap">
-		DELETE FROM t_resources_authorities
+	<select id="getAuthsId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT authority_id FROM t_resources_authorities
 		WHERE resources_id = #{resourceId, jdbcType=INTEGER}
-		AND authority_id = #{authId, jdbcType=INTEGER}
-	</delete>
-	
-	<insert id="insert" parameterType="java.util.HashMap">
-		INSERT INTO t_resources_authorities (resources_id, authority_id)
-		VALUES (#{resourceId, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})
-	</insert>
+	</select>
 </mapper>

@@ -15,6 +15,29 @@
 		<result column="des" property="describe" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	<insert id="addAuths" parameterType="java.util.HashMap">
+		INSERT INTO t_role_authorities 
+		(role_id, authority_id)
+		VALUES
+		<foreach collection="list" item="authId" index="index" separator="," >  
+        	(#{id, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})  
+    	</foreach>
+	</insert>
+	
+	<delete id="deleteAuths" parameterType="java.util.HashMap">
+		DELETE FROM t_role_authorities
+		WHERE role_id = #{id, jdbcType=INTEGER}
+		AND authority_id NOT IN 
+		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
+            #{authId, jdbcType=INTEGER}
+        </foreach>
+	</delete>
+	
+	<delete id="deleteAllAuths" parameterType="java.lang.Integer">
+		DELETE FROM t_role_authorities
+		WHERE role_id = #{roleId, jdbcType=INTEGER}
+	</delete>
+	
 	<select id="getPage" parameterType="java.util.HashMap" resultMap="RoleAuthMap">
 		SELECT role_id, role_name FROM t_role
 		WHERE 1=1
@@ -65,27 +88,4 @@
 		SELECT authority_id FROM t_role_authorities
 		WHERE role_id = #{roleId, jdbcType=INTEGER}
 	</select>
-	
-	<insert id="addAuths" parameterType="java.util.HashMap">
-		INSERT INTO t_role_authorities 
-		(role_id, authority_id)
-		VALUES
-		<foreach collection="list" item="authId" index="index" separator="," >  
-        	(#{roleId, jdbcType=INTEGER}, #{authId, jdbcType=INTEGER})  
-    	</foreach>
-	</insert>
-	
-	<delete id="deleteAuths" parameterType="java.util.HashMap">
-		DELETE FROM t_role_authorities
-		WHERE role_id = #{roleId, jdbcType=INTEGER}
-		AND authority_id NOT IN 
-		<foreach collection="list" item="authId" index="index" open="(" close=")" separator=",">
-            #{authId, jdbcType=INTEGER}
-        </foreach>
-	</delete>
-	
-	<delete id="deleteAllAuths" parameterType="java.lang.Integer">
-		DELETE FROM t_role_authorities
-		WHERE role_id = #{roleId, jdbcType=INTEGER}
-	</delete>
 </mapper>

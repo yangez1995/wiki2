@@ -18,13 +18,13 @@
 		(user_id, role_id)
 		VALUES
 		<foreach collection="list" item="roleId" index="index" separator="," >  
-        	(#{userId, jdbcType=INTEGER}, #{roleId, jdbcType=INTEGER})  
+        	(#{id, jdbcType=INTEGER}, #{roleId, jdbcType=INTEGER})  
     	</foreach>
 	</insert>
 	
 	<delete id="deleteRoles" parameterType="java.util.HashMap">
 		DELETE FROM t_user_roles
-		WHERE user_id = #{userId, jdbcType=INTEGER}
+		WHERE user_id = #{id, jdbcType=INTEGER}
 		AND role_id NOT IN 
 		<foreach collection="list" item="roleId" index="index" open="(" close=")" separator=",">
             #{roleId, jdbcType=INTEGER}

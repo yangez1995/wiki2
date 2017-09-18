@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
-import com.yez.wiki.entity.user.UserRolesId;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.UserRoleMapper;
 import com.yez.wiki.user.service.IUserRoleService;
@@ -18,21 +18,21 @@ public class UserRoleService implements IUserRoleService {
 	private UserRoleMapper userRoleMapper;
 	
 	@Override
-	public ResponseMessage update(UserRolesId ids) {
-		if(ids.getRolesId().isEmpty()) {
-			userRoleMapper.deleteAllRoles(ids.getUserId());
+	public ResponseMessage update(OneToMoreIds ids) {
+		if(ids.getIds().isEmpty()) {
+			userRoleMapper.deleteAllRoles(ids.getId());
 		} else {
-			List<Integer> nowList = userRoleMapper.getRolesId(ids.getUserId());
+			List<Integer> nowList = userRoleMapper.getRolesId(ids.getId());
 			if(nowList.isEmpty()) {
-				Map<String, Object> insertMap = MapFactory.userRolesIdMap(ids);
+				Map<String, Object> insertMap = MapFactory.oneToMoreIdsMap(ids);
 				userRoleMapper.addRoles(insertMap);
 			} else {
-				Map<String, Object> deleteMap = MapFactory.userRolesIdMap(ids);
+				Map<String, Object> deleteMap = MapFactory.oneToMoreIdsMap(ids);
 				userRoleMapper.deleteRoles(deleteMap);
 				
-				ids.getRolesId().removeAll(nowList);
-				if(!ids.getRolesId().isEmpty()) {
-					Map<String, Object> insertMap = MapFactory.userRolesIdMap(ids);
+				ids.getIds().removeAll(nowList);
+				if(!ids.getIds().isEmpty()) {
+					Map<String, Object> insertMap = MapFactory.oneToMoreIdsMap(ids);
 					userRoleMapper.addRoles(insertMap);
 				}
 			}
@@ -52,7 +52,7 @@ public class UserRoleService implements IUserRoleService {
 
 	@Override
 	public ResponseMessage getOtherRoles(List<Integer> list) {
-		return ResponseMessage.success(userRoleMapper.getOtherRoles(list));
+		return list.isEmpty() ? getRoles() : ResponseMessage.success(userRoleMapper.getOtherRoles(list));
 	}
 
 	@Override

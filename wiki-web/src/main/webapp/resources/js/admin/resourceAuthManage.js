@@ -61,9 +61,9 @@ function resetAll() {
 function resetList() {
 	$('#resource-auth-list').html('');
 	params.pageIndex = pageIndex;
-	$.post('resource/auth/searchPage', params, function(data) {
+	$.post('resource/auth/getPage', params, function(result) {
 		var table = '';
-		$(data).each(function(i, resource) {
+		$(result.data).each(function(i, resource) {
 			table += '<tr>' +
 					 '<td>' + resource.id + '</td>' +
 					 '<td>' + resource.name + '</td>' + 
@@ -81,7 +81,8 @@ function resetList() {
 
 function resetPage() {
 	$('#pagination').html('');
-	$.post('resource/auth/searchNumber', params, function(pageNumber) {
+	$.post('resource/auth/getNumber', params, function(result) {
+		pageNumber = result.data;
 		pageMax = pageNumber;
 		$('#page-number').text('共' + pageNumber + '页');
 		var pagination = '';
@@ -129,8 +130,12 @@ function setAuth(resource) {
 	$('#set-auth-list').html('');
 	var table = '';
 	$(resource.auths).each(function(i, auth){
-		table += '<tr><td>' + auth.name + '</td>' +
-				 '<td><button class="btn btn-danger btn-xs" onclick="removeAuth(' + resource.id + ',' + auth.id + ')">移除</button></td></tr>';
+		table += '<tr id="' + auth.id + '">' + 
+					 '<td>' + auth.name + '</td>' +
+					 '<td>' + 
+					 	 '<button class="btn btn-danger btn-xs" onclick="removeAuth(this)">移除</button>' + 
+					 '</td>' + 
+				 '</tr>';
 	});
 	$('#set-auth-list').html(table);
 	$('#set-auth').modal({
@@ -139,54 +144,71 @@ function setAuth(resource) {
 }
 /**
  * 删除权限
- * @param userId 要删除的资源id
- * @param roleId 要删除的权限id
  */
-function removeAuth(resourceId, authId) {
-	$.post('resource/auth/delete', {'resourceId' : resourceId, 'authId' : authId}, function(result) {
-		if(result.what == 200) {
-			resetSetList(resourceId);
-		}
-	});
+function removeAuth(e) {
+	$(e).parent().parent().remove();
 }
 /**
  * 选择添加权限，确定可添加权限并弹出模态框。
  */
 function chooseAddAuth() {
-	$.post('resource/auth/getOtherAuths', {'id' : nowSetId}, function(data) {
-		$('#other-auths').html('');
-		$(data).each(function(i, auth) {
-			$('#other-auths').append('<option value="' + auth.id + '">' + auth.name + '</option>');
-		});
-		$('#add-auth').modal({
-			backdrop: 'static'
-		});
+	var ids = [];
+	$('#set-auth-list').find('tr').each(function(i, tr) {
+		var param = {};
+		param.value = $(tr).attr('id');
+		ids.push(param);
+	});
+	$.ajax({
+		type : 'POST',
+		url : 'resource/auth/getOtherAuths',
+		contentType:"application/json",
+		data : JSON.stringify(ids),
+		success : function(result) {
+			$('#other-auths').html('');
+			$(result.data).each(function(i, auth) {
+				$('#other-auths').append('<option value="' + auth.id + '">' + auth.name + '</option>');
+			});
+			$('#add-auth').modal({
+				backdrop: 'static'
+			});
+		}
 	});
 }
 /**
  * 添加权限
  */
 function addAuth() {
-	if(!isEmpty($('#other-auths').val())) {
-		$.post('resource/auth/insert', {'resourceId' : nowSetId, 'authId' : $('#other-auths').val()}, function(result) {
-			if(result.what == 200) {
-				resetSetList(nowSetId);
-			}
-		});
+	if($('#other-auths').val() != '' && $('#other-auths').val() != null) {
+		$('#set-auth-list').append(
+			'<tr id="' + $('#other-auths').val() + '">' + 
+			    '<td>' + $('#other-auths').find('option:selected').text() + '</td>' +
+			    '<td>' + 
+			        '<button class="btn btn-danger btn-xs" onclick="removeAuth(this)">移除</button>' + 
+			    '</td>' + 
+			'</tr>'	
+		);
 	}
 }
-/**
- * 重置权限设置表格
- * @param userId 当前设置中权限id
- */
-function resetSetList(resourceId) {
-	$.post('resource/auth/getAuthsByResourceId', {'id' : resourceId}, function(data) {
-		var table = '';
-		$(data).each(function(i, auth){
-			table += '<tr><td>' + auth.name + '</td>' +
-					 '<td><button class="btn btn-danger btn-xs" onclick="removeAuth(' + resourceId + ',' + auth.id + ')">移除</button></td></tr>';
-		});
-		$('#set-auth-list').html(table);
+
+function updateAuths() {
+	var ids = [];
+	$('#set-auth-list').find('tr').each(function(i, tr){
+		ids.push($(tr).attr('id'));
+	});
+	var params = {};
+	params.id = nowSetId;
+	params.ids = ids;
+	$.ajax({
+		type : 'POST',
+		url : 'resource/auth/update',
+		contentType : 'application/json',
+		dataType : 'json',
+		data : JSON.stringify(params),
+		success : function(result) {
+			if(result.code == '200') {
+				resetAll();
+			}
+		}
 	});
 }
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yez.wiki.entity.ResponseMessage;
-import com.yez.wiki.entity.user.UserRolesId;
+import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.service.IUserRoleService;
 
@@ -25,7 +25,7 @@ public class AdminUserRoleController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ResponseMessage update(@RequestBody UserRolesId ids) {
+	public ResponseMessage update(@RequestBody OneToMoreIds ids) {
 		return userRoleService.update(ids);
 	}
 
@@ -53,12 +53,8 @@ public class AdminUserRoleController {
 	@RequestMapping(value = "/getOtherRoles", method = RequestMethod.POST)
 	public ResponseMessage getOtherRoles(@RequestBody List<Map<String, Integer>> ids) {
 		List<Integer> list = new ArrayList<Integer>();
-		if(ids.size() == 0) {
-			list.add(0);
-		} else {
-			for(Map<String, Integer> id : ids) {
-				list.add(id.get("value"));
-			}
+		for(Map<String, Integer> id : ids) {
+			list.add(id.get("value"));
 		}
 		return userRoleService.getOtherRoles(list);
 	}

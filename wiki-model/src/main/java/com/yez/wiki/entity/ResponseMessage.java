@@ -8,7 +8,7 @@ public class ResponseMessage {
 	public static final String SUCCESS = "200";
 	public static final String FAIL = "400";
 	
-	//Construction
+	//构造器
 	public ResponseMessage() {}
 	public ResponseMessage(String code) {
 		this.code = code;
