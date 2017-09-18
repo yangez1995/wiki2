@@ -68,7 +68,9 @@ public class WikiUpdateService implements IWikiUpdateService {
 
 	@Override
 	public ResponseMessage updateLabels(List<Label> list) {
+		//获取修改的wikiId
 		int wikiId = list.get(0).getWikiId();
+		//获取版本号
 		int version = wikiUpdateMapper.getWikiVersion(wikiId) + 1;
 		List<Label> nowLabels = new LinkedList<Label>();
 		nowLabels = wikiUpdateMapper.getWikiLabels(wikiId);

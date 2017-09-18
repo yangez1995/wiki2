@@ -12,6 +12,7 @@
     <module>wiki-web</module>
     <module>wiki-model</module>
     <module>wiki-user</module>
+    <module>wiki-test</module>
   </modules>
   
   <properties>

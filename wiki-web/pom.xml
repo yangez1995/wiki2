@@ -29,6 +29,11 @@
       <artifactId>wiki-main</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.yez.wiki</groupId>
+      <artifactId>wiki-test</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   
   <build>

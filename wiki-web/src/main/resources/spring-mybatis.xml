@@ -25,6 +25,7 @@
 			<array>
 				<value>classpath:com/yez/wiki/user/mapper/*</value>
 				<value>classpath:com/yez/wiki/main/mapper/*</value>
+				<value>classpath:com/yez/wiki/test/mapper/*</value>
 			</array>
 		</property>
 	</bean>

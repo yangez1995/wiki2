@@ -2,7 +2,7 @@ package com.yez.wiki.entity.wiki;
 
 import java.util.List;
 
-public class Wiki {
+public class StandardWiki {
 	protected int id;//ID
 	protected String mainTitle;//主标题
 	protected String synonymTitle;//同义词标题
