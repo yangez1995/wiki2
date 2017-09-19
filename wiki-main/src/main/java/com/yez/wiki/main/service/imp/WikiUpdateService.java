@@ -13,7 +13,7 @@ import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.wiki.Chapter;
 import com.yez.wiki.entity.wiki.ChildChapter;
 import com.yez.wiki.entity.wiki.Label;
-import com.yez.wiki.entity.wiki.Wiki;
+import com.yez.wiki.entity.wiki.StandardWiki;
 import com.yez.wiki.factory.ChapterFactory;
 import com.yez.wiki.factory.ChildChapterFactory;
 import com.yez.wiki.factory.LabelFactory;
@@ -33,7 +33,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 	 * @return 响应信息
 	 */
 	@Override
-	public ResponseMessage cardUpdate(Wiki wiki) {
+	public ResponseMessage cardUpdate(StandardWiki wiki) {
 		//验证空值
 		if(StringUtil.isEmpty(wiki.getSubTitle())) {
 			return ResponseMessage.fail("副标题不能为空！");
@@ -52,7 +52,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 		wiki.setVersion(((int) nowCard.get("version")) + 1);
 		
 		//修改名片
-		Map<String, Object> map = MapFactory.wikiMap(wiki);
+		Map<String, Object> map = MapFactory.standardWikiMap(wiki);
 		wikiUpdateMapper.cardUpdate(map);
 		
 		//记录wiki改动历史
@@ -72,8 +72,10 @@ public class WikiUpdateService implements IWikiUpdateService {
 		int wikiId = list.get(0).getWikiId();
 		//获取版本号
 		int version = wikiUpdateMapper.getWikiVersion(wikiId) + 1;
+		//获取当前标签列表
 		List<Label> nowLabels = new LinkedList<Label>();
 		nowLabels = wikiUpdateMapper.getWikiLabels(wikiId);
+		
 		Map<String, Object> history = new HashMap<String, Object>();
 		Map<String, Object> wikiHistory = MapFactory.wikiHistoryMap(wikiId, version, "label", 1);
 		boolean isChange = false;

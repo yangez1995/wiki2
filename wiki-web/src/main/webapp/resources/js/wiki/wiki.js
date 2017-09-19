@@ -131,9 +131,7 @@ $(document).ready(function() {
 
 function resetPage() {
 	$.post('getWikiById', { "id" : 1 }, function(data) {
-		$('#main-title').html(data.mainTitle);
-		$('#sub-title').html(data.subTitle);
-		$('#main-des').html(data.describe);
+		initCard(data.title, data.subTitle, data.describe)
 		$('#wiki-level').text('词条等级: ' + data.level);
 		$('#wiki-version').html('词条版本: ' + data.version + ' <a id="check-history" style="cursor: pointer;">[版本改动]</a>');
 		$('#wiki-create-date').text(data.createDate);
@@ -147,29 +145,7 @@ function resetPage() {
 		$('#catal1').html('');
 		$('#catal2').html('');
 		$('#catal3').html('');
-		$(data.labels).each(function(i, label) {
-			if(lr == 0) {
-				$('#lab-list-left').append('<dt>' + label.name + '</dt>' +
-					'<dd>' + label.content + '</dd><hr/>'
-				);
-				lr = 1;
-			} else {
-				$('#lab-list-right').append('<dt>' + label.name + '</dt>' +
-						'<dd>' + label.content + '</dd><hr/>'
-					);
-				lr = 0;
-			}
-			$('#edit-label-list').append('<tr id="' + label.id + '">' + 
-				'<td>' + (i + 1) + '</td>' +
-				'<td>' + label.name + '</td>' +
-				'<td>' + label.content + '</td>' +
-				'<td><button class="btn btn-primary btn-xs" onclick="ascending(this)">升序</button>' +  
-				'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onclick="descending(this)">降序</button>' + 
-				'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onClick="editLabel(this)">编辑</button>' + 
-				'<button class="btn btn-danger btn-xs" style="margin-left: 5px;" onClick="removeLabel(this)">删除</button></td>' +
-				'</tr>'
-			);
-		});
+		initLabel(data.labels);
 		var catalSize = 0;
 		$(data.chapters).each(function(i, chapter) {
 			$('#edit-catal-list').append('<tr id="' + chapter.id + '">' + 

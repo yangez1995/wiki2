@@ -1,4 +1,4 @@
-package com.yez.wiki.controller.user;
+package com.yez.wiki.controller.test;
 
 import java.text.ParseException;
 
@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.yez.wiki.entity.user.UserAccount;
 import com.yez.wiki.exception.DateFormatErrorException;
+import com.yez.wiki.factory.UserFactory;
 import com.yez.wiki.user.service.impl.TestService;
 import com.yez.wiki.util.TimeUtil;
 
@@ -23,11 +25,11 @@ public class TestController {
 	
 	@RequestMapping(value = "/addTestUserData", method = RequestMethod.GET)
 	public String addTestUserData() {
-		/*for(int i = 1; i <= 500; i++) {
-			String str = "test" + String.valueOf(i);
+		for(int i = 1; i <= 500; i++) {
+			String str = "testuser" + String.valueOf(i);
 			UserAccount user = UserFactory.userAccount(str, "123123");
 			service.addTestData(user);
-		}*/
+		}
 		return "/test";
 	}
 	

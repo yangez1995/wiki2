@@ -18,19 +18,19 @@ public class UserChartService implements IUserChartService {
 	@Override
 	public ResponseMessage getUserSexDistribution() {
 		Map<String, Double> distribution = new HashMap<String, Double>();
-		List<String> list = userChartMapper.getUserSex();
+		List<Integer> list = userChartMapper.getUserSex();
 		double[] statistics = new double[3];
-		for(String s : list) {
-			switch(s) {
-				case "x": {
+		for(Integer i : list) {
+			switch(i) {
+				case 0: {
 					statistics[0]++;
 					break;
 				}
-				case "m": {
+				case 1: {
 					statistics[1]++;
 					break;
 				}
-				case "w": {
+				case 2: {
 					statistics[2]++;
 					break;
 				}

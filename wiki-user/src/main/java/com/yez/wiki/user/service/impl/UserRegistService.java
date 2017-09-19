@@ -1,5 +1,7 @@
 package com.yez.wiki.user.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,6 @@ import com.yez.wiki.factory.UserMessageFactory;
 import com.yez.wiki.user.dao.UserRegistDao;
 import com.yez.wiki.user.service.IUserRegistService;
 import com.yez.wiki.util.StringUtil;
-import com.yez.wiki.util.TimeUtil;
 
 /**
  * 用户注册Service接口实现类
@@ -61,10 +62,10 @@ public class UserRegistService implements IUserRegistService {
 		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);//加密级别4
 		UserAccount user = UserFactory.userAccount(username, encoder.encode(password));//封装用户名、密码，并加密密码
-		user.setLocked('f');//设置帐号未被锁定
-		user.setRegDate(TimeUtil.getNowDate());//获取当前日期
+		user.setRegistDate(new Date());//获取当前日期
 		userRegistDao.userRegist(user);
-		UserMessage userMessage = UserMessageFactory.product(user.getId(), "萌新", -1, 'x');//建立用户默认个人信息
+		
+		UserMessage userMessage = UserMessageFactory.product(user.getId(), "萌新");//建立用户默认个人信息
 		userRegistDao.createMessage(userMessage);//将用户个人信息存入数据库
 		return ResponseMessage.success();
 	}

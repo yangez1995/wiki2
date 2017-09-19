@@ -4,9 +4,9 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yez.wiki.entity.wiki.Wiki;
+import com.yez.wiki.entity.wiki.StandardWiki;
 
 public interface WikiMapper {
-	public Wiki getWikiById(@Param("id")int id);
+	public StandardWiki getWikiById(@Param("id")int id);
 	public void newSimpleWiki(Map<String, Object> map);
 }

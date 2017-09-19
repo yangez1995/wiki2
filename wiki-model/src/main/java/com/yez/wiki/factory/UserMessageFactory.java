@@ -7,7 +7,7 @@ public class UserMessageFactory {
 		return new UserMessage();
 	}
 	
-	public static UserMessage product(int id, String nickname, int age, char sex) {
-		return new UserMessage(id, nickname, age, sex);
+	public static UserMessage product(int id, String nickname) {
+		return new UserMessage(id, nickname);
 	}
 } 

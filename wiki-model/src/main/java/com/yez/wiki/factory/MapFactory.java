@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yez.wiki.entity.user.OneToMoreIds;
-import com.yez.wiki.entity.wiki.Wiki;
+import com.yez.wiki.entity.wiki.StandardWiki;
 import com.yez.wiki.util.PageUtil;
 import com.yez.wiki.util.StringUtil;
 import com.yez.wiki.util.TimeUtil;
@@ -30,6 +30,7 @@ public class MapFactory {
 			map.put(key, Integer.parseInt(value));
 		}
 	}
+	
 	//新增list
 	public static <T> void machiningList(Map<String, Object> map, String key, List<T> list) {
 		if(list != null && !list.isEmpty()) {
@@ -44,11 +45,11 @@ public class MapFactory {
 		return map;
 	}
 	
-	public static Map<String, Object> wikiMap(Wiki wiki) {
+	public static Map<String, Object> standardWikiMap(StandardWiki wiki) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		machiningInt(map, "id", wiki.getId() + "");
-		machiningString(map, "mainTitle", wiki.getMainTitle());
-		machiningString(map, "synonymTitle", wiki.getSynonymTitle());
+		machiningString(map, "title", wiki.getTitle());
+		machiningString(map, "synonym", wiki.getSynonym());
 		machiningString(map, "subTitle", wiki.getSubTitle());
 		machiningString(map, "describe", wiki.getDescribe());
 		machiningList(map, "labels", wiki.getLabels());

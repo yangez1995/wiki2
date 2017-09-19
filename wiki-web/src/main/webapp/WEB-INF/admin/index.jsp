@@ -16,6 +16,7 @@
 <script src="../resources/plugin/layer/layer.js"></script>
 <script src="../resources/js/validate.js"></script>
 <script src="../resources/js/customLayer.js"></script>
+<script src="../resources/js/util/timeUtil.js"></script>
 <title>admin</title>
 </head>
 <body lang="zh-CN">

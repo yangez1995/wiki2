@@ -62,7 +62,7 @@ public class AdminUserAccountController {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10);
 		MapFactory.machiningInt(map, "id", id);
 		MapFactory.machiningString(map, "username", username);
-		MapFactory.machiningString(map, "locked", locked);
+		map.put("locked", "t".equals(locked));
 		return userAccountService.getPage(map);
 	}
 	
@@ -79,7 +79,7 @@ public class AdminUserAccountController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		MapFactory.machiningInt(map, "id", id);
 		MapFactory.machiningString(map, "username", username);
-		MapFactory.machiningString(map, "locked", locked);
+		map.put("locked", "t".equals(locked));
 		return userAccountService.getNumber(map);
 	}
 }

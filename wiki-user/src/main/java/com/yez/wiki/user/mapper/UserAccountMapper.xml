@@ -3,13 +3,13 @@
 <mapper	namespace="com.yez.wiki.user.dao.UserAccountMapper">
 	<!-- 修改用户帐号锁定状态 -->
 	<update id="updateLocked" parameterType="java.util.HashMap">
-		UPDATE t_user SET locked = #{locked, jdbcType=CHAR} 
+		UPDATE t_user SET locked = #{locked, jdbcType=TINYINT} 
 		WHERE user_id = #{id, jdbcType=INTEGER}
 	</update>
 	
 	<!-- 根据搜索条件获取一页用户帐号信息数据 -->
 	<select id="getPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT user_id AS id,username,locked,log_time AS logTime,reg_date AS regDate
+		SELECT user_id AS id,username,locked,last_login_time AS logTime,regist_date AS regDate
 		FROM t_user WHERE 1=1
 		<if test="id != '' and id != null">
 			AND user_id = #{id, jdbcType=INTEGER}
@@ -18,7 +18,7 @@
 			AND username LIKE CONCAT('%',#{username, jdbcType=VARCHAR},'%')
 		</if>
 		<if test="locked != '' and locked != null">
-			AND locked = #{locked, jdbcType=CHAR}
+			AND locked = #{locked, jdbcType=TINYINT}
 		</if>
 		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
 	</select>
@@ -34,7 +34,7 @@
 			AND username LIKE CONCAT('%',#{username, jdbcType=VARCHAR},'%')
 		</if>
 		<if test="locked != '' and locked != null">
-			AND locked = #{locked, jdbcType=CHAR}
+			AND locked = #{locked, jdbcType=TINYINT}
 		</if>
 	</select>
 </mapper>

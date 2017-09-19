@@ -12,6 +12,7 @@
 	<script src="../resources/js/jquery-3.2.1.min.js"></script>
 	<script src="../resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script src="../resources/js/wiki/wiki.js"></script>
+	<script src="../resources/js/wiki/wikiInit.js"></script>
 	<script src="../resources/js/wiki/wikiScroll.js"></script>
 	<script src="../resources/js/validate.js"></script>
 </head>

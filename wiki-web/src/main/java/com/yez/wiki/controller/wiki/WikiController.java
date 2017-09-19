@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.wiki.Chapter;
 import com.yez.wiki.entity.wiki.Label;
-import com.yez.wiki.entity.wiki.Wiki;
+import com.yez.wiki.entity.wiki.StandardWiki;
 import com.yez.wiki.main.service.IWikiService;
 import com.yez.wiki.main.service.IWikiUpdateService;
 
@@ -42,13 +42,13 @@ public class WikiController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getWikiById", method = RequestMethod.POST)
-	public Wiki getWikiById(int id) {
+	public StandardWiki getWikiById(int id) {
 		return wikiService.getWikiById(id);
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/cardUpdate", method = RequestMethod.POST)
-	public ResponseMessage cardUpdate(@RequestBody Wiki wiki) {
+	public ResponseMessage cardUpdate(@RequestBody StandardWiki wiki) {
 		return wikiUpdateService.cardUpdate(wiki);
 	}
 	

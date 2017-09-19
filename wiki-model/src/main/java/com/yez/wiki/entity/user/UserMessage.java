@@ -8,14 +8,12 @@ public class UserMessage {
 	private int id;//用户id
 	private String nickname;//昵称
 	private int age;//年龄, -1为未设定
-	private char sex;//性别 'm'男，'w'女，'x'未设定
+	private int sex;//性别 1男，2女，0未设定
 	
 	public UserMessage() {}
-	public UserMessage(int id, String nickname, int age, char sex) {
+	public UserMessage(int id, String nickname) {
 		this.id = id;
 		this.nickname = nickname;
-		this.age = age;
-		this.sex = sex;
 	}
 	
 	public int getId() {
@@ -36,10 +34,10 @@ public class UserMessage {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public char getSex() {
+	public int getSex() {
 		return sex;
 	}
-	public void setSex(char sex) {
+	public void setSex(int sex) {
 		this.sex = sex;
 	}
 	@Override

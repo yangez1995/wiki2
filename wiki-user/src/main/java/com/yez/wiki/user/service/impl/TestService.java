@@ -13,7 +13,6 @@ import com.yez.wiki.entity.user.UserAccount;
 import com.yez.wiki.entity.user.UserMessage;
 import com.yez.wiki.factory.UserMessageFactory;
 import com.yez.wiki.user.dao.ActiveUserDao;
-import com.yez.wiki.user.dao.UserLoginDao;
 import com.yez.wiki.user.dao.UserRegistDao;
 import com.yez.wiki.util.TimeUtil;
 
@@ -21,40 +20,24 @@ import com.yez.wiki.util.TimeUtil;
 public class TestService{
 	@Autowired
 	private UserRegistDao userRegistDao;
-	@Autowired
-	private UserLoginDao userLoginDao;
+	/*@Autowired
+	private UserLoginMapper userLoginDao;*/
 	@Autowired
 	private ActiveUserDao activeUserDao;
 	
 	public int addTestData(UserAccount user) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4);//加密级别4
 		user.setPassword(encoder.encode(user.getPassword()));//密码加密
-		user.setLocked('f');//设置帐号未被锁定
-		user.setRegDate(TimeUtil.getNowDate());//获取当前日期
+		user.setRegistDate(new Date());//获取当前日期
 		userRegistDao.userRegist(user);
-		int age = -1;
-		int k = (int) (Math.random()*6);
-		if(k == 0) {
-			age = (int) (Math.random()*50) + 5;
-		}
-		if(k >= 1 && k <=3) {
-			age = (int) (Math.random()*20) + 7;
-		}
-		char sex = 'x';
-		int kk = (int) (Math.random()*3);
-		if(kk == 1) {
-			sex = 'm';
-		}
-		if(kk == 2) {
-			sex = 'w';
-		}
-		UserMessage userMessage = UserMessageFactory.product(user.getId(), "萌新", age, sex);//建立用户默认个人信息
+		
+		UserMessage userMessage = UserMessageFactory.product(user.getId(), "萌新");//建立用户默认个人信息
 		userRegistDao.createMessage(userMessage);//将用户个人信息存入数据库
 		return user.getId();
 	}
 	
 	public void setTestLogTime(int id, String logTime) {
-		userLoginDao.updateLogTime(id, logTime);
+		//userLoginDao.updateLogTime(id, logTime);
 	}
 	
 	public void setTestActiveUser() throws ParseException {

@@ -63,9 +63,9 @@ function resetList() {
 			} else {
 				table += '<td>' + userMessage.age + '</td>';
 			}
-			if(userMessage.sex == 'x') {
+			if(userMessage.sex == '0') {
 				table += '<td>保密</td>';
-			} else if(userMessage.sex == 'm') {
+			} else if(userMessage.sex == '1') {
 				table += '<td>男</td>';
 			} else {
 				table += '<td>女</td>';

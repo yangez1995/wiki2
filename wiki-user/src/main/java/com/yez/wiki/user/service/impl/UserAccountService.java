@@ -26,7 +26,7 @@ public class UserAccountService implements IUserAccountService {
 
 	/*-- UPDATE --*/
 	/**
-	 * 锁定用户帐号，成功则返回响应码<b>200</b>
+	 * 锁定用户帐号，成功则返回响应码{@code 200}
 	 * @param id 要锁定的用户id
 	 * @return 响应信息
 	 */
@@ -34,13 +34,13 @@ public class UserAccountService implements IUserAccountService {
 	public ResponseMessage lock(int id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
-		map.put("locked", "t");//t 表示用户锁定
+		map.put("locked", true);
 		userAccountMapper.updateLocked(map);
 		return ResponseMessage.success();
 	}
 
 	/**
-	 * 解锁用户帐号，成功则返回响应码<b>200</b>
+	 * 解锁用户帐号，成功则返回响应码{@code 200}
 	 * @param id 要锁定的用户id
 	 * @return 响应信息
 	 */
@@ -48,14 +48,14 @@ public class UserAccountService implements IUserAccountService {
 	public ResponseMessage unlock(int id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
-		map.put("locked", "f");//f 表示用户未锁定
+		map.put("locked", false);
 		userAccountMapper.updateLocked(map);
 		return ResponseMessage.success();
 	}
 	
 	/*-- SELECT --*/
 	/**
-	 * 获取一页用户帐号信息，成功则返回响应码<b>200</b>、用户帐号信息集合
+	 * 获取一页用户帐号信息，成功则返回响应码{@code 200}、用户帐号信息集合
 	 * @param map 参数集合，包含：
 	 *     int startindex 起始条数
 	 *     int pageSize 每页最多显示多少条信息
@@ -70,7 +70,7 @@ public class UserAccountService implements IUserAccountService {
 	}
 
 	/**
-	 * 获取用户帐号数量，成功则返回响应码<b>200</b>、用户帐号数量
+	 * 获取用户帐号数量，成功则返回响应码{@code 200}、用户帐号数量
 	 * @param map 参数集合，包含：
 	 *     int id 按id精确搜索，可以为空
 	 *     String username 按username模糊搜索，可以为空

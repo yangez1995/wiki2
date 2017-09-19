@@ -21,5 +21,4 @@ public class TimeService implements ITimeService {
 		map.put("time", new Date());
 		timeMapper.insertMap(map);
 	}
-	
 }

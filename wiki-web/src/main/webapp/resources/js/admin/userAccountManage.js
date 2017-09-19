@@ -53,8 +53,8 @@ function resetList() {
 					 '<td>' + user.id + '</td>' +
 					 '<td>' + user.username + '</td>' +
 					 '<td>' + user.regDate + '</td>' +
-					 '<td>' + user.logTime + '</td>';
-			if(user.locked == 'f') {
+					 '<td>' + timeStampToDateTime(user.logTime) + '</td>';
+			if(user.locked == 0) {
 				table += '<td>可用</td>' +
 						 '<td><button class="btn-xs btn-danger" onclick="lockUser(' + user.id + ')">锁定</button></td>' +
 						 '</tr>';

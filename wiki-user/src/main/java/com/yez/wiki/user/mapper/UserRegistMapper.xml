@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yez.wiki.user.dao.UserRegistDao">
 	<insert id="userRegist" parameterType="com.yez.wiki.entity.user.UserAccount">
-		INSERT INTO t_user (username,password,locked,reg_date) 
+		INSERT INTO t_user (username, password, locked, regist_date) 
 		VALUES (#{username, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR},
-		#{locked, jdbcType=CHAR}, #{regDate, jdbcType=CHAR})
+		0 , #{registDate, jdbcType=DATE})
 		<selectKey resultType="int" keyProperty="id">
     		SELECT LAST_INSERT_ID()
     	</selectKey>
@@ -12,11 +12,10 @@
 	
 	<insert id="createMessage" parameterType="com.yez.wiki.entity.user.UserMessage">
 		INSERT INTO t_user_message (user_id,nickname,age,sex)
-		VALUES (#{id, jdbcType=INTEGER}, #{nickname, jdbcType=VARCHAR},
-		#{age, jdbcType=INTEGER}, #{sex, jdbcType=CHAR})
+		VALUES (#{id, jdbcType=INTEGER}, #{nickname, jdbcType=VARCHAR}, -1, 0)
 	</insert>
 	
-	<select id="checkUsernameExist" parameterType="String" resultType="int">
+	<select id="checkUsernameExist" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM t_user WHERE username = #{username, jdbcType=VARCHAR}
 	</select>
 </mapper>

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.security.UserDetailsImpl;
 import com.yez.wiki.factory.UserDetailsFactory;
-import com.yez.wiki.user.dao.UserLoginDao;
+import com.yez.wiki.user.dao.UserLoginMapper;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
-	private UserLoginDao userLoginDao;
+	private UserLoginMapper userLoginDao;
 	
 	/**
 	 * 通过用户名查找用户id、密码、权限集合
@@ -24,13 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserDetailsImpl user = UserDetailsFactory.product();
 		user = userLoginDao.selectByUsername(username);
-		if(user.getUsername().equals(username)) {
-			/*List<GrantedAuthorityImpl> list = new ArrayList<GrantedAuthorityImpl>();
-			list = userLoginDao.getUserAuthorities(user.getId());
-			for(GrantedAuthorityImpl g:list) {
-				System.out.println(g.getAuthority());
-			}*/
-			user.setAuthorities(userLoginDao.getUserAuthorities(user.getId()));
+		if(user != null) {
 			return user;
 		}
 		throw new UsernameNotFoundException("用户名不存在！");
