@@ -1,8 +1,6 @@
 var params = {};
 var wikiId = 1;
 var maxH = 0;
-var nowEditLabel = null;
-var nowEditCatal = null;
 var listens = [];
 var subCatalList = [];
 $(document).ready(function() {
@@ -27,6 +25,8 @@ $(document).ready(function() {
 		}
 	});
 	
+	installLabel($('#left-part'));
+	installCatal($('#left-part'));
 	resetPage();
 	
 	$('#title-edit').click(function() {
@@ -44,89 +44,6 @@ $(document).ready(function() {
 			backdrop: 'static'
 		});
 	});
-	
-	$('#label-edit').click(function() {
-		$('#label-edit-model').modal({
-			backdrop: 'static'
-		});
-	});
-	
-	$('#add-label-button').click(function() {
-		var nameKey = 0;
-		if(isEmpty($('#add-label-name').val())) {
-			alert("请输入标签名");
-			return false;
-		}
-		if($('#add-label-name').val().length > 6) {
-			alert("标签名不能超过6位");
-			return false;
-		}
-		$('#edit-label-list tr').each(function(i, tr) {
-			if($('#add-label-name').val() == $(tr).find('td:eq(1)').text()) {
-				alert("已存在同名标签");
-				nameKey = 1;
-				return false;
-			}
-		});
-		if(nameKey){
-			return false;
-		}
-		if(isEmpty($('#add-label-content').val())) {
-			alert("请输入标签内容");
-			return false;
-		}
-		if($('#add-label-content').val().length > 6) {
-			alert("标签内容不能超过20位");
-			return false;
-		}
-		$('#edit-label-list').append('<tr id="' + 0 + '">' + 
-			'<td>' + ($('#edit-label-list tr').length + 1) + '</td>' +	
-			'<td>' + $('#add-label-name').val() + '</td>' +	
-			'<td>' + $('#add-label-content').val() + '</td>' +	
-			'<td><button class="btn btn-primary btn-xs" onclick="ascending(this)">升序</button>' +  
-			'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onclick="descending(this)">降序</button>' + 
-			'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onClick="editLabel(this)">编辑</button>' + 
-			'<button class="btn btn-danger btn-xs" style="margin-left: 5px;" onClick="removeLabel(this)">删除</button></td>' +
-			'</tr>'
-		);
-		$('#add-label-name').val('');
-		$('#add-label-content').val('');
-	});
-	
-	$('#add-catal-button').click(function() {
-		var nameKey = 0;
-		if(isEmpty($('#add-chapter').val())) {
-			alert("请输入章节标题");
-			return false;
-		}
-		if($('#add-chapter').val().length > 30) {
-			alert("章节标题不能超过30位");
-			return false;
-		}
-		$('#edit-catal-list tr').each(function(i, tr) {
-			if($('#add-chapter').val() == $(tr).find('td:eq(1)').text()) {
-				alert("已存在同名章节");
-				nameKey = 1;
-				return false;
-			}
-		});
-		$('#edit-catal-list').append('<tr id="' + 0 + '">' + 
-			'<td>' + ($('#edit-catal-list tr').length + 1) + '</td>' +	
-			'<td>' + $('#add-chapter').val() + '</td>' +	
-			'<td><button class="btn btn-primary btn-xs" onclick="ascending(this)">升序</button>' +  
-			'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onclick="descending(this)">降序</button>' + 
-			'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onClick="editLabel(this)">编辑</button>' + 
-			'<button class="btn btn-danger btn-xs" style="margin-left: 5px;" onClick="removeLabel(this)">删除</button></td>' +
-			'</tr>'
-		);
-		$('#add-chapter').val('');
-	});
-	
-	$('#catal-edit').click(function() {
-		$('#catal-edit-model').modal({
-			backdrop: 'static'
-		});
-	});
 });
 
 function resetPage() {
@@ -135,10 +52,6 @@ function resetPage() {
 		$('#wiki-level').text('词条等级: ' + data.level);
 		$('#wiki-version').html('词条版本: ' + data.version + ' <a id="check-history" style="cursor: pointer;">[版本改动]</a>');
 		$('#wiki-create-date').text(data.createDate);
-		var lr = 0;
-		$('#lab-list-left').html('');
-		$('#lab-list-right').html('');
-		$('#edit-label-list').html('');
 		$('#edit-catal-list').html('');
 		$('#chapter-container').html('');
 		$('#sub-catal').html('');
@@ -187,155 +100,6 @@ function resetPage() {
 	});
 }
 
-function initCatal(chapters, catalSize) {
-	if(catalSize <= 10) {
-		$(chapters).each(function(i, chapter) {
-			appendChapterCatal('#catal1', chapter);
-			$(chapter.childs).each(function(j, child) {
-				appendChildCatal('#catal1', chapter.serNum, child);
-			})
-		});
-	} else if(catalSize > 10 && catalSize <= 16) {
-		var catalS = 0;
-		$(chapters).each(function(i, chapter) {
-			if(catalS <= 8) {
-				appendChapterCatal('#catal1', chapter);
-				catalS += 1.5;
-			} else {
-				appendChapterCatal('#catal2', chapter);
-			}
-			$(chapter.childs).each(function(j, child) {
-				if(catalS <= 8) {
-					appendChildCatal('#catal1', chapter.serNum, child);
-					catalS += 1;
-				} else {
-					appendChildCatal('#catal2', chapter.serNum, child);
-				}
-			})
-		});
-	} else {
-		var everySize = 8;
-		if(catalSize > 24) {
-			everySize = catalSize / 3;
-		}
-		var catalS = 0;
-		var catalS2 = 0;
-		$(chapters).each(function(i, chapter) {
-			if(catalS <= everySize) {
-				appendChapterCatal('#catal1', chapter);
-				catalS += 1.5;
-			} else {
-				if(catalS2 <= everySize) {
-					appendChapterCatal('#catal2', chapter);
-					catalS2 += 1.5;
-				} else {
-					appendChapterCatal('#catal3', chapter);
-				}
-			}
-			$(chapter.childs).each(function(j, child) {
-				if(catalS <= everySize) {
-					appendChildCatal('#catal1', chapter.serNum, child);
-					catalS += 1;
-				} else {
-					if(catalS2 <= everySize) {
-						appendChildCatal('#catal2', chapter.serNum, child);
-						catalS2 += 1;
-					} else {
-						appendChildCatal('#catal3', chapter.serNum, child);
-					}
-				}
-			})
-		});
-	}
-}
-
-function appendChapterCatal(id, chapter) {
-	$(id).append('<dt>' +
-		'<span>' + chapter.serNum + '</span>' +
-		'<a href="#main-title' + chapter.serNum + '">&nbsp;' + chapter.title + '</a>' +
-		'</dt>'
-	);
-}
-function appendChildCatal(id, pSerId, child) {
-	$(id).append('<dd>' +
-		'<span>·</span>' +
-		'<a href="#sub-title' + pSerId + '-' + child.serNum + '">' + child.title + '</a>' +
-		'</dd>'
-	);
-}
-
-function editLabel(e) {
-	var tr = $(e).parent().parent();
-	nowEditLabel = tr;
-	$('#edit-label-name').val($(tr).find('td:eq(1)').text());
-	$('#edit-label-content').val($(tr).find('td:eq(2)').text());
-	$('#a-label-edit-model').modal({
-		backdrop: 'static'
-	});
-}
-
-function onEditLabel() {
-	var nameKey = 0;
-	var list = $(nowEditLabel).parent();
-	if($('#edit-label-name').val() != nowEditLabel.find('td:eq(1)').text()) {
-		$(list).find('tr').each(function(i, tr) {
-			if($('#edit-label-name').val() == $(tr).find('td:eq(1)').text()) {
-				alert("已存在同名标签");
-				nameKey = 1;
-				return false;
-			}
-		});
-	}
-	if(nameKey) {
-		return false;
-	}
-	$(nowEditLabel).find('td:eq(1)').text($('#edit-label-name').val());
-	$(nowEditLabel).find('td:eq(2)').text($('#edit-label-content').val());
-	$('#a-label-edit-model').modal('hide');
-}
-
-function removeLabel(e) {
-	$(e).parent().parent().remove();
-	$('#edit-label-list tr').each(function(i, tr) {
-		$(tr).find('td:eq(0)').text(i + 1);
-	});
-}
-
-function editCatal(e) {
-	var tr = $(e).parent().parent();
-	nowEditCatal = tr;
-	$('#edit-catal-title').val($(tr).find('td:eq(1)').text());
-	$('#a-catal-edit-model').modal({
-		backdrop: 'static'
-	});
-}
-
-function onEditCatal() {
-	var nameKey = 0;
-	var list = $(nowEditCatal).parent();
-	if($('#edit-catal-title').val() != nowEditCatal.find('td:eq(1)').text()) {
-		$(list).find('tr').each(function(i, tr) {
-			if($('#edit-catal-title').val() == $(tr).find('td:eq(1)').text()) {
-				alert("已存在同名目录");
-				nameKey = 1;
-				return false;
-			}
-		});
-	}
-	if(nameKey) {
-		return false;
-	}
-	$(nowEditCatal).find('td:eq(1)').text($('#edit-catal-title').val());
-	$('#a-catal-edit-model').modal('hide');
-}
-
-function removeCatal(e) {
-	$(e).parent().parent().remove();
-	$('#edit-catal-list tr').each(function(i, tr) {
-		$(tr).find('td:eq(0)').text(i + 1);
-	});
-}
-
 function editChapter(e) {
 	var chapter = {};
 	var childs = [];
@@ -355,6 +119,28 @@ function editChapter(e) {
 	chapter.childs = childs;
 	window.localStorage.setItem('chapter', JSON.stringify(chapter));
     window.location.href = 'editer';
+}
+
+function titleUpdate() {
+	params.id = wikiId;
+	params.subTitle = $('#sub-title-edit').val();
+	var des = $('#main-des-edit').val();
+	arr = des.split('\n');
+	var describe = '';
+	$(arr).each(function(i, a) {
+		describe += '<p>' + a + '</p>';
+	});
+	params.describe = describe;
+	$.ajax({
+		type : 'POST',
+		url : 'cardUpdate',
+		contentType:"application/json",
+		data : JSON.stringify(params),
+		success : function(result) {
+			$('#title-edit-model').modal('hide');
+			resetPage();
+		}
+	});
 }
 
 function ascending(e) {
@@ -383,69 +169,19 @@ function descending(e) {
 	$(tr).next().after(tr);
 }
 
-function titleUpdate() {
-	params.id = wikiId;
-	params.subTitle = $('#sub-title-edit').val();
-	var des = $('#main-des-edit').val();
-	arr = des.split('\n');
-	var describe = '';
-	$(arr).each(function(i, a) {
-		describe += '<p>' + a + '</p>';
-	});
-	params.describe = describe;
-	$.ajax({
-		type : 'POST',
-		url : 'cardUpdate',
-		contentType:"application/json",
-		data : JSON.stringify(params),
-		success : function(result) {
-			$('#title-edit-model').modal('hide');
-			resetPage();
-		}
-	});
-}
-
-function labelUpdate() {
-	var list = [];
-	$('#edit-label-list tr').each(function(i, tr) {
-		var label = {}
-		label.id = $(tr).attr('id');
-		label.wikiId = wikiId;
-		label.serNum = $(tr).find('td:eq(0)').text();
-		label.name = $(tr).find('td:eq(1)').text();
-		label.content = $(tr).find('td:eq(2)').text();
-		list.push(label);
-	});
-	$.ajax({
-		type : 'POST',
-		url : 'labelUpdate',
-		contentType:"application/json",
-		data : JSON.stringify(list),
-		success : function(result) {
-			$('#label-edit-model').modal('hide');
-			resetPage();
-		}
-	});
-}
-
-function catalUpdate() {
-	var list = [];
-	$('#edit-catal-list tr').each(function(i, tr) {
-		var chapter = {}
-		chapter.id = $(tr).attr('id');
-		chapter.wikiId = wikiId;
-		chapter.serNum = $(tr).find('td:eq(0)').text();
-		chapter.title = $(tr).find('td:eq(1)').text();
-		list.push(chapter);
-	});
-	$.ajax({
-		type : 'POST',
-		url : 'catalUpdate',
-		contentType:"application/json",
-		data : JSON.stringify(list),
-		success : function(result) {
-			$('#catal-edit-model').modal('hide');
-			resetPage();
-		}
-	});
+function modalCreater(id, title, body, footer) {
+	var modal = '' +
+		'<div class="modal fade" id="' + id + '" tabindex="-1" role="dialog" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+						'<h4 class="modal-title">' + title + '</h4>' +
+					'</div>' +
+					'<div class="modal-body">' + body + '</div>' +
+					'<div class="modal-footer">' + footer + '</div>' +
+				'</div>' +
+			'</div>'+
+		'</div>';
+	return modal;
 }

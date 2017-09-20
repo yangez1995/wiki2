@@ -20,13 +20,14 @@ ALTER TABLE t_card_history ADD CONSTRAINT del_card_history FOREIGN KEY (wiki_id)
 
 CREATE TABLE t_label_history(
   id INT PRIMARY KEY AUTO_INCREMENT,
-  wiki_id INT,
-  label_id INT,
-  history_id INT,
-  version INT,
-  ser_num TINYINT,
-  name VARCHAR(6),
-  content VARCHAR(20)
+  wiki_id INT NOT NULL,
+  label_id INT NOT NULL,
+  history_id INT NOT NULL,
+  version INT NOT NULL,
+  ser_num TINYINT NOT NULL,
+  change_type TINYINT NOT NULL,
+  name VARCHAR(6) NOT NULL,
+  content VARCHAR(20) NOT NULL
 );
 ALTER TABLE t_label_history ADD CONSTRAINT del_label_history FOREIGN KEY (wiki_id) REFERENCES t_wiki(id) ON DELETE CASCADE;
 

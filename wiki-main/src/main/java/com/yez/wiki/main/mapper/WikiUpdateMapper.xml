@@ -66,7 +66,7 @@
 		INSERT INTO t_label (wiki_id, ser_num, name, content)
 		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
 		#{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
-		<selectKey keyProperty="labelId" resultType="java.lang.Integer">  
+		<selectKey keyProperty="id" resultType="java.lang.Integer">  
             SELECT LAST_INSERT_ID()
         </selectKey>
 	</insert>
@@ -84,9 +84,9 @@
 	</select>
 	<insert id="insertLabelHistory" parameterType="java.util.HashMap">
 		INSERT INTO t_label_history
-		(wiki_id, label_id, version, ser_num, name, content, history_id)
+		(wiki_id, label_id, version, ser_num, name, content, change_type, history_id)
 		VALUES(#{wikiId, jdbcType=INTEGER}, #{labelId, jdbcType=INTEGER}, #{version, jdbcType=INTEGER},
-		#{serNum, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+		#{serNum, jdbcType=TINYINT}, #{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
 	</insert>
 	<!-- 修改标签部分结束 -->
 	

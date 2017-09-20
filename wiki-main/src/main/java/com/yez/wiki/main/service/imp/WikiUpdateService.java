@@ -90,7 +90,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				}
 				history.putAll(LabelFactory.decomposeHistory(label));
 				history.put("labelId", label.getId());
-				history.put("changeType", "insert");
+				history.put("changeType", 1);
 				history.put("version", 1);
 				wikiUpdateMapper.insertLabelHistory(history);
 			} else {
@@ -104,7 +104,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 								isChange = true;
 							}
 							history.putAll(LabelFactory.decomposeHistory(label));
-							history.put("changeType", "update");
+							history.put("changeType", 3);
 							history.put("version", wikiUpdateMapper.selectLabelVersion(label.getId()) + 1);
 							wikiUpdateMapper.insertLabelHistory(history);
 						}
@@ -126,7 +126,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 			for(Label label : nowLabels) {
 				deleteList.add(label.getId());
 				history.putAll(LabelFactory.decomposeHistory(label));
-				history.put("changeType", "remove");
+				history.put("changeType", 2);
 				history.put("version", wikiUpdateMapper.selectLabelVersion(label.getId()) + 1);
 				wikiUpdateMapper.insertLabelHistory(history);
 			}

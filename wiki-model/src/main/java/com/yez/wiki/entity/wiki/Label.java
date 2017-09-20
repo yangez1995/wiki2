@@ -17,7 +17,9 @@ public class Label {
 	}
 	
 	public boolean same(Label label) {
-		if(this.serNum == label.getSerNum() && this.name.equals(label.getName()) && this.content.equals(label.getContent())) {
+		if(this.serNum == label.getSerNum() 
+				&& this.name.equals(label.getName()) 
+				&& this.content.equals(label.getContent())) {
 			return true;
 		}
 		return false;
