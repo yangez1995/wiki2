@@ -10,7 +10,7 @@
 		<result column="level" property="level" jdbcType="CHAR"/>
 		<result column="version" property="version" jdbcType="INTEGER"/>
 		<result column="create_by" property="createBy" jdbcType="INTEGER"/>
-		<result column="create_date" property="createDate" jdbcType="CHAR"/>
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
 		<collection column="id" property="labels" javaType="ArrayList" 
 			ofType="com.yez.wiki.entity.wiki.Label" select="getLabel"/>
 		<collection column="id" property="gene" javaType="ArrayList" 

@@ -9,6 +9,7 @@
 <link href="../resources/css/wiki/history.css" rel="stylesheet">
 <script src="../resources/js/jquery-3.2.1.min.js"></script>
 <script src="../resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="../resources/js/util/timeUtil.js"></script>
 <script src="../resources/js/wiki/history.js"></script>
 <title>history</title>
 </head>

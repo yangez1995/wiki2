@@ -2,9 +2,7 @@ var params = {};
 var wikiId = 1;
 var maxH = 0;
 var listens = [];
-var subCatalList = [];
 $(document).ready(function() {
-	$('#sub-catal-cont').width($('#img-collection').width());
 	
 	//窗口大小改变事件
 	var w = $('#img-collection').width();
@@ -24,122 +22,28 @@ $(document).ready(function() {
 			$('#catal-bar').css('margin-left','100px');
 		}
 	});
+	//左侧组件
+	installCard($('#left-part'));//添加名片组件
+	installLabel($('#left-part'));//添加标签组件
+	installCatal($('#left-part'));//添加目录组件
+	installChapter($('#left-part'));//添加章节组件
+	//右侧组件
+	installStatistics($('#right-part'));//添加词条统计组件
+	installSubCatal($('#right-part'));//添加滑动目录组件
 	
-	installLabel($('#left-part'));
-	installCatal($('#left-part'));
 	resetPage();
-	
-	$('#title-edit').click(function() {
-		$('#main-title-edit').val($('#main-title').text());
-		$('#sub-title-edit').val($('#sub-title').text());
-		var describe = '';
-		$('#main-des p').each(function(i, p) {
-			if(i > 0) {
-				describe += '\n';
-			}
-			describe += $(p).text();
-		});
-		$('#main-des-edit').val(describe);
-		$('#title-edit-model').modal({
-			backdrop: 'static'
-		});
-	});
 });
 
 function resetPage() {
 	$.post('getWikiById', { "id" : 1 }, function(data) {
 		initCard(data.title, data.subTitle, data.describe)
-		$('#wiki-level').text('词条等级: ' + data.level);
-		$('#wiki-version').html('词条版本: ' + data.version + ' <a id="check-history" style="cursor: pointer;">[版本改动]</a>');
-		$('#wiki-create-date').text(data.createDate);
-		$('#edit-catal-list').html('');
-		$('#chapter-container').html('');
-		$('#sub-catal').html('');
-		$('#catal1').html('');
-		$('#catal2').html('');
-		$('#catal3').html('');
 		initLabel(data.labels);
-		var catalSize = 0;
-		$(data.chapters).each(function(i, chapter) {
-			$('#edit-catal-list').append('<tr id="' + chapter.id + '">' + 
-				'<td>' + (i + 1) + '</td>' +
-				'<td>' + chapter.title + '</td>' +
-				'<td><button class="btn btn-primary btn-xs" onclick="ascending(this)">升序</button>' +  
-				'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onclick="descending(this)">降序</button>' + 
-				'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onClick="editCatal(this)">编辑</button>' + 
-				'<button class="btn btn-danger btn-xs" style="margin-left: 5px;" onClick="removeCatal(this)">删除</button></td>' +
-				'</tr>'
-			);
-			var pId = 'chapter'  + chapter.serNum;
-			$('#chapter-container').append('' + 
-				'<div class="chapters" id="' + pId + '" style="margin-bottom: 30px;"><div class="a-chapter" id="' + chapter.id +'">' +
-				'<button class="btn edit-icon chapter-edit" style="float: right;" onclick="editChapter(this)"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;编辑</button>' +
-				'<h3 class="onlisten" id="main-title' + chapter.serNum + '">' + chapter.title + '</h3><hr/>' +
-				'<div class="chapter-content">' + chapter.content + '</div></div></div>'
-			);
-			$('#sub-catal').append('<dt onclick="unlockScroll()"><em class="pointer"></em>' + 
-				'<a href="#main-title' + chapter.serNum + '"><span>' + chapter.serNum + '</span>' + chapter.title + '</a></dt>');
-			catalSize += 1.5;
-			pId = '#' + pId;
-			$(chapter.childs).each(function(i, child) {
-				$(pId).append('<div class="a-child" id="' + child.id + '"><h4 class="onlisten" id="sub-title' + chapter.serNum + '-' + child.serNum +'">' + child.title + '</h4>' +
-					'<div class="child-content">' + child.content + '</div></div>');
-				$('#sub-catal').append('<dd onclick="unlockScroll()"><a href="#sub-title' + chapter.serNum + '-' + child.serNum + '"><span>' + chapter.serNum + '.' + child.serNum + '</span>' + child.title + '</a></dd>');
-				catalSize += 1;
-			});
-		});
-		initCatal(data.chapters, catalSize);
+		initCatal(data.chapters);
+		initChapter(data.chapters);
+		initSubCatal(data.chapters);
+		initStatistics(data);
 		maxH = $('#main-div').height() + $('#main-div').offset().top;
 		listens = $('.onlisten');
-		subCatalList = $('#sub-catal a');
-		
-		$('#check-history').click(function() {
-			window.localStorage.setItem('wikiId', wikiId);
-		    window.location.href = 'history';
-		});
-	});
-}
-
-function editChapter(e) {
-	var chapter = {};
-	var childs = [];
-	chapter.id = $(e).parent().attr('id');
-	chapter.wikiId = wikiId;
-	chapter.title = $(e).parent().find('h3').text();
-	chapter.content = $(e).parent().find('div').html();
-	var chapters = $(e).parent().parent();
-	$(chapters).find('.a-child').each(function(i, c) {
-		var child = {};
-		child.id = $(c).attr('id');
-		child.parentId = chapter.id;
-		child.title = $(c).find('h4').text();
-		child.content = $(c).find('div').html();
-		childs.push(child);
-	});
-	chapter.childs = childs;
-	window.localStorage.setItem('chapter', JSON.stringify(chapter));
-    window.location.href = 'editer';
-}
-
-function titleUpdate() {
-	params.id = wikiId;
-	params.subTitle = $('#sub-title-edit').val();
-	var des = $('#main-des-edit').val();
-	arr = des.split('\n');
-	var describe = '';
-	$(arr).each(function(i, a) {
-		describe += '<p>' + a + '</p>';
-	});
-	params.describe = describe;
-	$.ajax({
-		type : 'POST',
-		url : 'cardUpdate',
-		contentType:"application/json",
-		data : JSON.stringify(params),
-		success : function(result) {
-			$('#title-edit-model').modal('hide');
-			resetPage();
-		}
 	});
 }
 

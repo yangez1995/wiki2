@@ -36,7 +36,7 @@
 	</select>
 	<insert id="insertCardHistory" parameterType="java.util.HashMap">
 		INSERT INTO t_card_history (wiki_id, sub_title, des, version, history_id)
-		VALUES (#{wikiId, jdbcType=INTEGER}, #{subTitle, jdbcType=VARCHAR}, 
+		VALUES (#{id, jdbcType=INTEGER}, #{subTitle, jdbcType=VARCHAR}, 
 		#{describe, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER}, #{historyId, jdbcType=INTEGER})
 	</insert>
 	<!-- 修改wiki名片部分结束 -->
@@ -45,7 +45,7 @@
 	<resultMap type="com.yez.wiki.entity.wiki.Label" id="LabelMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
-		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="TINYINT"/>
 		<result column="name" property="name" jdbcType="VARCHAR"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 	</resultMap>
@@ -56,7 +56,7 @@
 	
 	<update id="updateLabel" parameterType="com.yez.wiki.entity.wiki.Label">
 		UPDATE t_label SET
-		ser_num = #{serNum, jdbcType=INTEGER},
+		ser_num = #{serNum, jdbcType=TINYINT},
 		name = #{name, jdbcType=VARCHAR},
 		content = #{content, jdbcType=VARCHAR}
 		WHERE id = #{id, jdbcType=INTEGER}
@@ -64,7 +64,7 @@
 	
 	<insert id="insertLabel" parameterType="com.yez.wiki.entity.wiki.Label">
 		INSERT INTO t_label (wiki_id, ser_num, name, content)
-		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=TINYINT},
 		#{name, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
 		<selectKey keyProperty="id" resultType="java.lang.Integer">  
             SELECT LAST_INSERT_ID()
@@ -94,7 +94,7 @@
 	<resultMap type="com.yez.wiki.entity.wiki.Chapter" id="CatalMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
-		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="TINYINT"/>
 		<result column="title" property="title" jdbcType="VARCHAR"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 	</resultMap>
@@ -106,13 +106,13 @@
 	<update id="updateCatal" parameterType="com.yez.wiki.entity.wiki.Chapter">
 		UPDATE t_chapter 
 		SET title = #{title, jdbcType=VARCHAR},
-		ser_num = #{serNum, jdbcType=INTEGER}
+		ser_num = #{serNum, jdbcType=TINYINT}
 		WHERE id = #{id, jdbcType=INTEGER}
 	</update>
 	
 	<insert id="insertCatal" parameterType="com.yez.wiki.entity.wiki.Chapter">
 		INSERT INTO t_chapter (wiki_id, ser_num, title)
-		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=TINYINT},
 		#{title, jdbcType=VARCHAR})
 		<selectKey keyProperty="id" resultType="java.lang.Integer">  
             SELECT LAST_INSERT_ID()  
@@ -133,9 +133,9 @@
 	<insert id="insertChapterHistory" parameterType="java.util.HashMap">
 		INSERT INTO t_chapter_history (wiki_id, chapter_id, ser_num, title, content, 
 		version, change_type, history_id)
-		VALUES (#{wikiId, jdbcType=INTEGER}, #{chapterId, jdbcType=INTEGER},#{serNum, jdbcType=INTEGER},
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{chapterId, jdbcType=INTEGER},#{serNum, jdbcType=TINYINT},
 		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
-		#{changeType, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+		#{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
 	</insert>
 	<!-- 修改目录部分结束 -->
 	
@@ -143,7 +143,7 @@
 	<resultMap type="com.yez.wiki.entity.wiki.Chapter" id="ChapterMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="wiki_id" property="wikiId" jdbcType="INTEGER"/>
-		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="TINYINT"/>
 		<result column="title" property="title" jdbcType="VARCHAR"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 		<collection column="id" property="childs" javaType="ArrayList" 
@@ -153,7 +153,7 @@
 	<resultMap type="com.yez.wiki.entity.wiki.ChildChapter" id="ChildChapterMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="parent_id" property="parentId" jdbcType="INTEGER"/>
-		<result column="ser_num" property="serNum" jdbcType="INTEGER"/>
+		<result column="ser_num" property="serNum" jdbcType="TINYINT"/>
 		<result column="title" property="title" jdbcType="VARCHAR"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 	</resultMap>
@@ -177,13 +177,13 @@
 	<update id="updateChildChapter" parameterType="com.yez.wiki.entity.wiki.ChildChapter">
 		UPDATE t_chapter_child SET title = #{title, jdbcType=VARCHAR},
 		content = #{content, jdbcType=VARCHAR},
-		ser_num = #{serNum, jdbcType=INTEGER}
+		ser_num = #{serNum, jdbcType=TINYINT}
 		WHERE id = #{id, jdbcType=INTEGER}
 	</update>
 	
 	<insert id="insertChildChapter" parameterType="com.yez.wiki.entity.wiki.ChildChapter">
 		INSERT INTO t_chapter_child (parent_id, ser_num, title, content)
-		VALUES (#{parentId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		VALUES (#{parentId, jdbcType=INTEGER}, #{serNum, jdbcType=TINYINT},
 		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
 		<selectKey keyProperty="id" resultType="java.lang.Integer">  
             SELECT LAST_INSERT_ID()  
@@ -201,9 +201,9 @@
 	<insert id="insertChildHistory" parameterType="java.util.HashMap">
 		INSERT INTO t_chapter_child_history (parent_id, child_id, ser_num, 
 		title, content, version, change_type, history_id)
-		VALUES (#{parentId, jdbcType=INTEGER}, #{childId, jdbcType=INTEGER}, #{serNum, jdbcType=INTEGER},
+		VALUES (#{parentId, jdbcType=INTEGER}, #{childId, jdbcType=INTEGER}, #{serNum, jdbcType=TINYINT},
 		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
-		#{changeType, jdbcType=VARCHAR}, #{historyId, jdbcType=INTEGER})
+		#{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
 	</insert>
 	<!-- 修改段落部分结束 -->
 </mapper>

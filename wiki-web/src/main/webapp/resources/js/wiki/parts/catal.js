@@ -51,7 +51,31 @@ function installCatal(div) {
 }
 
 //初始化目录
-function initCatal(chapters, catalSize) {
+function initCatal(chapters) {
+	var catalSize = 0;
+	$('#catal1').html('');
+	$('#catal2').html('');
+	$('#catal3').html('');
+	$('#edit-catal-list').html('');
+	$(chapters).each(function(i, chapter) {
+		$('#edit-catal-list').append(
+			'<tr id="' + chapter.id + '">' + 
+				'<td>' + (i + 1) + '</td>' +
+				'<td>' + chapter.title + '</td>' +
+				'<td>' + 
+					'<button class="btn btn-primary btn-xs" onclick="ascending(this)">升序</button>' +  
+					'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onclick="descending(this)">降序</button>' + 
+					'<button class="btn btn-primary btn-xs" style="margin-left: 5px;" onClick="editCatal(this)">编辑</button>' + 
+					'<button class="btn btn-danger btn-xs" style="margin-left: 5px;" onClick="removeCatal(this)">删除</button>' + 
+				'</td>' +
+			'</tr>'
+		);
+		catalSize += 1.5;
+		$(chapter.childs).each(function() {
+			catalSize += 1;
+		});
+	});
+	
 	if(catalSize <= 10) {
 		$(chapters).each(function(i, chapter) {
 			appendChapterCatal('#catal1', chapter);

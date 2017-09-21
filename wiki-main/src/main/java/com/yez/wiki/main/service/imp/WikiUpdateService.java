@@ -34,12 +34,19 @@ public class WikiUpdateService implements IWikiUpdateService {
 	 */
 	@Override
 	public ResponseMessage cardUpdate(StandardWiki wiki) {
-		//验证空值
+		//验证副标题
 		if(StringUtil.isEmpty(wiki.getSubTitle())) {
 			return ResponseMessage.fail("副标题不能为空！");
 		}
+		if(StringUtil.checkLength(wiki.getSubTitle(), 1, 30)) {
+			return ResponseMessage.fail("副标题不能超过30字！");
+		}
+		//验证简介
 		if(StringUtil.isEmpty(wiki.getDescribe())) {
 			return ResponseMessage.fail("简介不能为空！");
+		}
+		if(StringUtil.checkLength(wiki.getDescribe(), 1, 500)) {
+			return ResponseMessage.fail("简介不能超过500字！");
 		}
 		//获取当前名片信息
 		Map<String, Object> nowCard = wikiUpdateMapper.getWikiCard(wiki.getId());
@@ -159,7 +166,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 					isChange = true;
 				}
 				history.putAll(ChapterFactory.decomposeHistory(chapter));
-				history.put("changeType", "insert");
+				history.put("changeType", "1");
 				history.put("chapterId", chapter.getId());
 				history.put("version", 1);
 				wikiUpdateMapper.insertChapterHistory(history);
@@ -175,7 +182,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 							wikiUpdateMapper.updateCatal(chapter);
 							history.putAll(ChapterFactory.decomposeHistory(chapter));
 							history.put("content", nowCatals.get(i).getContent());
-							history.put("changeType", "update");
+							history.put("changeType", "3");
 							history.put("version", wikiUpdateMapper.selectChapterVersion(chapter.getId()) + 1);
 							wikiUpdateMapper.insertChapterHistory(history);
 						}
@@ -197,7 +204,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 			for(Chapter chapter : nowCatals) {
 				deleteList.add(chapter.getId());
 				history.putAll(ChapterFactory.decomposeHistory(chapter));
-				history.put("changeType", "remove");
+				history.put("changeType", "2");
 				history.put("version", wikiUpdateMapper.selectChapterVersion(chapter.getId()) + 1);
 				wikiUpdateMapper.insertChapterHistory(history);
 			}
@@ -232,7 +239,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				}
 				wikiUpdateMapper.insertChildChapter(child);
 				history.putAll(ChildChapterFactory.decomposeHistory(child));
-				history.put("changeType", "insert");
+				history.put("changeType", 1);
 				wikiUpdateMapper.insertChildHistory(history);
 			} else {
 				for(int i = 0; i < nowChilds.size(); i++) {
@@ -245,7 +252,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 							}
 							wikiUpdateMapper.updateChildChapter(child);
 							history.putAll(ChildChapterFactory.decomposeHistory(child));
-							history.put("changeType", "update");
+							history.put("changeType", 3);
 							wikiUpdateMapper.insertChildHistory(history);
 						}
 						nowChilds.remove(i);
@@ -266,7 +273,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 			for(ChildChapter child : nowChilds) {
 				deleteList.add(child.getId());
 				history.putAll(ChildChapterFactory.decomposeHistory(child));
-				history.put("changeType", "remove");
+				history.put("changeType", 2);
 				wikiUpdateMapper.insertChildHistory(history);
 			}
 			map.put("list", deleteList);
@@ -294,9 +301,9 @@ public class WikiUpdateService implements IWikiUpdateService {
 		int version = wikiUpdateMapper.selectChapterVersion(chapter.getId()) + 1;
 		history.put("version", version);
 		if(!nowChapter.same(chapter)) {
-			history.put("changeType", "update");
+			history.put("changeType", 3);
 		} else {
-			history.put("changeType", "child");
+			history.put("changeType", 4);
 		}
 		wikiUpdateMapper.insertChapterHistory(history);
 		return version;

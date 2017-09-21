@@ -8,11 +8,15 @@ $(document).ready(function() {
 function resetList() {
 	$.post('getHistorys', {'wikiId': wikiId, 'pageIndex': pageIndex}, function(data) {
 		$(data).each(function(i, history) {
-			$('#list').append('<tr><td>' + history.version + '</td>' +
+			$('#list').append(
+				'<tr id="' + history.id + '">' + 
+					'<td>' + history.version + '</td>' +
 					'<td>' + changeTableName(history.changeTable) + '</td>' +
 					'<td>' + history.nickname + '</td>' +
-					'<td>' + history.editTime + '</td>' +
-					'<td><a onclick="check(this)">查看</a></td></tr>');
+					'<td>' + timeStampToDateTime(history.editTime) + '</td>' +
+					'<td><a onclick="check(this)">查看</a></td>' + 
+				'</tr>'
+			);
 		});
 	});
 }
@@ -38,8 +42,9 @@ function check(e) {
 	var params = {};
 	var tr = $(e).parent().parent();
 	params.wikiId = wikiId;
+	params.historyId = $(tr).attr('id');
 	params.version = $(tr).find('td:first').text();
 	params.type = $(tr).find('td:eq(1)').text();
 	window.localStorage.setItem('data', JSON.stringify(params));
-    window.location.href = 'compare';
+    window.location.href = 'compare/index';
 }
