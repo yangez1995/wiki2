@@ -29,8 +29,33 @@ public class WikiCompareController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("wikiId", wikiId);
 		map.put("historyId", historyId);
-		System.out.println(wikiId);
-		System.out.println(historyId);
 		return wikiCompareService.card(map);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/label", method = RequestMethod.GET)
+	public ResponseMessage label(int wikiId, int historyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("wikiId", wikiId);
+		map.put("historyId", historyId);
+		return wikiCompareService.label(map);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/catal", method = RequestMethod.GET)
+	public ResponseMessage catal(int wikiId, int historyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("wikiId", wikiId);
+		map.put("historyId", historyId);
+		return wikiCompareService.catal(map);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/chapter", method = RequestMethod.GET)
+	public ResponseMessage chapter(int wikiId, int historyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("wikiId", wikiId);
+		map.put("historyId", historyId);
+		return wikiCompareService.chapter(map);
 	}
 }

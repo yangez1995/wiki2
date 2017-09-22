@@ -32,19 +32,25 @@
 	</thead>
 	<tbody>
 	<tr>
-	    <td>1111-11-11 11:11:11</td>
-	    <td>超级管理员</td>
+	    <td id="update-time"></td>
+	    <td id="update-by"></td>
 	    <td>暂无</td>
 	</tr>	
 	</tbody>
 	</table>
 </div>
-<div class="row">
-	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box" id="old-compare-box">
+<div class="row" id="compare-start">
+	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box">
 		<div class="box-title" style="background: #FFD4D4;">-</div>
 	</div>
-	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box" id="now-compare-box">
+	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box">
 		<div class="box-title" style="background: #C1E3FF;">+</div>
+	</div>
+</div>
+<div class="row" id="delete-insert">
+	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box" id="delete-compare-box">
+	</div>
+	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 compare-box" id="insert-compare-box">
 	</div>
 </div>
 </div>

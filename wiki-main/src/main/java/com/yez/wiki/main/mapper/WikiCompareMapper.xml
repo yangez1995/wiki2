@@ -9,4 +9,52 @@
 		WHERE wiki_id = #{wikiId, jdbcType=INTEGER}
 		AND history_id = #{historyId, jdbcType=INTEGER}) - 1)
 	</select>
+	
+	<select id="label" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT l.ser_num AS serNum, l.name, l.content, l.change_type AS changeType,
+		r.ser_num AS oSerNum, r.content AS oContent
+		FROM t_label_history AS l
+		LEFT JOIN t_label_history AS r
+		ON l.change_type = 3
+		AND l.label_id = r.label_id
+		AND l.version = r.version + 1
+		WHERE l.wiki_id = #{wikiId, jdbcType=INTEGER}
+		AND l.history_id = #{historyId, jdbcType=INTEGER}
+	</select>
+	
+	<select id="catal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT l.ser_num AS serNum, l.title, l.change_type AS changeType,
+		r.ser_num AS oSerNum, r.title AS oTitle
+		FROM t_chapter_history AS l
+		LEFT JOIN t_chapter_history AS r
+		ON l.change_type = 3
+		AND l.chapter_id = r.chapter_id
+		AND l.version = r.version + 1
+		WHERE l.wiki_id = #{wikiId, jdbcType=INTEGER}
+		AND l.history_id = #{historyId, jdbcType=INTEGER}
+	</select>
+	
+	<select id="chapter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT l.chapter_id AS chapterId, l.change_type AS changeType, l.title, l.content,
+		r.title AS oTitle, r.content AS oContent
+		FROM t_chapter_history AS l
+		LEFT JOIN t_chapter_history AS r
+		ON l.change_type = 3
+		AND l.chapter_id = r.chapter_id
+		AND l.version = r.version + 1
+		WHERE l.wiki_id = #{wikiId, jdbcType=INTEGER}
+		AND l.history_id = #{historyId, jdbcType=INTEGER}
+	</select>
+	
+	<select id="child" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT l.ser_num AS serNum, l.title, l.content, l.change_type AS changeType,
+		r.ser_num AS oSerNum, r.title AS oTitle, r.content AS oContent
+		FROM t_chapter_child_history AS l
+		LEFT JOIN t_chapter_child_history AS r
+		ON l.change_type = 3
+		AND l.child_id = r.child_id
+		AND l.version = r.version + 1
+		WHERE l.parent_id = #{parentId, jdbcType=INTEGER}
+		AND l.history_id = #{historyId, jdbcType=INTEGER}
+	</select>
 </mapper>

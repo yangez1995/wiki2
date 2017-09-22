@@ -32,17 +32,17 @@
 </nav>
 <div class="container">
 	<!-- 相关作品部分 -->
-	<div class="row" style="background: #FCFCFC;border: #DDDDDD solid 1px;">
+	<!-- <div class="row" style="background: #FCFCFC;border: #DDDDDD solid 1px;">
 		<div style="width: 100%;height: 36px;border-bottom: #CCCCCC solid 1px;">
 			<span style="margin-left: 30px;line-height: 36px;font-weight: 600;color: #777777;">相关作品(共n项)</span>
 			<button class="btn hol-but pull-right" id="add-same" style="margin-top: 6px;margin-right: 20px;">+添加作品</button>
 		</div>
 		<div style="padding-left: 20px;padding-right: 20px;padding-top: 5px;padding-bottom: 5px;">
-			<!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 				<li class="nav-li"><a href="#">试一试长一点会怎么样，再长一点，再长一点</a></li>
-			</div> -->
+			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="row" id="main-div" style="margin-top: 10px;background: #FCFCFC;border: #DDDDDD solid 1px;">
 		<!-- 主要内容左侧 -->
 		<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9" id="left-part" style="padding-left: 30px;background: #FCFCFC;">

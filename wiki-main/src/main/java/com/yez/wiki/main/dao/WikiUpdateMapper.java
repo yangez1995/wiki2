@@ -31,12 +31,14 @@ public interface WikiUpdateMapper {
 	public void insertCatal(Chapter chapter);
 	public void deleteCatal(Map<String, Object> map);
 	public int selectChapterVersion(@Param("chapterId")int chapterId);
-	public void insertChapterHistory(Map<String, Object> map);
+	public void insertCatalHistory(Map<String, Object> map);
 	
 	public Chapter getChapter(@Param("id")int id);
 	public void updateChapter(Chapter chapter);
+	public void insertChapterHistory(Map<String, Object> map);
 	public void updateChildChapter(ChildChapter child);
 	public void insertChildChapter(ChildChapter child);
 	public void deleteChildChapter(Map<String, Object> map);
 	public void insertChildHistory(Map<String, Object> map);
+	public int selectChildVersion(@Param("childId")int childId);
 }

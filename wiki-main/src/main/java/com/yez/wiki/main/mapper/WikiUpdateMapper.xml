@@ -130,11 +130,11 @@
 	<select id="selectChapterVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM t_chapter_history WHERE chapter_id = #{chapterId, jdbcType=INTEGER}
 	</select>
-	<insert id="insertChapterHistory" parameterType="java.util.HashMap">
-		INSERT INTO t_chapter_history (wiki_id, chapter_id, ser_num, title, content, 
+	<insert id="insertCatalHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_chapter_history (wiki_id, chapter_id, ser_num, title,
 		version, change_type, history_id)
 		VALUES (#{wikiId, jdbcType=INTEGER}, #{chapterId, jdbcType=INTEGER},#{serNum, jdbcType=TINYINT},
-		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
+		#{title, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
 		#{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
 	</insert>
 	<!-- 修改目录部分结束 -->
@@ -174,6 +174,14 @@
 		WHERE id = #{id, jdbcType=INTEGER}
 	</update>
 	
+	<insert id="insertChapterHistory" parameterType="java.util.HashMap">
+		INSERT INTO t_chapter_history (wiki_id, chapter_id, ser_num, title, content, 
+		version, change_type, history_id)
+		VALUES (#{wikiId, jdbcType=INTEGER}, #{chapterId, jdbcType=INTEGER},#{serNum, jdbcType=TINYINT},
+		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
+		#{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
+	</insert>
+	
 	<update id="updateChildChapter" parameterType="com.yez.wiki.entity.wiki.ChildChapter">
 		UPDATE t_chapter_child SET title = #{title, jdbcType=VARCHAR},
 		content = #{content, jdbcType=VARCHAR},
@@ -205,5 +213,9 @@
 		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{version, jdbcType=INTEGER},
 		#{changeType, jdbcType=TINYINT}, #{historyId, jdbcType=INTEGER})
 	</insert>
+	
+	<select id="selectChildVersion" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_chapter_child_history WHERE child_id = #{childId, jdbcType=INTEGER}
+	</select>
 	<!-- 修改段落部分结束 -->
 </mapper>

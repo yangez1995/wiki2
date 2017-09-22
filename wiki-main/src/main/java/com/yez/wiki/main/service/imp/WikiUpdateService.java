@@ -169,7 +169,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				history.put("changeType", "1");
 				history.put("chapterId", chapter.getId());
 				history.put("version", 1);
-				wikiUpdateMapper.insertChapterHistory(history);
+				wikiUpdateMapper.insertCatalHistory(history);
 			} else {
 				for(int i = 0; i < nowCatals.size(); i++) {
 					if(nowCatals.get(i).getId() == chapter.getId()) {
@@ -184,7 +184,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 							history.put("content", nowCatals.get(i).getContent());
 							history.put("changeType", "3");
 							history.put("version", wikiUpdateMapper.selectChapterVersion(chapter.getId()) + 1);
-							wikiUpdateMapper.insertChapterHistory(history);
+							wikiUpdateMapper.insertCatalHistory(history);
 						}
 						nowCatals.remove(i);
 						break;
@@ -206,7 +206,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				history.putAll(ChapterFactory.decomposeHistory(chapter));
 				history.put("changeType", "2");
 				history.put("version", wikiUpdateMapper.selectChapterVersion(chapter.getId()) + 1);
-				wikiUpdateMapper.insertChapterHistory(history);
+				wikiUpdateMapper.insertCatalHistory(history);
 			}
 			map.put("list", deleteList);
 			wikiUpdateMapper.deleteCatal(map);
@@ -240,6 +240,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				wikiUpdateMapper.insertChildChapter(child);
 				history.putAll(ChildChapterFactory.decomposeHistory(child));
 				history.put("changeType", 1);
+				history.put("version", wikiUpdateMapper.selectChildVersion(child.getId()) + 1);
 				wikiUpdateMapper.insertChildHistory(history);
 			} else {
 				for(int i = 0; i < nowChilds.size(); i++) {
@@ -253,6 +254,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 							wikiUpdateMapper.updateChildChapter(child);
 							history.putAll(ChildChapterFactory.decomposeHistory(child));
 							history.put("changeType", 3);
+							history.put("version", wikiUpdateMapper.selectChildVersion(child.getId()) + 1);
 							wikiUpdateMapper.insertChildHistory(history);
 						}
 						nowChilds.remove(i);
@@ -274,6 +276,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 				deleteList.add(child.getId());
 				history.putAll(ChildChapterFactory.decomposeHistory(child));
 				history.put("changeType", 2);
+				history.put("version", wikiUpdateMapper.selectChildVersion(child.getId()) + 1);
 				wikiUpdateMapper.insertChildHistory(history);
 			}
 			map.put("list", deleteList);

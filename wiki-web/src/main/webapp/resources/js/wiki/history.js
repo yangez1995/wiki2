@@ -45,6 +45,8 @@ function check(e) {
 	params.historyId = $(tr).attr('id');
 	params.version = $(tr).find('td:first').text();
 	params.type = $(tr).find('td:eq(1)').text();
+	params.updateBy = $(tr).find('td:eq(2)').text();
+	params.updateTime = $(tr).find('td:eq(3)').text();
 	window.localStorage.setItem('data', JSON.stringify(params));
     window.location.href = 'compare/index';
 }
