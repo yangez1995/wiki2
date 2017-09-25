@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+.wiki-card {
+	padding-right: 20%;
+}
+
+.wiki-card a{
+	font-size: 18px;
+	color: #00C;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.wiki-card .label {
+	padding: 0px;
+	font-size: 13px;
+	color: #999;
+	font-weight: 500;
+}
+
+.wiki-card p {
+	font-size: 13px;
+	padding-top: 5px;
+}
+

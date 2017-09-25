@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yez.wiki.main.dao.WikiMapper">
+	<resultMap type="com.yez.wiki.entity.wiki.AnimeWiki" id="AnimeWikiMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="main_title" property="mainTitle" jdbcType="VARCHAR"/>
+		<result column="synonym_title" property="synonymTitle" jdbcType="VARCHAR"/>
+		<result column="sub_title" property="subTitle" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+		<result column="level" property="level" jdbcType="CHAR"/>
+		<result column="version" property="version" jdbcType="INTEGER"/>
+		<result column="create_by" property="createBy" jdbcType="INTEGER"/>
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+		<result column="source" property="source" jdbcType="DOUBLE"/>
+		<result column="picture" property="picture" jdbcType="DOUBLE"/>
+		<result column="storyboard" property="storyboard" jdbcType="DOUBLE"/>
+		<result column="music" property="music" jdbcType="DOUBLE"/>
+		<result column="akira" property="akira" jdbcType="DOUBLE"/>
+		<result column="plot" property="plot" jdbcType="DOUBLE"/>
+		<result column="hot" property="hot" jdbcType="DOUBLE"/>
+		<collection column="id" property="labels" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.Label" select="getLabel"/>
+		<collection column="id" property="gene" javaType="ArrayList" 
+			ofType="java.lang.String" select="getGene"/>
+		<collection column="id" property="chapters" javaType="ArrayList" 
+			ofType="com.yez.wiki.entity.wiki.Chapter" select="getChapter"/>
+	</resultMap>
+
 	<resultMap type="com.yez.wiki.entity.wiki.StandardWiki" id="WikiMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="main_title" property="mainTitle" jdbcType="VARCHAR"/>
@@ -73,6 +98,14 @@
 	<select id="getWikiById" parameterType="java.lang.Integer" resultMap="WikiMap">
 		SELECT * FROM t_wiki 
 		WHERE id = #{id, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAnimeWiki" parameterType="java.lang.Integer" resultMap="AnimeWikiMap">
+		SELECT l.*,r.* FROM 
+		t_wiki AS l
+		LEFT JOIN t_type_anime AS r
+		ON l.id = r.wiki_id
+		WHERE l.id = #{id, jdbcType=INTEGER}
 	</select>
 	<!-- 获取wiki数据部分结束 -->
 	

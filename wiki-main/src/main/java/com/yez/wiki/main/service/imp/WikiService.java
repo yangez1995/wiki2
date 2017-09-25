@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yez.wiki.entity.wiki.AnimeWiki;
 import com.yez.wiki.entity.wiki.StandardWiki;
 import com.yez.wiki.main.dao.WikiMapper;
 import com.yez.wiki.main.service.IWikiService;
@@ -23,5 +24,10 @@ public class WikiService implements IWikiService {
 	@Override
 	public StandardWiki getWikiById(int id) {
 		return wikiMapper.getWikiById(id);
+	}
+
+	@Override
+	public AnimeWiki getAnimeWiki(int id) {
+		return wikiMapper.getAnimeWiki(id);
 	}
 }

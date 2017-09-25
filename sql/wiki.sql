@@ -13,9 +13,28 @@ CREATE TABLE t_wiki (
   category TINYINT NOT NULL
 );
 
+CREATE TABLE t_type_anime (
+  wiki_id INT PRIMARY KEY,
+  source DOUBLE,
+  picture DOUBLE,
+  storyboard DOUBLE,
+  music DOUBLE,
+  akira DOUBLE,
+  plot DOUBLE,
+  hot DOUBLE
+);
+ALTER TABLE t_type_anime ADD CONSTRAINT del_type_anime FOREIGN KEY (wiki_id) REFERENCES t_wiki(id) ON DELETE CASCADE;
+
 CREATE TABLE t_wiki_category(
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(20)
+);
+
+CREATE TABLE t_wiki_source(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  wiki_id INT,
+  user_id INT,
+  source TINYINT
 );
 
 CREATE TABLE t_label (

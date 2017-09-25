@@ -6,9 +6,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="../resources/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="../resources/css/wiki/index.css" rel="stylesheet">
 <script src="../resources/js/jquery-3.2.1.min.js"></script>
 <script src="../resources/js/wiki/index.js"></script>
 <script src="../resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="../resources/js/util.js"></script>
+<script src="../resources/js/util/timeUtil.js"></script>
 <title>Wiki</title>
 </head>
 <body>
@@ -35,7 +38,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"></div>
+		<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9" id="left-part" style="border-right: #CCC solid 1px;"></div>
 		<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
 </div>

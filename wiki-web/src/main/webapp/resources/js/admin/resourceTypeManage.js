@@ -90,9 +90,9 @@ $(document).ready(function() {
 
 function resetList() {
 	$('#resource-type-list').html('');
-	$.post('resource/type/getPage', {'pageIndex' : pageIndex}, function(data) {
+	$.post('resource/type/getPage', {'pageIndex' : pageIndex}, function(result) {
 		var table = '';
-		$(data).each(function(i, type) {
+		$(result.data).each(function(i, type) {
 			table += '<tr>' +
 					 '<td>' + type.id + '</td>' +
 					 '<td>' + type.name + '</td>' +
@@ -105,7 +105,8 @@ function resetList() {
 
 function resetPage() {
 	$('#pagination').html('');
-	$.get('resource/type/getNumber',function(pageNumber) {
+	$.get('resource/type/getNumber',function(result) {
+		var pageNumber = result.data;
 		pageMax = pageNumber;
 		$('#page-number').text('共' + pageNumber + '页');
 		var pagination = '';

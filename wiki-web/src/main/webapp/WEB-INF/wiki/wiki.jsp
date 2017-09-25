@@ -11,6 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="../resources/css/public.css">
 	<script src="../resources/js/jquery-3.2.1.min.js"></script>
 	<script src="../resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	<script src="../resources/plugin/echarts.min.js"></script>
 	<script src="../resources/js/util/timeUtil.js"></script>
 	<script src="../resources/js/wiki/parts/card.js"></script>
 	<script src="../resources/js/wiki/parts/label.js"></script>
@@ -18,8 +19,10 @@
 	<script src="../resources/js/wiki/parts/chapter.js"></script>
 	<script src="../resources/js/wiki/parts/statistics.js"></script>
 	<script src="../resources/js/wiki/parts/subCatal.js"></script>
+	<script src="../resources/js/wiki/parts/animeRadarMap.js"></script>
 	<script src="../resources/js/wiki/wiki.js"></script>
 	<script src="../resources/js/wiki/wikiScroll.js"></script>
+	<script src="../resources/js/util.js"></script>
 	<script src="../resources/js/validate.js"></script>
 </head>
 <body style="background: #EEEEEE;" data-spy="scroll" data-target=".navbar-example" data-offset="0">
@@ -65,6 +68,9 @@
 					<img src="../resources/image/img.png" style="height: 26px;width: 26px;margin-left: 5px;align-content: center;">
 					<span style="color: #666;font-family: Microsoft YaHei;font-size: 15px;">图册</span>
 				</div>
+			</div>
+			<div>
+				
 			</div>
 			<img class="hidden" id="return-top" src="../resources/image/return-top.png" style="position: fixed; bottom:10px;width: 50px;
 			height: 50px;padding: 8px;background: #DDDDDD;cursor: pointer;">

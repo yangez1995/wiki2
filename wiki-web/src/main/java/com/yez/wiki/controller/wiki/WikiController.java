@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yez.wiki.entity.ResponseMessage;
+import com.yez.wiki.entity.wiki.AnimeWiki;
 import com.yez.wiki.entity.wiki.Chapter;
 import com.yez.wiki.entity.wiki.Label;
 import com.yez.wiki.entity.wiki.StandardWiki;
@@ -44,6 +45,12 @@ public class WikiController {
 	@RequestMapping(value = "/getWikiById", method = RequestMethod.POST)
 	public StandardWiki getWikiById(int id) {
 		return wikiService.getWikiById(id);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getAnimeWiki", method = RequestMethod.POST)
+	public AnimeWiki getAnimeWiki(int id) {
+		return wikiService.getAnimeWiki(id);
 	}
 	
 	@ResponseBody

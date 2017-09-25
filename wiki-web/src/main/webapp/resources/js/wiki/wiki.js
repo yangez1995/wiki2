@@ -3,6 +3,8 @@ var wikiId = 1;
 var maxH = 0;
 var listens = [];
 $(document).ready(function() {
+	var category = getUrlParam('category');
+	wikiId = getUrlParam('wikiId');
 	
 	//窗口大小改变事件
 	var w = $('#img-collection').width();
@@ -30,18 +32,20 @@ $(document).ready(function() {
 	//右侧组件
 	installStatistics($('#right-part'));//添加词条统计组件
 	installSubCatal($('#right-part'));//添加滑动目录组件
+	installAnimeRadarMap($('#right-part'));//添加评分雷达图
 	
 	resetPage();
 });
 
 function resetPage() {
-	$.post('getWikiById', { "id" : 1 }, function(data) {
+	$.post('getWikiById', { "id" : wikiId }, function(data) {
 		initCard(data.title, data.subTitle, data.describe)
 		initLabel(data.labels);
 		initCatal(data.chapters);
 		initChapter(data.chapters);
 		initSubCatal(data.chapters);
 		initStatistics(data);
+		initAnimeRadarMap(data);
 		maxH = $('#main-div').height() + $('#main-div').offset().top;
 		listens = $('.onlisten');
 	});
@@ -85,7 +89,7 @@ function modalCreater(id, title, body, footer) {
 					'<div class="modal-body">' + body + '</div>' +
 					'<div class="modal-footer">' + footer + '</div>' +
 				'</div>' +
-			'</div>'+
+			'</div>' +
 		'</div>';
 	return modal;
 }
