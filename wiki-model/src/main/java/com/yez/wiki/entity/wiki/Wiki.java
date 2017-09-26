@@ -14,6 +14,17 @@ public class Wiki {
 	protected Date createDate;//创建时间
 	protected int category;//类型
 	
+	public Wiki() {}
+	public Wiki(String title, String subTitle, String describe, 
+			int category, int createBy, Date createDate) {
+		this.title = title;
+		this.subTitle = subTitle;
+		this.describe = describe;
+		this.category = category;
+		this.createBy = createBy;
+		this.createDate= createDate;
+	}
+	
 	public int getId() {
 		return id;
 	}

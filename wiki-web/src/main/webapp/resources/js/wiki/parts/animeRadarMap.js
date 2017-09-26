@@ -26,7 +26,8 @@ function initAnimeRadarMap(data) {
 	        type: 'radar',
 	        // areaStyle: {normal: {}},
 	        data : [{
-                value : [9, 7, 9, 8, 6, 8],
+                value : [data.source.picture, data.source.storyboard, data.source.music,
+                	data.source.akira, data.source.plot, data.source.hot],
                 name : '详细数据',
                 symbolSize : 0,
                 areaStyle : {
@@ -54,7 +55,8 @@ function initAnimeRadarMap(data) {
                 	}
                 }
             },{
-                value : [8, 8, 8, 8, 8, 8],
+                value : [data.source.source, data.source.source, data.source.source, 
+                	data.source.source, data.source.source, data.source.source],
                 name : '评分基准线',
                 symbolSize : 0,
                 lineStyle : {

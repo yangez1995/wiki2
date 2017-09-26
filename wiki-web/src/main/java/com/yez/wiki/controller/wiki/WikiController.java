@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yez.wiki.entity.ResponseMessage;
-import com.yez.wiki.entity.wiki.AnimeWiki;
 import com.yez.wiki.entity.wiki.Chapter;
 import com.yez.wiki.entity.wiki.Label;
 import com.yez.wiki.entity.wiki.StandardWiki;
@@ -42,15 +41,22 @@ public class WikiController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getWikiById", method = RequestMethod.POST)
-	public StandardWiki getWikiById(int id) {
-		return wikiService.getWikiById(id);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/getAnimeWiki", method = RequestMethod.POST)
-	public AnimeWiki getAnimeWiki(int id) {
-		return wikiService.getAnimeWiki(id);
+	@RequestMapping(value = "/getWiki", method = RequestMethod.POST)
+	public ResponseMessage getWiki(int id, int category) {
+		switch (category) {
+		case 1 : {
+			return ResponseMessage.success(wikiService.getSimpleWiki(id));
+		}
+		case 2 : {
+			return ResponseMessage.success(wikiService.getStandardWiki(id));
+		}
+		case 3 : {
+			return ResponseMessage.success(wikiService.getAnimeWiki(id));
+		}
+		default: {
+			return ResponseMessage.fail("类型编码未知！");
+		}
+		}
 	}
 	
 	@ResponseBody

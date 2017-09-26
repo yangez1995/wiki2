@@ -2,8 +2,13 @@ var params = {};
 var wikiId = 1;
 var maxH = 0;
 var listens = [];
+var category = 0;
+var type = 0;
+var auth = 0;
 $(document).ready(function() {
-	var category = getUrlParam('category');
+	category = getUrlParam('category');
+	type = Math.floor(category / 10);
+	auth = category % 10;
 	wikiId = getUrlParam('wikiId');
 	
 	//窗口大小改变事件
@@ -26,26 +31,41 @@ $(document).ready(function() {
 	});
 	//左侧组件
 	installCard($('#left-part'));//添加名片组件
-	installLabel($('#left-part'));//添加标签组件
-	installCatal($('#left-part'));//添加目录组件
+	if(type == 2 || type == 3) {
+		installLabel($('#left-part'));//添加标签组件
+		installCatal($('#left-part'));//添加目录组件
+	}
 	installChapter($('#left-part'));//添加章节组件
 	//右侧组件
 	installStatistics($('#right-part'));//添加词条统计组件
-	installSubCatal($('#right-part'));//添加滑动目录组件
-	installAnimeRadarMap($('#right-part'));//添加评分雷达图
+	if(type == 2 || type == 3) {
+		installSubCatal($('#right-part'));//添加滑动目录组件
+	}
+	if(type == 3) {
+		installAnimeRadarMap($('#right-part'));//添加评分雷达图
+	}
 	
 	resetPage();
 });
 
 function resetPage() {
-	$.post('getWikiById', { "id" : wikiId }, function(data) {
-		initCard(data.title, data.subTitle, data.describe)
-		initLabel(data.labels);
-		initCatal(data.chapters);
-		initChapter(data.chapters);
-		initSubCatal(data.chapters);
+	$.post('getWiki', { 'id' : wikiId, 'category' : type }, function(result) {
+		var data = result.data;
+		alert(JSON.stringify(data));
+		initCard(data.title, data.subTitle, data.describe);
 		initStatistics(data);
-		initAnimeRadarMap(data);
+		if(type == 1) {
+			initChapter(data.chapter);
+		}
+		if(type == 2 || type == 3) {
+			initLabel(data.labels);
+			initCatal(data.chapters);
+			initChapter(data.chapters);
+			initSubCatal(data.chapters);
+		}
+		if(type == 3) {
+			initAnimeRadarMap(data);
+		}
 		maxH = $('#main-div').height() + $('#main-div').offset().top;
 		listens = $('.onlisten');
 	});

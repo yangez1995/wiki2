@@ -1,5 +1,7 @@
 var step = 1;
-
+var params = {};
+var type = 0;
+var auth = 0;
 $(document).ready(function() {
 	$("#ystep").loadStep({
 	    //ystep的外观大小
@@ -32,7 +34,22 @@ $(document).ready(function() {
 	getPage();
 });
 
+function createWiki() {
+	params.title = $('#title').val();
+	params.subTitle = $('#sub-title').val();
+	params.describe = '<p>' + $('#describe').val() + '</p>';
+	params.category = parseInt(type) + parseInt(auth);
+	$.post('newWiki', params, function(result) {
+		alert(JSON.stringify(result));
+	});
+}
+
 function doNext() {
+	if(step == 1) {
+		type = $('#type').val();
+	} else if(step == 2) {
+		auth = $('#auth').val();
+	}
 	$("#ystep").nextStep();
 	step++;
 	getPage();

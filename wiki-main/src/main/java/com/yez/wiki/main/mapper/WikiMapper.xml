@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yez.wiki.main.dao.WikiMapper">
-	<resultMap type="com.yez.wiki.entity.wiki.AnimeWiki" id="AnimeWikiMap">
+	<resultMap type="com.yez.wiki.entity.wiki.SimpleWiki" id="SimpleWikiMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
-		<result column="main_title" property="mainTitle" jdbcType="VARCHAR"/>
-		<result column="synonym_title" property="synonymTitle" jdbcType="VARCHAR"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="synonym" property="synonym" jdbcType="VARCHAR"/>
 		<result column="sub_title" property="subTitle" jdbcType="VARCHAR"/>
 		<result column="des" property="describe" jdbcType="VARCHAR"/>
 		<result column="level" property="level" jdbcType="CHAR"/>
 		<result column="version" property="version" jdbcType="INTEGER"/>
 		<result column="create_by" property="createBy" jdbcType="INTEGER"/>
 		<result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
-		<result column="source" property="source" jdbcType="DOUBLE"/>
-		<result column="picture" property="picture" jdbcType="DOUBLE"/>
-		<result column="storyboard" property="storyboard" jdbcType="DOUBLE"/>
-		<result column="music" property="music" jdbcType="DOUBLE"/>
-		<result column="akira" property="akira" jdbcType="DOUBLE"/>
-		<result column="plot" property="plot" jdbcType="DOUBLE"/>
-		<result column="hot" property="hot" jdbcType="DOUBLE"/>
+		<association column="id" property="chapter" select="getChapter" 
+			javaType="com.yez.wiki.entity.wiki.Chapter"/>
+	</resultMap>
+
+	<resultMap type="com.yez.wiki.entity.wiki.AnimeWiki" id="AnimeWikiMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="synonym" property="synonym" jdbcType="VARCHAR"/>
+		<result column="sub_title" property="subTitle" jdbcType="VARCHAR"/>
+		<result column="des" property="describe" jdbcType="VARCHAR"/>
+		<result column="level" property="level" jdbcType="CHAR"/>
+		<result column="version" property="version" jdbcType="INTEGER"/>
+		<result column="create_by" property="createBy" jdbcType="INTEGER"/>
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+		<association column="id" property="source" select="getAnimeSource" 
+			javaType="com.yez.wiki.entity.wiki.AnimeSource"/>
 		<collection column="id" property="labels" javaType="ArrayList" 
 			ofType="com.yez.wiki.entity.wiki.Label" select="getLabel"/>
 		<collection column="id" property="gene" javaType="ArrayList" 
@@ -26,10 +35,10 @@
 			ofType="com.yez.wiki.entity.wiki.Chapter" select="getChapter"/>
 	</resultMap>
 
-	<resultMap type="com.yez.wiki.entity.wiki.StandardWiki" id="WikiMap">
+	<resultMap type="com.yez.wiki.entity.wiki.StandardWiki" id="StandardWikiMap">
 		<id column="id" property="id" jdbcType="INTEGER"/>
-		<result column="main_title" property="mainTitle" jdbcType="VARCHAR"/>
-		<result column="synonym_title" property="synonymTitle" jdbcType="VARCHAR"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="synonym" property="synonym" jdbcType="VARCHAR"/>
 		<result column="sub_title" property="subTitle" jdbcType="VARCHAR"/>
 		<result column="des" property="describe" jdbcType="VARCHAR"/>
 		<result column="level" property="level" jdbcType="CHAR"/>
@@ -69,6 +78,16 @@
 		<result column="title" property="title" jdbcType="VARCHAR"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 	</resultMap>
+	
+	<resultMap type="com.yez.wiki.entity.wiki.AnimeSource" id="AnimeSourceMap">
+		<result column="source" property="source" jdbcType="DOUBLE"/>
+		<result column="picture" property="picture" jdbcType="DOUBLE"/>
+		<result column="storyboard" property="storyboard" jdbcType="DOUBLE"/>
+		<result column="music" property="music" jdbcType="DOUBLE"/>
+		<result column="akira" property="akira" jdbcType="DOUBLE"/>
+		<result column="plot" property="plot" jdbcType="DOUBLE"/>
+		<result column="hot" property="hot" jdbcType="DOUBLE"/>
+	</resultMap>
 	<!-- 获取wiki数据部分 -->
 	<select id="getChildChapter" parameterType="java.lang.Integer" resultMap="ChildChapterMap">
 		SELECT * FROM t_chapter_child
@@ -95,26 +114,26 @@
 		ORDER BY ser_num ASC
 	</select>
 	
-	<select id="getWikiById" parameterType="java.lang.Integer" resultMap="WikiMap">
+	<select id="getAnimeSource" parameterType="java.lang.Integer" resultMap="AnimeSourceMap">
+		SELECT * FROM t_type_anime 
+		WHERE wiki_id = #{id, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 主要方法 -->
+	<select id="getStandardWiki" parameterType="java.lang.Integer" resultMap="StandardWikiMap">
 		SELECT * FROM t_wiki 
 		WHERE id = #{id, jdbcType=INTEGER}
 	</select>
 	
 	<select id="getAnimeWiki" parameterType="java.lang.Integer" resultMap="AnimeWikiMap">
-		SELECT l.*,r.* FROM 
-		t_wiki AS l
-		LEFT JOIN t_type_anime AS r
-		ON l.id = r.wiki_id
-		WHERE l.id = #{id, jdbcType=INTEGER}
+		SELECT * FROM t_wiki 
+		WHERE id = #{id, jdbcType=INTEGER}
 	</select>
-	<!-- 获取wiki数据部分结束 -->
 	
-	<!-- 新建简单wiki -->
-	<insert id="newSimpleWiki" parameterType="java.util.HashMap">
-		INSERT INTO t_wiki (main_title, level)
-		VALUES (#{mainTitle, jdbcType=VARCHAR}, '1')
-		<selectKey keyProperty="id" resultType="java.lang.Integer">  
-            SELECT LAST_INSERT_ID()  
-        </selectKey>  
-	</insert>
+	<select id="getSimpleWiki" parameterType="java.lang.Integer" resultMap="SimpleWikiMap">
+		SELECT * FROM t_wiki
+		WHERE id = #{id, jdbcType=INTEGER}
+	</select>
+	<!-- 主要方法结束 -->
+	<!-- 获取wiki数据部分结束 -->
 </mapper>

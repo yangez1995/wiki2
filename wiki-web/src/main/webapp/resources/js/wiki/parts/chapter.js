@@ -45,5 +45,6 @@ function editChapter(e) {
 	});
 	chapter.childs = childs;
 	window.localStorage.setItem('chapter', JSON.stringify(chapter));
+	window.localStorage.setItem('category', category);
     window.location.href = 'editer';
 }

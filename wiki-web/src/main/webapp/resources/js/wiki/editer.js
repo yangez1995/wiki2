@@ -1,4 +1,5 @@
 var wikiId = 0;
+var category = 0;
 var chapter = {};
 var childConut = 1;
 $(document).ready(function() {
@@ -18,6 +19,7 @@ $(document).ready(function() {
 		$('#left-part').height($(window).height());
 	});
 	chapter = $.parseJSON(window.localStorage.getItem('chapter'));
+	category = window.localStorage.getItem('category');
 	wikiId = chapter.wikiId;
 	resetPage();
 	editerInit();
@@ -52,7 +54,7 @@ $(document).ready(function() {
 			contentType : 'application/json',
 			data : JSON.stringify(chapter),
 			success : function() {
-				window.location.href = 'wiki?id=' + wikiId;
+				window.location.href = 'wiki?wikiId=' + wikiId + '&category=' + category;
 			}
 		})
 	});
