@@ -8,6 +8,9 @@
 		ON l.id = r.wiki_id
 		AND l.version = r.version
 		WHERE 1 = 1
+		<if test="search != '' and search != null">
+			AND l.title LIKE #{search, jdbcType=VARCHAR}
+		</if>
 		LIMIT #{startIndex, jdbcType=INTEGER}, #{pageSize, jdbcType=INTEGER}
 	</select>
 </mapper>

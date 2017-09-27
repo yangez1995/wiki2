@@ -69,9 +69,6 @@
 					<span style="color: #666;font-family: Microsoft YaHei;font-size: 15px;">图册</span>
 				</div>
 			</div>
-			<div>
-				
-			</div>
 			<img class="hidden" id="return-top" src="../resources/image/return-top.png" style="position: fixed; bottom:10px;width: 50px;
 			height: 50px;padding: 8px;background: #DDDDDD;cursor: pointer;">
 		</div>

@@ -26,9 +26,9 @@
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 			<div class="input-group" style="margin-top: 0px;">
-			    <input type="text" class="form-control">
+			    <input type="text" id="search" class="form-control">
 			    <span class="input-group-btn">
-			        <button class="btn btn-default" type="button">搜索</button>
+			        <button class="btn btn-default" type="button" onclick="resultPage()">搜索</button>
 			    </span>
 			</div>
 		</div>

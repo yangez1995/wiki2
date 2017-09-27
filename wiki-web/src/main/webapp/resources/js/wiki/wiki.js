@@ -51,7 +51,6 @@ $(document).ready(function() {
 function resetPage() {
 	$.post('getWiki', { 'id' : wikiId, 'category' : type }, function(result) {
 		var data = result.data;
-		alert(JSON.stringify(data));
 		initCard(data.title, data.subTitle, data.describe);
 		initStatistics(data);
 		if(type == 1) {

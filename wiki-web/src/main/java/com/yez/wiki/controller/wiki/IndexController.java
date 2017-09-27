@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.main.service.IWikiIndexService;
+import com.yez.wiki.util.StringUtil;
 
 @Controller
 @RequestMapping("/wiki")
@@ -25,8 +26,17 @@ public class IndexController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
-	public ResponseMessage getPage(int pageIndex) {
+	public ResponseMessage getPage(int pageIndex, String search) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10); 
+		if(!StringUtil.isEmpty(search)) {
+			StringBuffer buffer = new StringBuffer();
+			char[] arr = search.toCharArray();
+			for(char c : arr) {
+				buffer.append("%").append(c);
+			}
+			buffer.append("%");
+			map.put("search", buffer.toString());
+		}
 		return wikiIndexService.getPage(map);
 	}
 }
