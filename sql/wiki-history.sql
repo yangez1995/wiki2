@@ -37,10 +37,10 @@ CREATE TABLE t_chapter_history (
   chapter_id INT NOT NULL,
   history_id INT NOT NULL,
   version INT NOT NULL,
-  change_type TINYINT NOT NULL，
+  change_type TINYINT NOT NULL,
   ser_num TINYINT NOT NULL,
   title VARCHAR(30) NOT NULL,
-  content VARCHAR(2000),
+  content VARCHAR(2000)
 );
 ALTER TABLE t_chapter_history ADD CONSTRAINT del_chapter_history FOREIGN KEY (wiki_id) REFERENCES t_wiki(id) ON DELETE CASCADE;
 
@@ -51,8 +51,8 @@ CREATE TABLE t_chapter_child_history (
   history_id INT NOT NULL,
   version INT NOT NULL,
   ser_num TINYINT NOT NULL,
-  change_type TINYINT NOT NULL
+  change_type TINYINT NOT NULL,
   title VARCHAR(30) NOT NULL,
-  content VARCHAR(2000),
+  content VARCHAR(2000)
 );
 ALTER TABLE t_chapter_child_history ADD CONSTRAINT del_chapter_child_history FOREIGN KEY (parent_id) REFERENCES t_chapter(id) ON DELETE CASCADE;

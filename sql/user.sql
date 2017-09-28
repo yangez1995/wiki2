@@ -17,14 +17,6 @@ CREATE TABLE t_user_message (
 );
 ALTER TABLE t_user_message ADD CONSTRAINT del_user FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON DELETE CASCADE;
 
-CREATE TABLE t_user_roles (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT NOT NULL,
-  role_id INT NOT NULL
-);
-ALTER TABLE t_user_roles ADD CONSTRAINT del_user_role FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON DELETE CASCADE;
-ALTER TABLE t_user_roles ADD CONSTRAINT del_role_user FOREIGN KEY (role_id) REFERENCES t_role(role_id) ON DELETE CASCADE;
-
 CREATE TABLE t_role (
   role_id INT PRIMARY KEY AUTO_INCREMENT,
   role_name VARCHAR(30) NOT NULL,
@@ -37,6 +29,27 @@ CREATE TABLE t_authority (
   authority_mark VARCHAR(30) NOT NULL,
   des VARCHAR(100)
 );
+
+CREATE TABLE t_resources (
+  resources_id INT PRIMARY KEY AUTO_INCREMENT,
+  resources_name VARCHAR(30) NOT NULL,
+  resources_url VARCHAR(30) NOT NULL,
+  resources_type CHAR(2) NOT NULL,
+  des VARCHAR(100)
+);
+
+CREATE TABLE t_resource_type (
+  id CHAR(2) PRIMARY KEY,
+  name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE t_user_roles (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  role_id INT NOT NULL
+);
+ALTER TABLE t_user_roles ADD CONSTRAINT del_user_role FOREIGN KEY (user_id) REFERENCES t_user(user_id) ON DELETE CASCADE;
+ALTER TABLE t_user_roles ADD CONSTRAINT del_role_user FOREIGN KEY (role_id) REFERENCES t_role(role_id) ON DELETE CASCADE;
 
 CREATE TABLE t_role_authorities (
   id INT PRIMARY KEY AUTO_INCREMENT,

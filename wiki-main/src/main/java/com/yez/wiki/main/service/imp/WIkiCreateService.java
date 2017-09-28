@@ -10,6 +10,7 @@ import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.wiki.Wiki;
 import com.yez.wiki.main.dao.WikiCreateMapper;
 import com.yez.wiki.main.service.IWIkiCreateService;
+import com.yez.wiki.main.util.SolrConnectUtil;
 import com.yez.wiki.util.StringUtil;
 
 @Service
@@ -22,7 +23,11 @@ public class WIkiCreateService implements IWIkiCreateService {
 		if(StringUtil.isEmpty(wiki.getTitle())) {
 			return ResponseMessage.fail("标题不能为空");
 		}
+		if(!StringUtil.checkLength(wiki.getDescribe(), 0, 500) ) {
+			return ResponseMessage.fail("描述过长");
+		}
 		wikiCreateMapper.newWiki(wiki);
+		InsertSolrIndex(wiki);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("wikiId", wiki.getId());
 		map.put("title", "点击编辑按钮编辑章节");
@@ -36,7 +41,11 @@ public class WIkiCreateService implements IWIkiCreateService {
 		if(StringUtil.isEmpty(wiki.getTitle())) {
 			return ResponseMessage.fail("标题不能为空");
 		}
+		if(!StringUtil.checkLength(wiki.getDescribe(), 0, 500) ) {
+			return ResponseMessage.fail("描述过长");
+		}
 		wikiCreateMapper.newWiki(wiki);
+		InsertSolrIndex(wiki);
 		return ResponseMessage.success();
 	}
 
@@ -45,7 +54,17 @@ public class WIkiCreateService implements IWIkiCreateService {
 		if(StringUtil.isEmpty(wiki.getTitle())) {
 			return ResponseMessage.fail("标题不能为空");
 		}
+		if(!StringUtil.checkLength(wiki.getDescribe(), 0, 500) ) {
+			return ResponseMessage.fail("描述过长");
+		}
 		wikiCreateMapper.newWiki(wiki);
+		InsertSolrIndex(wiki);
 		return ResponseMessage.success();
+	}
+	
+	private void InsertSolrIndex(Wiki wiki) {
+		wiki.setLevel(1);
+		wiki.setVersion(1);
+		SolrConnectUtil.addWiki(wiki);
 	}
 }
