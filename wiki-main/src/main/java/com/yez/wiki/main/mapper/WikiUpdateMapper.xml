@@ -111,9 +111,9 @@
 	</update>
 	
 	<insert id="insertCatal" parameterType="com.yez.wiki.entity.wiki.Chapter">
-		INSERT INTO t_chapter (wiki_id, ser_num, title)
+		INSERT INTO t_chapter (wiki_id, ser_num, title, content)
 		VALUES (#{wikiId, jdbcType=INTEGER}, #{serNum, jdbcType=TINYINT},
-		#{title, jdbcType=VARCHAR})
+		#{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR})
 		<selectKey keyProperty="id" resultType="java.lang.Integer">  
             SELECT LAST_INSERT_ID()  
         </selectKey>

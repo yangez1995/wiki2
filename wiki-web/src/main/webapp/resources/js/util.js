@@ -7,7 +7,12 @@ function fromToJson(arr) {
 }
 
 function limitString(str, length) {
-	return str.substring(0,length) + '...';
+	str.replace('<p>', '');
+	str.replace('</p>', '');
+	if(str.length > length) {
+		str = str.substring(0,length) + '...';
+	}
+	return '<p>' + str + '</p>';
 }
 
 function getUrlParam(name) {

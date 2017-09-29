@@ -159,6 +159,7 @@ public class WikiUpdateService implements IWikiUpdateService {
 		
 		for(Chapter chapter : list) {
 			if(chapter.getId() == 0) {
+				chapter.setContent("记得为该章节填写内容哦~");
 				wikiUpdateMapper.insertCatal(chapter);
 				if(!isChange) {
 					wikiUpdateMapper.insertWikiHistory(wikiHistory);

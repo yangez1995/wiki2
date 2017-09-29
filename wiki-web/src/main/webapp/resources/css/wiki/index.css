@@ -11,6 +11,19 @@
 	text-decoration: underline;
 }
 
+.wiki-card a:visited{
+	font-size: 18px;
+	color: #551A8B;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.wiki-card a em{
+	color: red;
+	font-style: normal;
+	text-decoration: underline;
+}
+
 .wiki-card .label {
 	padding: 0px;
 	padding-right: 10px;
@@ -21,6 +34,5 @@
 
 .wiki-card p {
 	font-size: 13px;
-	padding-top: 5px;
 }
 

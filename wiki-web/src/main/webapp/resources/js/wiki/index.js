@@ -16,8 +16,9 @@ function resultPage() {
 	params.q = 'wiki_title:' + search;
 	params['hl.fl'] = 'wiki_title';
 	params.hl = 'on';
-	params['hl.simple.pre'] = '<font color="red">';
-	params['hl.simple.post'] = '</font>';
+	if(search != '*') {
+		$.post('searchLog/insert', { 'search' : search }, function() {});
+	}
 	$.post('/solr/core/select', params, function(result) {
 		$(result.response.docs).each(function(i, wiki) {
 			var div = '<div class="wiki-card">' + 

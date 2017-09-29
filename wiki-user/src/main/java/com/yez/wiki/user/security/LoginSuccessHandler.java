@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import com.yez.wiki.entity.security.UserDetailsImpl;
 import com.yez.wiki.user.service.IUserLoginService;
+import com.yez.wiki.util.StringUtil;
 
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 	@Autowired
@@ -25,7 +26,14 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		//更新用户最后登陆时间
 		userLoginService.updateLogTime(userDetails.getId());
-		super.onAuthenticationSuccess(request, response, authentication);
+		String url = (String) request.getSession().getAttribute("afterLoginUrl");
+		System.out.println(url);
+		if(!StringUtil.isEmpty(url)) {
+			request.getSession().removeAttribute("url");
+			getRedirectStrategy().sendRedirect( request, response, url);
+		} else {
+			super.onAuthenticationSuccess(request, response, authentication);
+		}
 	}
 
 }
