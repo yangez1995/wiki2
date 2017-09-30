@@ -1,4 +1,4 @@
-package com.yez.wiki.main.util;
+package com.yez.wiki.main.solr;
 
 import java.io.IOException;
 import java.util.Date;

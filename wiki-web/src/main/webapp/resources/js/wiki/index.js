@@ -14,7 +14,7 @@ function resultPage() {
 	}
 	var params = {};
 	params.q = 'wiki_title:' + search;
-	params['hl.fl'] = 'wiki_title';
+	params['hl.fl'] = 'wiki_title, wiki_describe';
 	params.hl = 'on';
 	if(search != '*') {
 		$.post('searchLog/insert', { 'search' : search }, function() {});
@@ -23,7 +23,7 @@ function resultPage() {
 		$(result.response.docs).each(function(i, wiki) {
 			var div = '<div class="wiki-card">' + 
 						  '<a href="wiki?wikiId=' + wiki.id + '&category=' + wiki.wiki_category + '">';
-			if(search == '*') {
+			if(search == '*' || result.highlighting[wiki.id].wiki_title == null) {
 				div += wiki.wiki_title;
 			} else {
 				div += result.highlighting[wiki.id].wiki_title;

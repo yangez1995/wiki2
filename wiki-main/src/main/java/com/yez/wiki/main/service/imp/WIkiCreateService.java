@@ -10,7 +10,7 @@ import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.wiki.Wiki;
 import com.yez.wiki.main.dao.WikiCreateMapper;
 import com.yez.wiki.main.service.IWIkiCreateService;
-import com.yez.wiki.main.util.SolrConnectUtil;
+import com.yez.wiki.main.solr.SolrConnectUtil;
 import com.yez.wiki.util.StringUtil;
 
 @Service
