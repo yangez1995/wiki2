@@ -34,7 +34,7 @@ public class ResourceTypeService implements IResourceTypeService {
 		if(StringUtil.isEmpty(name)) {
 			return ResponseMessage.fail("名称不能为空！");
 		}
-		if(StringUtil.checkLength(name, 1, 30)) {
+		if(!StringUtil.checkLength(name, 1, 30)) {
 			return ResponseMessage.fail("名称长度在1-30位之间！");
 		}
 		

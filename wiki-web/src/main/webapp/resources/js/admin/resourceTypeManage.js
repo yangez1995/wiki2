@@ -73,7 +73,7 @@ $(document).ready(function() {
 					'name' : $('#new-type-name').val()
 				},
 				success : function(result) {
-					if(result.what == 200) {
+					if(result.code == '200') {
 						$('#new-type').modal('hide');
 						$('#new-type-name').val('');
 						$('#new-type-id').val('');

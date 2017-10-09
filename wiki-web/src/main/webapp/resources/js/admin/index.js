@@ -52,6 +52,9 @@ $(document).ready(function() {
 	$('#res-auth').click(function() {
 		$('#content').load('../resources/page/admin/resourceAuthManage.html');
 	});
+	$('#wiki-category').click(function() {
+		$('#content').load('../resources/page/admin/wikiCategoryManage.html');
+	});
 });	
 
 $(window).resize(function() {

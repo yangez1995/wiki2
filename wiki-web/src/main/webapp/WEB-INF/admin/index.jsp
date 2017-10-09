@@ -44,7 +44,7 @@
       <dd id="u-role">· 用户角色管理</dd>
       <dd id="u-msg">· 用户信息管理</dd>
       <dd id="u-chart">· 用户图表</dd>
-      <dd id="au-chart">· 用户活跃图表</dd>
+      <!-- <dd id="au-chart">· 用户活跃图表</dd> -->
     </dl>
     <dl class="nav-dl">
       <dt>角色管理</dt>
@@ -60,6 +60,11 @@
       <dd id="res-msg">· 资源信息管理</dd>
       <dd id="res-type">· 资源类型管理</dd>
       <dd id="res-auth">· 资源权限管理</dd>
+    </dl>
+    <dl class="nav-dl">
+      <dt>词条管理</dt>
+      <dd id="wiki-msg">· 词条信息管理</dd>
+      <dd id="wiki-category">· 词条类型管理</dd>
     </dl>
   </div>
   <div id="content" style="margin-left: 220px;padding: 20px;"></div>

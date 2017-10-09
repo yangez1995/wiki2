@@ -41,16 +41,33 @@ public class SecurityMetadataSourceImpl implements FilterInvocationSecurityMetad
 	
 	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+		long start = System.currentTimeMillis();
 		String url = ((FilterInvocation) object).getRequestUrl();
 		//判断url是否有？，如果有截取？之前url
 		int firstQuestionMarkIndex = url.indexOf("?");
         if (firstQuestionMarkIndex != -1) {
             url = url.substring(0, firstQuestionMarkIndex);
         }
+        String[] urlArr = url.split("/");
+        
         Iterator<String> ite = resourceMap.keySet().iterator();
         while(ite.hasNext()) {
         	String resURL = ite.next();
-        	if(url.equals(resURL)) {
+        	String[] resURLArr = resURL.split("/");
+        	boolean key = true;
+        	for(int i = 0; i < resURLArr.length; i++) {
+        		if("**".equals(resURLArr[i])) {
+        			break;
+        		}
+        		if("*".equals(resURLArr[i])) {
+        			continue;
+        		}
+        		if(!resURLArr[i].equals(urlArr[i])) {
+        			key = false;
+        			break;
+        		}
+        	}
+        	if(key) {
         		return resourceMap.get(resURL);
         	}
         }
