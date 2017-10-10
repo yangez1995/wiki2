@@ -1,4 +1,7 @@
 var settings = {};
+var pageIndex = 1;
+var pageSize = 10;
+var pageNumber = 1;
 
 $.fn.manageUI = function(options) {
 	//默认配置
@@ -22,13 +25,27 @@ $.fn.manageUI = function(options) {
 			}
 		},
 		canInsert : false, //是否可以新增
-		insertModal : {
-			title : '新增',
-			body : '',
-			footer : ''
+		insertModal : { //新增模态框
+			title : '新增', //标题
+			body : '', //内容
+			footer : '' //选项
+		},
+		canDelete : false, //是否可删除
+		deleteModal : { //删除模态框
+			title : '删除', //标题
+			body : '', //内容
+			footer : '' //选项
+		},
+		canUpdate : false, //是否可修改
+		updateModal : { //修改模态框
+			title : '修改', //标题
+			body : '', //内容
+			footer : '' //选项
 		}
 	}
 	settings = $.extend(defaults, options);
+	settings.table.ajax.data.pageIndex = pageIndex;
+	settings.table.ajax.data.pageSize = pageSize;
 	
 	//新建表格
 	$(this).append('<table class="table table-striped table-bordered" id="manageUI-table"></table>');
@@ -56,13 +73,38 @@ $.fn.manageUI = function(options) {
 	$('#manageUI-table').append('<tbody id="manageUI-table-tbody"></tbody>');
 	refreshPage();
 	
+	//页码
+	$(this).append(
+		'<div class="input-group" style="width: 170px;float: left;">' +
+			'<span id="page-number" class="input-group-addon"></span>' +
+			'<input type="text" class="form-control" id="page-go-index" placeholder="页数" onkeydown="onlyNum()">' +
+			'<span class="input-group-btn">' +
+				'<button class="btn btn-default" type="button" onclick="goToPage()">Go!</button>' +
+			'</span>' +
+		'</div>' +
+		'<ul id="pagination" class="pagination" style="margin: 0px;float: right;"></ul>'
+	);
+	refreshNumber();
+	
 	//新增模态框
-	if(options.canInsert) {
+	if(settings.canInsert) {
 		$(this).append(modalCreater('insert', settings.insertModal.title, settings.insertModal.body, settings.insertModal.footer));
+	}
+	
+	//删除模态框
+	if(settings.canDelete) {
+		$(this).append(modalCreater('delete', settings.deleteModal.title, settings.deleteModal.body, settings.deleteModal.footer))
+	}
+	
+	//修改模态框
+	if(settings.canUpdate) {
+		$(this).append(modalCreater('update', settings.updateModal.title, settings.updateModal.body, settings.updateModal.footer))
 	}
 }
 
 function refreshPage() {
+	settings.table.ajax.data.pageIndex = pageIndex;
+	settings.table.ajax.data.pageSize = pageSize;
 	$('#manageUI-table-tbody').empty();
 	$.ajax({
 		type : settings.table.ajax.type,
@@ -90,6 +132,55 @@ function modalCreater(id, title, body, footer) {
 			'</div>' +
 		'</div>';
 	return modal;
+}
+
+function refreshNumber() {
+	$('#pagination').html('');
+	$('#page-number').text('共' + pageNumber + '页');
+	var pagination = '';
+	if(pageIndex >= 3) {
+		pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
+	}
+	if(pageIndex >= 2) {
+		pagination += '<li><a href="#" onclick="changePage(' + (pageIndex - 1) + ')">&lt;</a></li>';
+	}
+	var startIndex = 1;
+	if(pageIndex - 4 > 1) {
+		startIndex = pageIndex - 4; 
+	}
+	var endIndex = pageNumber;
+	if(pageIndex + 4 < pageNumber) {
+		endIndex = pageIndex + 4;
+	}
+	for(var i = startIndex; i <= endIndex; i++) {
+		if(i == pageIndex){
+			pagination += '<li class="active"><a href="#">' + i + '</a></li>';
+		} else {
+			pagination += '<li><a href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
+		}
+	}
+	if(pageIndex <= pageNumber - 1) {
+		pagination += '<li><a href="#" onclick="changePage(' + (pageIndex + 1) + ')">&gt;</a></li>';
+	}
+	if(pageIndex <= pageNumber - 2) {
+		pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
+	}
+	$('#pagination').append(pagination);
+}
+
+function goToPage() {
+	var p = $('#page-go-index').val();
+	$('#page-go-index').val('');
+	if(p < 1 || p > pageNumber) {
+		alert('该页不存在！');
+	} else {
+		changePage(parseInt(p));
+	}
+}
+
+function changePage(index) {
+	pageIndex = index;
+	refreshPage();
 }
 
 function showInsertModal() {

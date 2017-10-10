@@ -25,6 +25,12 @@ public class AdminWikiCategoryController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public ResponseMessage update(String id, String name) {
+		return wikiCategoryService.update(id, name);
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
 	public ResponseMessage getPage(int pageIndex, int pageSize) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, pageSize);

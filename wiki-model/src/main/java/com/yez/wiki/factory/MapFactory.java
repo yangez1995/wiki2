@@ -18,6 +18,13 @@ public class MapFactory {
 		return map;
 	}
 	
+	public static Map<String, Object> pageAndSize(List<Object> list, int pageNumber) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pageNumber", pageNumber);
+		return map;
+	}
+	
 	//新增String
 	public static void machiningString(Map<String, Object> map, String key, String value) {
 		if(!StringUtil.isEmpty(value)) {

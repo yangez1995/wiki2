@@ -5,5 +5,7 @@ import java.util.Map;
 
 public interface WikiCategoryMapper {
 	public void insert(Map<String, Object> map);
+	public void update(Map<String, Object> map);
 	public List<Object> getPage(Map<String, Object> map);
+	public int getNumber();
 }

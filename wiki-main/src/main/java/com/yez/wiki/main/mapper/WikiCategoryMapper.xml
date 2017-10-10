@@ -7,8 +7,18 @@
 		VALUES (#{id, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR})
 	</insert>
 
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE t_wiki_category 
+		SET name = #{name, jdbcType=VARCHAR}
+		WHERE id = #{id, jdbcType=INTEGER}
+	</update>
+
 	<select id="getPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		SELECT * FROM t_wiki_category
 		LIMIT #{startIndex, jdbcType=INTEGER}, #{pageSize, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getNumber" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_wiki_category
 	</select>
 </mapper>

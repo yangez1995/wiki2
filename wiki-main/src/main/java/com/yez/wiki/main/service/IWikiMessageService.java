@@ -4,8 +4,6 @@ import java.util.Map;
 
 import com.yez.wiki.entity.ResponseMessage;
 
-public interface IWikiCategoryService {
-	public ResponseMessage insert(String id, String name);
-	public ResponseMessage update(String id, String name);
+public interface IWikiMessageService {
 	public ResponseMessage getPage(Map<String, Object> map);
 }
