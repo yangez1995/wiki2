@@ -41,7 +41,6 @@ public class SecurityMetadataSourceImpl implements FilterInvocationSecurityMetad
 	
 	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-		long start = System.currentTimeMillis();
 		String url = ((FilterInvocation) object).getRequestUrl();
 		//判断url是否有？，如果有截取？之前url
 		int firstQuestionMarkIndex = url.indexOf("?");

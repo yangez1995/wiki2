@@ -1,5 +1,6 @@
 package com.yez.wiki.main.service.imp;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,16 @@ public class WikiMessageService implements IWikiMessageService {
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
 		return ResponseMessage.success(MapFactory.pageAndSize(wikiMessageMapper.getPage(map), wikiMessageMapper.getNumber(map)));
+	}
+
+	@Override
+	public List<Object> getCategory() {
+		return wikiMessageMapper.getCategory();
+	}
+
+	@Override
+	public List<Object> getAuth() {
+		return wikiMessageMapper.getAuth();
 	}
 
 }

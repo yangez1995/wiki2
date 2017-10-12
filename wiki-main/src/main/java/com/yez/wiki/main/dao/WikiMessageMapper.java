@@ -6,4 +6,6 @@ import java.util.Map;
 public interface WikiMessageMapper {
 	public List<Object> getPage(Map<String, Object> map);
 	public int getNumber(Map<String, Object> map);
+	public List<Object> getCategory(); 
+	public List<Object> getAuth(); 
 }

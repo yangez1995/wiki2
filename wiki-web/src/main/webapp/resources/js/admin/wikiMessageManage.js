@@ -24,12 +24,7 @@ $(document).ready(function() {
 				name : '创建日期'
 			}],
 			ajax : {
-				type : 'POST', //请求类型
 				url : 'wiki/message/getPage', //请求地址
-				async : true, //是否异步
-				dataType : 'json', //预期返回数据类型
-				contentType : 'application/x-www-form-urlencoded', //内容编码类型
-				data : {}, //请求数据
 				success : function(result) {
 					pageNumber = Math.ceil(result.data.pageNumber / pageSize);
 					$(result.data.list).each(function(i, obj) {
@@ -50,7 +45,43 @@ $(document).ready(function() {
 					refreshNumber();
 				}
 			}
-		}
+		},
+		complexSearch : true,
+		complexSearchItems : [{
+			name : 'ID',
+			param : 'id',
+			type : 'string'
+		}, {
+			name : '主标题',
+			param : 'title',
+			type : 'string'
+		}, {
+			name : '副标题',
+			param : 'subTitle',
+			type : 'string'
+		}, {
+			name : '级别',
+			param : 'level',
+			type : 'number'
+		}, {
+			name : '创建人ID',
+			param : 'createBy',
+			type : 'string'
+		},  {
+			name : '创建人昵称',
+			param : 'nickname',
+			type : 'string'
+		}, {
+			name : '类别',
+			param : 'category',
+			type : 'select',
+			url : 'wiki/message/getCategory'
+		}, {
+			name : '权限类型',
+			param : 'auth',
+			type : 'select',
+			url : 'wiki/message/getAuth'
+		}, ]
 	}
 	$('#wiki-message-manageUI').manageUI(options);
 });

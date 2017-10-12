@@ -21,8 +21,11 @@
 		<if test="subTitle != '' and subTitle != null">
 			AND a.sub_title LIKE CONCAT('%',#{subTitle, jdbcType=VARCHAR},'%')
 		</if>
-		<if test="level != '' and level != null">
-			AND a.level = #{level, jdbcType=INTEGER}
+		<if test="levelMin != '' and levelMin != null">
+			AND a.level &gt;= #{levelMin, jdbcType=INTEGER}
+		</if>
+		<if test="levelMax != '' and levelMax != null">
+			AND a.level &lt;= #{levelMax, jdbcType=INTEGER}
 		</if>
 		<if test="createBy != '' and createBy != null">
 			AND a.create_by = #{createBy, jdbcType=INTEGER}
@@ -31,7 +34,10 @@
 			AND b.nickname LIKE CONCAT('%',#{nickname, jdbcType=VARCHAR},'%')
 		</if>
 		<if test="category != '' and category != null">
-			AND a.category = #{category, jdbcType=INTEGER}
+			AND a.category - a.category % 10 = #{category, jdbcType=INTEGER}
+		</if>
+		<if test="auth != '' and auth != null">
+			AND a.category % 10 = #{auth, jdbcType=INTEGER}
 		</if>
 		LIMIT #{startIndex, jdbcType=INTEGER}, #{pageSize, jdbcType=INTEGER}
 	</select>
@@ -50,8 +56,11 @@
 		<if test="subTitle != '' and subTitle != null">
 			AND a.sub_title LIKE CONCAT('%',#{subTitle, jdbcType=VARCHAR},'%')
 		</if>
-		<if test="level != '' and level != null">
-			AND a.level = #{level, jdbcType=INTEGER}
+		<if test="levelMin != '' and levelMin != null">
+			AND a.level &gt;= #{levelMin, jdbcType=INTEGER}
+		</if>
+		<if test="levelMax != '' and levelMax != null">
+			AND a.level &lt;= #{levelMax, jdbcType=INTEGER}
 		</if>
 		<if test="createBy != '' and createBy != null">
 			AND a.create_by = #{createBy, jdbcType=INTEGER}
@@ -60,7 +69,20 @@
 			AND b.nickname LIKE CONCAT('%',#{nickname, jdbcType=VARCHAR},'%')
 		</if>
 		<if test="category != '' and category != null">
-			AND a.category = #{category, jdbcType=INTEGER}
+			AND a.category - a.category % 10 = #{category, jdbcType=INTEGER}
 		</if>
+		<if test="auth != '' and auth != null">
+			AND a.category % 10 = #{auth, jdbcType=INTEGER}
+		</if>
+	</select>
+	
+	<select id="getCategory" resultType="java.util.HashMap">
+		SELECT id AS value,name FROM t_wiki_category
+		WHERE id &gt;= 10
+	</select>
+	
+	<select id="getAuth" resultType="java.util.HashMap">
+		SELECT id AS value,name FROM t_wiki_category
+		WHERE id &lt; 10
 	</select>
 </mapper>

@@ -2,6 +2,7 @@ var settings = {};
 var pageIndex = 1;
 var pageSize = 10;
 var pageNumber = 1;
+var params = {};
 
 $.fn.manageUI = function(options) {
 	//默认配置
@@ -15,12 +16,7 @@ $.fn.manageUI = function(options) {
 				//mark : '' //数据字段名(不能为空)
 			}],
 			ajax : {
-				type : 'GET', //请求类型
 				url : '', //请求地址
-				async : true, //是否异步
-				dataType : 'json', //预期返回数据类型
-				contentType : 'application/x-www-form-urlencoded', //内容编码类型
-				data : {}, //请求数据
 				success : function() {}
 			}
 		},
@@ -41,11 +37,18 @@ $.fn.manageUI = function(options) {
 			title : '修改', //标题
 			body : '', //内容
 			footer : '' //选项
-		}
+		},
+		complexSearch : false, //是否支持复杂搜索
+		complexSearchItems : [{
+			name : '', //显示名
+			param : '', //参数名
+			type : '', //类型, string、select、number
+			url : '' //当类型为select时请求url
+		}]
 	}
 	settings = $.extend(defaults, options);
-	settings.table.ajax.data.pageIndex = pageIndex;
-	settings.table.ajax.data.pageSize = pageSize;
+	params.pageIndex = pageIndex;
+	params.pageSize = pageSize;
 	
 	//新建表格
 	$(this).append('<table class="table table-striped table-bordered" id="manageUI-table"></table>');
@@ -86,6 +89,11 @@ $.fn.manageUI = function(options) {
 	);
 	refreshNumber();
 	
+	//复杂搜索按钮
+	$('#pagination').before('<button class="btn btn-default" style="float: left;margin-left: 10px;" onclick="showComplexSearchModal()">复杂搜索</button>');
+	//刷新页面按钮
+	$('#pagination').before('<button class="btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>');
+	
 	//新增模态框
 	if(settings.canInsert) {
 		$(this).append(modalCreater('insert', settings.insertModal.title, settings.insertModal.body, settings.insertModal.footer));
@@ -100,19 +108,79 @@ $.fn.manageUI = function(options) {
 	if(settings.canUpdate) {
 		$(this).append(modalCreater('update', settings.updateModal.title, settings.updateModal.body, settings.updateModal.footer))
 	}
+	
+	//复杂搜索模态框
+	if(settings.complexSearch) {
+		var body = '';
+		$(settings.complexSearchItems).each(function(i, obj) {
+			body += '<label for="search-' + obj.param + '">' + obj.name + '</label>';
+			switch(obj.type) {
+			case 'string' : {
+				body += '<input class="form-control" id="search-' + obj.param + '" type="text">';
+				break;
+			}
+			case 'select' : {
+				body += '<select class="form-control" id="search-' + obj.param + '">' +
+							'<option value="">-- 请选择 --</option>';
+				$.ajax({
+					type : 'GET',
+					url : obj.url,
+					async : false,
+					success : function(result) {
+						$(result).each(function(i, map) {
+							body += '<option value="' + map.value + '">' + map.name + '</option>';
+						});
+					}
+				});
+				body += '</select>';
+				break;
+			}
+			case 'number' : {
+				body += '<div class="input-group">' +
+							'<input id="search-min' + obj.param + '" type="text" class="form-control" placeholder="下限">' +
+							'<span class="input-group-addon">——</span>' +
+							'<input id="search-max' + obj.param + '" type="text" class="form-control" placeholder="上限">' +
+						'</div>';
+				break;
+			}
+			}
+		});
+		var footer = '<button type="button" class="btn btn-defult" data-dismiss="modal">关闭</button>' + 
+        			 '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="complexSearch(' + replaceQuotes(JSON.stringify(settings.complexSearchItems)) + ')">搜索</button>';
+		$(this).append(modalCreater('complex-search', '复杂搜索', body, footer));
+	}
+}
+
+function complexSearch(items) {
+	params = {};
+	$(items).each(function(i, item) {
+		switch(item.type) {
+		case 'string' : {
+			params[item.param] = $('#search-' + item.param).val();
+			break;
+		}
+		case 'select' : {
+			params[item.param] = $('#search-' + item.param).val();
+			break;
+		}
+		case 'number' : {
+			params[item.param + 'Min'] = $('#search-min' + item.param).val();
+			params[item.param + 'Max'] = $('#search-max' + item.param).val();
+			break;
+		}
+		}
+	});
+	refreshPage();
 }
 
 function refreshPage() {
-	settings.table.ajax.data.pageIndex = pageIndex;
-	settings.table.ajax.data.pageSize = pageSize;
+	params.pageIndex = pageIndex;
+	params.pageSize = pageSize;
 	$('#manageUI-table-tbody').empty();
 	$.ajax({
-		type : settings.table.ajax.type,
+		type : 'POST',
 		url : settings.table.ajax.url,
-		async : settings.table.ajax.async,
-		dataType : settings.table.ajax.dataType,
-		contentType : settings.table.ajax.contentType,
-		data : settings.table.ajax.data,
+		data : params,
 		success : settings.table.ajax.success
 	});
 }
@@ -187,4 +255,18 @@ function showInsertModal() {
 	$('#insert').modal({
 		backdrop: 'static'
 	});
+}
+
+function showComplexSearchModal() {
+	$('#complex-search').modal({
+		backdrop: 'static'
+	});
+}
+
+function refresh() {
+	pageIndex = 1;
+	pageSize = 10;
+	params = {};
+	$('#complex-search').find('.form-control').val('');
+	refreshPage();
 }
