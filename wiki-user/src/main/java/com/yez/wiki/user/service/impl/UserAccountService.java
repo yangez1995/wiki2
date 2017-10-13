@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
+import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.UserAccountMapper;
 import com.yez.wiki.user.service.IUserAccountService;
-import com.yez.wiki.util.PageUtil;
 /**
  * 用户帐号Service接口实现类
  * @author 杨恩哲
@@ -66,19 +66,6 @@ public class UserAccountService implements IUserAccountService {
 	 */
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(userAccountMapper.getPage(map));
-	}
-
-	/**
-	 * 获取用户帐号数量，成功则返回响应码{@code 200}、用户帐号数量
-	 * @param map 参数集合，包含：
-	 *     int id 按id精确搜索，可以为空
-	 *     String username 按username模糊搜索，可以为空
-	 *     String locked 按locked精确搜索，可以为空
-	 * @return 响应信息
-	 */
-	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(userAccountMapper.getNumber(map), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(userAccountMapper.getPage(map), userAccountMapper.getNumber(map)));
 	}
 }

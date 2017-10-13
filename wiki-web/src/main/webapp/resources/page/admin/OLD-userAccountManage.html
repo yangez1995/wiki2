@@ -1,0 +1,75 @@
+<script src="../resources/js/admin/userAccountManage.js"></script>
+<div class="table-responsive">
+<table class="table table-striped table-bordered" style="overflow-x:visible">
+  <caption class="hidden-xs">用户帐号管理</caption>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>用户名</th>
+    <th>注册时间</th>
+    <th>最后登陆时间</th>
+    <th>状态</th>
+    <th width="55px">选项</th>
+  </tr>
+  </thead>
+  <tbody id="user-account-list">
+  </tbody>
+</table>
+</div>
+<!-- 大型设备样式 -->
+<div class="hidden-xs input-group" style="width: 170px;float: left;">
+  <span class="page-number input-group-addon"></span>
+  <input type="text" class="form-control" id="page-go-index" placeholder="页数" onkeydown="onlyNum()">
+  <span class="input-group-btn">
+    <button class="btn btn-default" id="page-go" type="button">Go!</button>
+  </span>
+</div>
+<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" data-toggle="modal" data-target="#complex-search">复杂搜索</button>
+<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>
+<!-- <ul class="hidden-xs pagination" id="pagination" style="margin: 0px;float: right;"></ul> -->
+<!-- 小型设备样式 -->
+<ul class="hidden-sm hidden-md hidden-lg pagination" id="pagination" style="margin: 0px;"></ul>
+<div class="hidden-sm hidden-md hidden-lg input-group">
+  <span class="page-number input-group-addon"></span>
+  <input type="text" class="form-control" id="page-go-index" placeholder="页数" onkeydown="onlyNum()">
+  <span class="input-group-btn">
+    <button class="btn btn-default" id="page-go" type="button">Go!</button>
+  </span>
+</div>
+<button type="button" class="btn btn-primary btn-block hidden-sm hidden-md hidden-lg" style="margin-top: 10px;">新建按钮</button>
+<div class="row" style="margin-top: 10px;">
+	<div class="col-xs-6 hidden-sm hidden-md hidden-lg">
+		<button type="button" class="btn btn-default btn-block">复杂搜索</button>
+	</div>
+	<div class="col-xs-6 hidden-sm hidden-md hidden-lg">
+		<button type="button" class="btn btn-default btn-block">刷新页面</button>
+	</div>
+</div>
+
+<!-- 复杂搜索模态框 -->
+<div class="modal fade" id="complex-search" tabindex="-1" role="dialog" aria-labelledby="SearchLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="SearchLabel">复杂搜索</h4>
+      </div>
+      <div class="modal-body">
+        <label for="search-id">id</label>
+        <input class="form-control" id="search-id" type="text">
+        <label for="search-name">用户名</label>
+        <input class="form-control" id="search-name" type="text">
+        <label for="search-locked">状态</label>
+        <select class="form-control" id="search-locked">
+      	  <option value="">-- 请选择 --</option>
+          <option value="f">可用</option>
+          <option value="t">禁用</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-defult" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="onComplexSearch()">搜索</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>

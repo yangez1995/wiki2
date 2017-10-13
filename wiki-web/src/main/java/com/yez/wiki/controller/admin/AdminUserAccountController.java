@@ -1,6 +1,8 @@
 package com.yez.wiki.controller.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,19 @@ import com.yez.wiki.user.service.IUserAccountService;
 @Controller
 @RequestMapping("/admin/user/account")
 public class AdminUserAccountController {
+	private static List<Map<String, String>> lockedList;
+	static {
+		lockedList = new ArrayList<Map<String, String>>();
+		Map<String, String> map1 = new HashMap<String, String>();
+		map1.put("value", "f");
+		map1.put("name", "可用");
+		Map<String, String> map2 = new HashMap<String, String>();
+		map2.put("value", "t");
+		map2.put("name", "禁用");
+		lockedList.add(map1);
+		lockedList.add(map2);
+	}
+	
 	/**
 	 * 用户帐号Service
 	 */
@@ -66,20 +81,9 @@ public class AdminUserAccountController {
 		return userAccountService.getPage(map);
 	}
 	
-	/**
-	 * 获取符合搜索条件的用户总数
-	 * @param id 查找用户id
-	 * @param username 查找用户名
-	 * @param locked 查找用户锁定状态
-	 * @return 从Service获取的响应信息
-	 */
 	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.POST)
-	public ResponseMessage getNumber(String username, String id, String locked) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "username", username);
-		map.put("locked", "t".equals(locked));
-		return userAccountService.getNumber(map);
+	@RequestMapping(value = "/getLocked", method = RequestMethod.GET)
+	public List<Map<String, String>> getLocked() {
+		return lockedList;
 	}
 }

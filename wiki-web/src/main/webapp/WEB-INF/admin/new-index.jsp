@@ -22,7 +22,7 @@
 <body lang="zh-CN">
 <div class="container-fluid" style="padding: 0px;">
   <div style="width: 100%; height: 50px; background: #556;">
-    <div style="width: 200px; height: 100%; float: left;border-right: #667 solid 1px;">
+    <div class="hidden-xs" style="width: 200px; height: 100%; float: left;border-right: #667 solid 1px;">
       <img src="../resources/image/default-head.png" style="width: 30px;height: 30px;margin-left: 10px;margin-top: 10px;border-radius: 15px;float: left;">
       <div style="float: left;margin-left: 10px;margin-top: 6px;width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
         <span id="on-login-name" style="color: #EEE;">用户昵称</span><br/>
@@ -30,14 +30,14 @@
       </div>
       <span id="logout" style="color: #EEE;line-height: 50px;cursor: pointer;" onMouseOver="this.style.color='#CCC'" onMouseOut="this.style.color='#EEE'">[注销]</span>
     </div>
-    <div class="input-group" style="float: right;width: 240px;margin-top: 8px;margin-right: 20px;">
+    <div class="hidden-xs input-group" style="float: right;width: 240px;margin-top: 8px;margin-right: 20px;margin-left: 20px;">
       <input class="form-control" id="easy-search" type="text">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="onEasySearch()">搜索</button>
+        <button class="btn btn-default" type="button" onclick="easySearch()">搜索</button>
       </span>
     </div>
   </div>
-  <div id="left-nav" style="width: 200px; float:left; background: #667;">
+  <div class="hidden-xs" id="left-nav" style="width: 200px; float:left; background: #667;">
     <dl class="nav-dl dl-act">
       <dt>用户管理</dt>
       <dd id="u-account">· 用户帐号管理</dd>
@@ -67,6 +67,6 @@
       <dd id="wiki-category">· 词条类型管理</dd>
     </dl>
   </div>
-  <div id="content" style="margin-left: 220px;padding: 20px;"></div>
+  <div id="content" style="float: left;padding: 20px;"></div>
 </body>
 </html>

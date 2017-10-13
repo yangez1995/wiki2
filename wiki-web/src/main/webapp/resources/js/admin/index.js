@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	var h = $(window).height() - 50;
-	var w = $(window).width() - 220;
+	if($(window).width() >= 768) {
+		var w = $(window).width() - 220;
+	} else {
+		var w = $(window).width();
+	}
 	$('#left-nav').css('height', h);
 	$('#content').css({'width': w,'height': h});
 	$('#content').load('../resources/page/admin/userAccountManage.html');
@@ -62,7 +66,11 @@ $(document).ready(function() {
 
 $(window).resize(function() {
 	var h = $(window).height() - 50;
-	var w = $(window).width() - 220;
+	if($(window).width() >= 768) {
+		var w = $(window).width() - 220;
+	} else {
+		var w = $(window).width();
+	}
 	$('#left-nav').css('height', h);
 	$('#content').css({'width': w,'height': h});
 });

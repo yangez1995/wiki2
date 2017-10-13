@@ -9,7 +9,7 @@
   height: 36px;
   width: 100%;
   padding-left: 20px;
-  background: var(--mcolor);
+  background: #556;
   font-size: 15px;
   line-height: 36px;
   color: #DDD;
@@ -17,14 +17,14 @@
 }
 
 .nav-dl dt:hover {
-	background: var(--mcolor-hover);
+	background: #505060;
 }
 
 .nav-dl dd {
   height: 0px;
   width: 100%;
   padding-left: 25px;
-  background: var(--mcolor-shallow);
+  background: #667;
   line-height: 30px;
   color: #EEE;
   cursor: pointer;
@@ -37,7 +37,7 @@
 }
 
 .nav-dl dd:hover {
-	background: var(--mcolor);
+	background: #556;
 }
 
 .dl-act dd{

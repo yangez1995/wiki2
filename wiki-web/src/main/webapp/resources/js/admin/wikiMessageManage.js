@@ -1,5 +1,3 @@
-var updateId = 0;
-
 $(document).ready(function() {
 	var options = {
 		table : { //表格

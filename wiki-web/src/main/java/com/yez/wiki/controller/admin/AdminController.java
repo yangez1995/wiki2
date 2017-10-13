@@ -29,6 +29,11 @@ public class AdminController {
 		return "/admin/index";
 	}
 	
+	@RequestMapping(value = "/newindex", method = RequestMethod.GET)
+	public String newadmin() {
+		return "/admin/new-index";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/getOnLoginUserMessage", method = RequestMethod.GET)
 	public Map<String, Object> getOnLoginUserMessage() {

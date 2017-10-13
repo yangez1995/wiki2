@@ -33,11 +33,4 @@ public interface IUserAccountService {
 	 * @return 响应信息
 	 */
 	public ResponseMessage getPage(Map<String, Object> map);
-	
-	/**
-	 * 获取用户帐号数量
-	 * @param map 参数集合
-	 * @return 响应信息
-	 */
-	public ResponseMessage getNumber(Map<String, Object> map);
 }

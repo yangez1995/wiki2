@@ -3,6 +3,7 @@ var pageIndex = 1;
 var pageSize = 10;
 var pageNumber = 1;
 var params = {};
+var easySearchParam = [];
 
 $.fn.manageUI = function(options) {
 	//默认配置
@@ -38,6 +39,7 @@ $.fn.manageUI = function(options) {
 			body : '', //内容
 			footer : '' //选项
 		},
+		easySearchParam : [], //简单搜索字段
 		complexSearch : false, //是否支持复杂搜索
 		complexSearchItems : [{
 			name : '', //显示名
@@ -51,13 +53,13 @@ $.fn.manageUI = function(options) {
 	params.pageSize = pageSize;
 	
 	//新建表格
-	$(this).append('<table class="table table-striped table-bordered" id="manageUI-table"></table>');
+	$(this).append('<div class="table-responsive"><table class="table table-striped table-bordered" id="manageUI-table"></table></div>');
 	
 	//表格标题部分
 	if(settings.canInsert) {//是否可以新建行
-		$('#manageUI-table').append('<caption>' + settings.table.title + '<button type="button" class="btn btn-primary btn-sm pull-right" onclick="showInsertModal()">' + settings.table.insertBtnText + '</button></caption>');
+		$('#manageUI-table').append('<caption class="hidden-xs">' + settings.table.title + '<button type="button" class="btn btn-primary btn-sm pull-right" onclick="showInsertModal()">' + settings.table.insertBtnText + '</button></caption>');
 	} else {
-		$('#manageUI-table').append('<caption>资源类型管理</caption>');
+		$('#manageUI-table').append('<caption class="hidden-xs">' + settings.table.title + '</caption>');
 	}
 	
 	//表格列部分
@@ -78,21 +80,23 @@ $.fn.manageUI = function(options) {
 	
 	//页码
 	$(this).append(
-		'<div class="input-group" style="width: 170px;float: left;">' +
-			'<span id="page-number" class="input-group-addon"></span>' +
+		'<div class="hidden-xs input-group" style="width: 170px;float: left;">' +
+			'<span class="page-number input-group-addon"></span>' +
 			'<input type="text" class="form-control" id="page-go-index" placeholder="页数" onkeydown="onlyNum()">' +
 			'<span class="input-group-btn">' +
 				'<button class="btn btn-default" type="button" onclick="goToPage()">Go!</button>' +
 			'</span>' +
 		'</div>' +
-		'<ul id="pagination" class="pagination" style="margin: 0px;float: right;"></ul>'
+		'<ul class="hidden-xs pagination" id="pagination" style="margin: 0px;float: right;"></ul>'
 	);
 	refreshNumber();
 	
+	//简单搜索字段
+	easySearchParam = settings.easySearchParam;
 	//复杂搜索按钮
-	$('#pagination').before('<button class="btn btn-default" style="float: left;margin-left: 10px;" onclick="showComplexSearchModal()">复杂搜索</button>');
+	$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="showComplexSearchModal()">复杂搜索</button>');
 	//刷新页面按钮
-	$('#pagination').before('<button class="btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>');
+	$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>');
 	
 	//新增模态框
 	if(settings.canInsert) {
@@ -151,6 +155,14 @@ $.fn.manageUI = function(options) {
 	}
 }
 
+function easySearch() {
+	params = {};
+	$(easySearchParam).each(function(i, param) {
+		params[param] = $('#easy-search').val();
+	});
+	refreshPage();
+}
+
 function complexSearch(items) {
 	params = {};
 	$(items).each(function(i, item) {
@@ -204,7 +216,7 @@ function modalCreater(id, title, body, footer) {
 
 function refreshNumber() {
 	$('#pagination').html('');
-	$('#page-number').text('共' + pageNumber + '页');
+	$('.page-number').text('共' + pageNumber + '页');
 	var pagination = '';
 	if(pageIndex >= 3) {
 		pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
@@ -267,6 +279,7 @@ function refresh() {
 	pageIndex = 1;
 	pageSize = 10;
 	params = {};
+	$('#easy-search').val('');
 	$('#complex-search').find('.form-control').val('');
 	refreshPage();
 }
