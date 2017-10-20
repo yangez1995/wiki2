@@ -10,6 +10,5 @@ public interface IRoleMessageService {
 	public ResponseMessage delete(int id);
 	public ResponseMessage update(Role role);
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber(Map<String, Object> map);
 	public boolean checkRoleNameExist(String name);
 }

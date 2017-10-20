@@ -1,7 +1,6 @@
 package com.yez.wiki.controller.admin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,16 +39,6 @@ public class AdminUserRoleController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.POST)
-	public ResponseMessage getNumber(String id, String username, String roleId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "username", username);
-		MapFactory.machiningInt(map, "roleId", roleId);
-		return userRoleService.getNumber(map);
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/getOtherRoles", method = RequestMethod.POST)
 	public ResponseMessage getOtherRoles(@RequestBody List<Map<String, Integer>> ids) {
 		List<Integer> list = new ArrayList<Integer>();
@@ -61,7 +50,7 @@ public class AdminUserRoleController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getRoles", method = RequestMethod.GET)
-	public ResponseMessage getRoles() {
+	public List<Map<String, Object>> getRoles() {
 		return userRoleService.getRoles();
 	}
 }

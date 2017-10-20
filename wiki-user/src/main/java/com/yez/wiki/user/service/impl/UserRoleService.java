@@ -11,7 +11,6 @@ import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.UserRoleMapper;
 import com.yez.wiki.user.service.IUserRoleService;
-import com.yez.wiki.util.PageUtil;
 @Service
 public class UserRoleService implements IUserRoleService {
 	@Autowired
@@ -42,21 +41,16 @@ public class UserRoleService implements IUserRoleService {
 	
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(userRoleMapper.getPage(map));
-	}
-
-	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(userRoleMapper.getNumber(map), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(userRoleMapper.getPage(map), userRoleMapper.getNumber(map)));
 	}
 
 	@Override
 	public ResponseMessage getOtherRoles(List<Integer> list) {
-		return list.isEmpty() ? getRoles() : ResponseMessage.success(userRoleMapper.getOtherRoles(list));
+		return list.isEmpty() ? ResponseMessage.success(getRoles()) : ResponseMessage.success(userRoleMapper.getOtherRoles(list));
 	}
 
 	@Override
-	public ResponseMessage getRoles() {
-		return ResponseMessage.success(userRoleMapper.getRoles());
+	public List<Map<String, Object>> getRoles() {
+		return userRoleMapper.getRoles();
 	}
 }

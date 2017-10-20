@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Role;
+import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.factory.RoleFactory;
 import com.yez.wiki.user.dao.RoleMessageMapper;
 import com.yez.wiki.user.service.IRoleMessageService;
-import com.yez.wiki.util.PageUtil;
 import com.yez.wiki.util.StringUtil;
 
 @Service
@@ -53,18 +53,13 @@ public class RoleMessageService implements IRoleMessageService {
 	
 	@Override
 	public ResponseMessage update(Role role) {
-		System.out.println(roleMapper.update(role));
+		roleMapper.update(role);
 		return ResponseMessage.success();
 	}
 	
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(roleMapper.getPage(map));
-	}
-
-	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(roleMapper.getNumber(map), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(roleMapper.getPage(map), roleMapper.getNumber(map)));
 	}
 
 	@Override

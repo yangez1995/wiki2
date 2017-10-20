@@ -1,6 +1,5 @@
 package com.yez.wiki.controller.admin;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,25 +58,11 @@ public class AdminRoleMessageContorller {
 	 * 获取页数对应的角色信息
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getPage", method = RequestMethod.GET)
-	public ResponseMessage getRoleMessage(int pageIndex, String id, String name, String authId) {
+	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
+	public ResponseMessage getRoleMessage(int pageIndex, String id, String roleName, String authId) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10);
 		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "name", name);
-		MapFactory.machiningInt(map, "authId", authId);
+		MapFactory.machiningString(map, "roleName", roleName);
 		return roleMessageService.getPage(map);
-	}
-	
-	/**
-	 * 获取收录所有角色所需要的总页数
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.GET)
-	public ResponseMessage getNumber(String id, String name, String authId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "name", name);
-		MapFactory.machiningInt(map, "authId", authId);
-		return roleMessageService.getNumber(map);
 	}
 }

@@ -11,10 +11,10 @@
 		<if test="nickname != '' and nickname != null">
 			AND nickname LIKE CONCAT('%',#{nickname, jdbcType=VARCHAR},'%')
 		</if>
-		<if test="minAge != '' and minAge != null">
+		<if test="ageMin != '' and minAge != null">
 			AND age &gt;= #{minAge, jdbcType=INTEGER}
 		</if>
-		<if test="maxAge != '' and maxAge != null">
+		<if test="ageMax != '' and maxAge != null">
 			AND age &lt;= #{maxAge, jdbcType=INTEGER}
 		</if>
 		<if test="sex != '' and sex != null">

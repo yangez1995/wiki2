@@ -1,127 +1,77 @@
-var pageIndex = 1;
-var pageMax = 1;
 var nowSetUserId = 0;
-var params = {}
+
 $(document).ready(function() {
-	resetList();
-	resetPage();
-	
-	$('#page-go').click(function() {
-		var p = $('#page-go-index').val();
-		if(p < 1 || p > pageMax) {
-			alert('该页不存在！');
-		} else {
-			pageIndex = parseInt(p);
-			resetList();
-			resetPage();
-		}
-	});
-	
-	$.get('user/role/getRoles', function(result) {
-		$(result.data).each(function(i, role) {
-			$('#search-role').append('<option value="' + role.id + '">' + role.name + '</option>');
-		});
-	});
+	var options = {
+		table : { //表格
+			title : '用户角色管理', //表格标题
+			column : [{
+				name : 'ID'
+			}, {
+				name : '用户名'
+			}, {
+				name : '角色'
+			}, {
+				name : '选项',
+				width : '55px'
+			}],
+			ajax : {
+				url : 'user/role/getPage', //请求地址
+				success : function(result) {
+					pageNumber = Math.ceil(result.data.pageNumber / pageSize);
+					var table = '';
+					$(result.data.list).each(function(i, user) {
+						table += '<tr>' +
+								 '<td>' + user.id + '</td>' +
+								 '<td>' + user.username + '</td>' + 
+								 '<td>';
+						$(user.roles).each(function(j, role) {
+							table += '<span class="label label-primary" style="line-height: 20px;">' + role.name + '</span>&nbsp;';
+						});
+						table += '</td>' +
+								 '<td><button class="btn-xs btn-primary" onclick="showUpdateModal(' + replaceQuotes(JSON.stringify(user)) + ')">设置</button></td>'
+					});
+					$('#manageUI-table-tbody').append(table);
+					refreshNumber();
+				}
+			}
+		},
+		easySearchParam : ['username'],
+		complexSearch : true,
+		complexSearchItems : [{
+			name : 'ID',
+			param : 'id',
+			type : 'string'
+		}, {
+			name : '用户名',
+			param : 'username',
+			type : 'string'
+		}, {
+			name : '角色',
+			param : 'role',
+			type : 'select',
+			url : 'user/role/getRoles'
+		}],
+		canUpdate : true, 
+		updateModal : { 
+			title : '设置角色',
+			body : '<table class="table table-striped table-bordered model-table">' +
+					   '<thead><tr>' + 
+					   	   '<th>角色名</th>' + 
+					   	   '<th width="43px">选项</th>' +
+					   '</tr></thead>' +
+					   '<tbody id="set-role-list"></tbody>' +
+				   '</table>', 
+			footer : '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="updateRoles()">确认</button>' +
+					 '<button type="button" class="btn btn-info" onclick="chooseAddRole()">添加角色</button>'
+		},
+	}
+	$('#user-role-manageUI').manageUI(options);
 });
 
-function onEasySearch() {
-	params = {};
-	if(!isEmpty($('#easy-search').val())) {
-		params.username = $('#easy-search').val();
-	} 
-	pageIndex = 1;
-	resetPage();
-	resetList();
-}
-
-function onComplexSearch() {
-	params = {};
-	if(!isEmpty($('#search-id').val())) {
-		params.id = $('#search-id').val();
-	}
-	if(!isEmpty($('#search-username').val())) {
-		params.username = $('#search-username').val();
-	}
-	if(!isEmpty($('#search-role').val())) {
-		params.roleId = $('#search-role').val();
-	}
-	pageIndex = 1;
-	resetPage();
-	resetList();
-}
-
-function resetAll() {
-	resetList();
-	resetPage();
-}
-
-function resetList() {
-	$('#user-role-list').html('');
-	params.pageIndex = pageIndex;
-	$.post('user/role/getPage', params, function(result) {
-		var table = '';
-		$(result.data).each(function(i, user) {
-			table += '<tr>' +
-					 '<td>' + user.id + '</td>' +
-					 '<td>' + user.username + '</td>' + 
-					 '<td>';
-			$(user.roles).each(function(j, role) {
-				table += '<span class="label label-primary" style="line-height: 20px;">' + role.name + '</span>&nbsp;';
-			});
-			table += '</td>' +
-					 '<td><button class="btn-xs btn-primary" onclick="setRole(' + replaceQuotes(JSON.stringify(user)) + ')">设置</button></td>'
-		});
-		$('#user-role-list').append(table);
-	});
-}
-
-function resetPage() {
-	$('#pagination').html('');
-	$.post('user/role/getNumber', params, function(result) {
-		pageNumber = result.data;
-		pageMax = pageNumber;
-		$('#page-number').text('共' + pageNumber + '页');
-		var pagination = '';
-		if(pageIndex >= 3) {
-			pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
-		}
-		if(pageIndex >= 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex - 1) + ')">&lt;</a></li>';
-		}
-		var startIndex = 1;
-		if(pageIndex - 4 > 1) {
-			startIndex = pageIndex - 4; 
-		}
-		var endIndex = pageNumber;
-		if(pageIndex + 4 < pageNumber) {
-			endIndex = pageIndex + 4;
-		}
-		for(var i = startIndex; i <= endIndex; i++) {
-			if(i == pageIndex){
-				pagination += '<li class="active"><a href="#">' + i + '</a></li>';
-			} else {
-				pagination += '<li><a href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
-			}
-		}
-		if(pageIndex <= pageNumber - 1) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex + 1) + ')">&gt;</a></li>';
-		}
-		if(pageIndex <= pageNumber - 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
-		}
-		$('#pagination').append(pagination);
-	});
-}
-
-function changePage(index) {
-	pageIndex = index;
-	resetList();
-	resetPage();
-}
 /**
  * 点击设置按钮，加载用户角色信息并弹出角色设置模态框
  */
-function setRole(user) {
+function showUpdateModal(user) {
 	nowSetUserId = user.id;
 	$('#set-role-list').html('');
 	var table = '';
@@ -134,7 +84,7 @@ function setRole(user) {
 				 '</tr>';
 	});
 	$('#set-role-list').html(table);
-	$('#set-role').modal({
+	$('#update').modal({
 		backdrop: 'static'
 	});
 }
@@ -202,19 +152,8 @@ function updateRoles() {
 		data : JSON.stringify(params),
 		success : function(result) {
 			if(result.code == '200') {
-				resetAll();
+				refreshPage();
 			}
 		}
 	});
-}
-
-function refresh() {
-	params = {};
-	pageIndex = 1;
-	resetList();
-	resetPage();
-	$('#easy-search').val('');
-	$('#search-id').val('');
-	$('#search-username').val('');
-	$('#search-role').val('');
 }

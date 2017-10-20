@@ -9,55 +9,115 @@ $(document).ready(function() {
 	$('#content').css({'width': w,'height': h});
 	$('#content').load('../resources/page/admin/userAccountManage.html');
 	
-	$.get('getOnLoginUserMessage', function(data) {
+	/*$.get('getOnLoginUserMessage', function(data) {
 		$('#on-login-name').text(data.nickname);
 		$('#on-login-role').text(data.role);
-	});
-	
-	$('#logout').click(function() {
-		window.location.href = '../user/logout';
-	});
+	});*/
 	
 	$('.nav-dl dt').click(function() {
 		$('.nav-dl').removeClass('dl-act');
 		$(this).parent().addClass('dl-act');
 	});
 	
+	$('#u-account-min').click(function() {
+		$('#content').load('../resources/page/admin/userAccountManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#u-account').click(function() {
 		$('#content').load('../resources/page/admin/userAccountManage.html');
+	});
+	
+	$('#u-role-min').click(function() {
+		$('#content').load('../resources/page/admin/userRoleManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#u-role').click(function() {
 		$('#content').load('../resources/page/admin/userRoleManage.html');
 	});
+	
+	$('#u-msg-min').click(function() {
+		$('#content').load('../resources/page/admin/userMessageManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#u-msg').click(function() {
 		$('#content').load('../resources/page/admin/userMessageManage.html');
+	});
+	
+	$('#u-chart-min').click(function() {
+		$('#content').load('../resources/page/admin/userChartManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#u-chart').click(function() {
 		$('#content').load('../resources/page/admin/userChartManage.html');
 	});
+	
+	$('#au-chart-min').click(function() {
+		$('#content').load('../resources/page/admin/activeUserChartManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#au-chart').click(function() {
 		$('#content').load('../resources/page/admin/activeUserChartManage.html');
 	});
+	
+	$('#r-msg-min').click(function() {
+		$('#content').load('../resources/page/admin/roleMessageManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#r-msg').click(function() {
-		$('#content').load('../resources/page/admin/roleManage.html');
+		$('#content').load('../resources/page/admin/roleMessageManage.html');
+	});
+	
+	$('#r-auth-min').click(function() {
+		$('#content').load('../resources/page/admin/roleAuthManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#r-auth').click(function() {
 		$('#content').load('../resources/page/admin/roleAuthManage.html');
 	});
+	
+	$('#auth-msg-min').click(function() {
+		$('#content').load('../resources/page/admin/authorityManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#auth-msg').click(function() {
 		$('#content').load('../resources/page/admin/authorityManage.html');
+	});
+	
+	$('#res-msg-min').click(function() {
+		$('#content').load('../resources/page/admin/resourceMessageManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#res-msg').click(function() {
 		$('#content').load('../resources/page/admin/resourceMessageManage.html');
 	});
+	
+	$('#res-type-min').click(function() {
+		$('#content').load('../resources/page/admin/resourceTypeManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#res-type').click(function() {
 		$('#content').load('../resources/page/admin/resourceTypeManage.html');
+	});
+	
+	$('#res-auth-min').click(function() {
+		$('#content').load('../resources/page/admin/resourceAuthManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#res-auth').click(function() {
 		$('#content').load('../resources/page/admin/resourceAuthManage.html');
 	});
+	
+	$('#wiki-msg-min').click(function() {
+		$('#content').load('../resources/page/admin/wikiMessageManage.html');
+		$('#min-nav-btn').trigger('click');
+	});
 	$('#wiki-msg').click(function() {
 		$('#content').load('../resources/page/admin/wikiMessageManage.html');
+	});
+	
+	$('#wiki-category-min').click(function() {
+		$('#content').load('../resources/page/admin/wikiCategoryManage.html');
+		$('#min-nav-btn').trigger('click');
 	});
 	$('#wiki-category').click(function() {
 		$('#content').load('../resources/page/admin/wikiCategoryManage.html');
@@ -74,6 +134,10 @@ $(window).resize(function() {
 	$('#left-nav').css('height', h);
 	$('#content').css({'width': w,'height': h});
 });
+
+function logout() {
+	window.location.href = '../user/logout';
+}
 
 function onlyNum() 
 { 

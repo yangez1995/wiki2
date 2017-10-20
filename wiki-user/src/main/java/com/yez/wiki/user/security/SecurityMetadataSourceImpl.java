@@ -48,27 +48,30 @@ public class SecurityMetadataSourceImpl implements FilterInvocationSecurityMetad
             url = url.substring(0, firstQuestionMarkIndex);
         }
         String[] urlArr = url.split("/");
-        
-        Iterator<String> ite = resourceMap.keySet().iterator();
-        while(ite.hasNext()) {
-        	String resURL = ite.next();
-        	String[] resURLArr = resURL.split("/");
-        	boolean key = true;
-        	for(int i = 0; i < resURLArr.length; i++) {
-        		if("**".equals(resURLArr[i])) {
-        			break;
-        		}
-        		if("*".equals(resURLArr[i])) {
-        			continue;
-        		}
-        		if(!resURLArr[i].equals(urlArr[i])) {
-        			key = false;
-        			break;
-        		}
-        	}
-        	if(key) {
-        		return resourceMap.get(resURL);
-        	}
+        try {
+        	Iterator<String> ite = resourceMap.keySet().iterator();
+            while(ite.hasNext()) {
+            	String resURL = ite.next();
+            	String[] resURLArr = resURL.split("/");
+            	boolean key = true;
+            	for(int i = 0; i < resURLArr.length; i++) {
+            		if("**".equals(resURLArr[i])) {
+            			break;
+            		}
+            		if("*".equals(resURLArr[i])) {
+            			continue;
+            		}
+            		if(!resURLArr[i].equals(urlArr[i])) {
+            			key = false;
+            			break;
+            		}
+            	}
+            	if(key) {
+            		return resourceMap.get(resURL);
+            	}
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+        	return null;
         }
 		return null;
 	}

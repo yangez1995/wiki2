@@ -6,7 +6,6 @@ import com.yez.wiki.entity.ResponseMessage;
 
 public interface IUserMessageService {
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber(Map<String, Object> map);
 	
 	public String getNicknameById(int id);
 }

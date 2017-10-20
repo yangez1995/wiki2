@@ -78,7 +78,7 @@ $.fn.manageUI = function(options) {
 	$('#manageUI-table').append('<tbody id="manageUI-table-tbody"></tbody>');
 	refreshPage();
 	
-	//页码
+	//大型设备页码
 	$(this).append(
 		'<div class="hidden-xs input-group" style="width: 170px;float: left;">' +
 			'<span class="page-number input-group-addon"></span>' +
@@ -91,12 +91,34 @@ $.fn.manageUI = function(options) {
 	);
 	refreshNumber();
 	
-	//简单搜索字段
-	easySearchParam = settings.easySearchParam;
-	//复杂搜索按钮
-	$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="showComplexSearchModal()">复杂搜索</button>');
-	//刷新页面按钮
-	$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>');
+	//小型设备页码
+	$(this).append('<ul class="pager hidden-sm hidden-md hidden-lg" id="min-pagination-btn" style="margin: 10px 0px;"></ul>');
+	
+	//小型设备新增按钮
+	if(settings.canInsert) {
+		$(this).append('<button type="button" class="btn btn-primary btn-block hidden-sm hidden-md hidden-lg" onclick="showInsertModal()" style="margin-bottom: 10px;">' + settings.table.insertBtnText + '</button>');
+	}
+	
+	if(settings.complexSearch) {
+		//简单搜索字段
+		easySearchParam = settings.easySearchParam;
+		//复杂搜索按钮
+		$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="showComplexSearchModal()">复杂搜索</button>');
+		//刷新页面按钮
+		$('#pagination').before('<button class="hidden-xs btn btn-default" style="float: left;margin-left: 10px;" onclick="refresh()">刷新页面</button>');
+		
+		//小型设备复杂搜索按钮
+		$(this).append(
+			'<div class="row hidden-sm hidden-md hidden-lg">' +
+				'<div class="col-xs-6">' +
+					'<button class="btn btn-default btn-block" onclick="showComplexSearchModal()">复杂搜索</button>' +
+				'</div>' +
+				'<div class="col-xs-6">' +
+					'<button class="btn btn-default btn-block" onclick="refresh()">刷新页面</button>' +
+				'</div>' +
+			'</div>'
+		);
+	}
 	
 	//新增模态框
 	if(settings.canInsert) {
@@ -155,11 +177,20 @@ $.fn.manageUI = function(options) {
 	}
 }
 
+function easySearchMin() {
+	$('#min-nav-btn').trigger('click');
+	$(easySearchParam).each(function(i, param) {
+		params[param] = $('#easy-search-min').val();
+	});
+	refreshPage();
+}
+
 function easySearch() {
 	params = {};
 	$(easySearchParam).each(function(i, param) {
 		params[param] = $('#easy-search').val();
 	});
+	pageIndex = 1;
 	refreshPage();
 }
 
@@ -182,6 +213,7 @@ function complexSearch(items) {
 		}
 		}
 	});
+	pageIndex = 1;
 	refreshPage();
 }
 
@@ -216,6 +248,7 @@ function modalCreater(id, title, body, footer) {
 
 function refreshNumber() {
 	$('#pagination').html('');
+	$('#min-pagination-btn').html('');
 	$('.page-number').text('共' + pageNumber + '页');
 	var pagination = '';
 	if(pageIndex >= 3) {
@@ -246,6 +279,30 @@ function refreshNumber() {
 		pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
 	}
 	$('#pagination').append(pagination);
+	
+	var minPaginationBtn = '';
+	if(pageIndex == 1) {
+		minPaginationBtn += '<li class="previous disabled"><a>上一页</a></li>';
+	} else {
+		minPaginationBtn += '<li class="previous"><a onclick="changePage(' + (pageIndex - 1) + ')">上一页</a></li>';
+	}
+	
+	minPaginationBtn += '<li><div class="btn-group dropup">' +
+							'<button type="button" class="btn btn-default dropdown-toggle" id="min-pagination-select" data-toggle="dropdown" style="border-radius: 15px;">第1页</button>' +
+							'<ul class="dropdown-menu" id="min-pagination" role="menu" style="overflow:scroll;max-height: 500px;left: -17px;min-width: 100px;"></ul>' +
+						'<div></li>';
+	
+	if(pageIndex == pageNumber) {
+		minPaginationBtn += '<li class="next disabled"><a>下一页 </a></li>';
+	} else {
+		minPaginationBtn += '<li class="next"><a onclick="changePage(' + (pageIndex + 1) + ')">下一页 </a></li>';
+	}
+	$('#min-pagination-btn').append(minPaginationBtn);
+	
+	$('#min-pagination-select').text('第' + pageIndex + '页');
+	for(var i = 1; i <= pageNumber; i++) {
+		$('#min-pagination').append('<li><a onclick="changePage(' + i + ')">第' + i + '页</a></li>');
+	}
 }
 
 function goToPage() {
@@ -280,6 +337,7 @@ function refresh() {
 	pageSize = 10;
 	params = {};
 	$('#easy-search').val('');
+	$('#easy-search-min').val('');
 	$('#complex-search').find('.form-control').val('');
 	refreshPage();
 }

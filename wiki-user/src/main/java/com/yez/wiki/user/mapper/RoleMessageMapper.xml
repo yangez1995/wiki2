@@ -35,12 +35,8 @@
 		<if test="id != '' and id != null">
 			AND role_id = #{id, jdbcType=INTEGER}
 		</if>
-		<if test="name != '' and name != null">
-			AND role_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
-		</if>
-		<if test="authId != '' and authId != null">
-			AND role_id IN (SELECT role_id FROM t_role_suthorities
-			WHERE authority_id = #{authId, jdbcType=INTEGER})
+		<if test="roleName != '' and roleName != null">
+			AND role_name LIKE CONCAT('%',#{roleName, jdbcType=VARCHAR},'%')
 		</if>
 		LIMIT #{startIndex, jdbcType=INTEGER},#{pageSize, jdbcType=INTEGER}
 	</select>
@@ -51,12 +47,8 @@
 		<if test="id != '' and id != null">
 			AND role_id = #{id, jdbcType=INTEGER}
 		</if>
-		<if test="name != '' and name != null">
+		<if test="roleName != '' and roleName != null">
 			AND role_name LIKE CONCAT('%',#{name, jdbcType=VARCHAR},'%')
-		</if>
-		<if test="authId != '' and authId != null">
-			AND role_id IN (SELECT role_id FROM t_role_suthorities
-			WHERE authority_id = #{authId, jdbcType=INTEGER})
 		</if>
 	</select>
 	

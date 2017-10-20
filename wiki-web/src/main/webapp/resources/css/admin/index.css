@@ -1,5 +1,20 @@
 @charset "UTF-8";
 
+::-webkit-scrollbar  
+{  
+    width: 5px;  
+    height: 5px;  
+    background-color: #FFF;  
+}  
+
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 2px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #CCC;  
+} 
+
+/* 左侧导航栏 */
 .nav-dl {
 	margin-top: 1px;
 	margin-bottom: 0px;
@@ -42,4 +57,37 @@
 
 .dl-act dd{
 	height: 30px;
+}
+
+/* 响应式导航栏 */
+.navbar-toggle {
+	background: #667;
+}
+
+.navbar-toggle span {
+	background: #AAA;
+}
+
+@media (min-width: 768px) {
+	.navbar-collapse.collapse {
+		display: none!important;
+	}
+}
+
+.navbar-collapse {
+	border-top: #667 solid 1px;
+}
+
+.navbar-collapse .nav-dl {
+	border-top: #667 solid 1px;
+	margin-top: 0px;
+}
+
+/* 小型设备页数选择 */
+#min-pagination {
+	text-align: center;
+}
+
+#min-pagination a {
+	border: 0px;
 }

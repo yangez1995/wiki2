@@ -9,7 +9,6 @@ import com.yez.wiki.entity.user.OneToMoreIds;
 public interface IUserRoleService {
 	public ResponseMessage update(OneToMoreIds ids);
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber(Map<String, Object> map);
 	public ResponseMessage getOtherRoles(List<Integer> list);
-	public ResponseMessage getRoles();
+	public List<Map<String, Object>> getRoles();
 }
