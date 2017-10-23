@@ -11,7 +11,6 @@ import com.yez.wiki.entity.user.OneToMoreIds;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.ResourceAuthMapper;
 import com.yez.wiki.user.service.IResourceAuthService;
-import com.yez.wiki.util.PageUtil;
 
 @Service
 public class ResourceAuthService implements IResourceAuthService {
@@ -43,12 +42,7 @@ public class ResourceAuthService implements IResourceAuthService {
 
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(resourceAuthMapper.searchPage(map));
-	}
-
-	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(resourceAuthMapper.searchNumber(map), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(resourceAuthMapper.searchPage(map), resourceAuthMapper.searchNumber(map)));
 	}
 
 	@Override

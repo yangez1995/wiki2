@@ -38,6 +38,12 @@ CREATE TABLE t_resources (
   des VARCHAR(100)
 );
 
+CREATE TABLE t_role_level (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  role_id INT NOT NULL,
+  level INT NOT NULL
+);
+
 CREATE TABLE t_resource_type (
   id CHAR(2) PRIMARY KEY,
   name VARCHAR(30) NOT NULL

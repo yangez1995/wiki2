@@ -10,7 +10,6 @@ public interface IAuthorityService {
 	public ResponseMessage delete(int id);
 	public ResponseMessage update(Authority authority);
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber(Map<String, Object> map);
 	public boolean checkAuthorityNameExist(String name);
 	public boolean checkAuthorityMarkExist(String mark);
 }

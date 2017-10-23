@@ -9,5 +9,4 @@ public interface IResourceTypeService {
 	public ResponseMessage delete(String id);
 	public ResponseMessage update(Map<String, Object> map);
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber();
 }

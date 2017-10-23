@@ -1,223 +1,192 @@
-var pageIndex = 1;
-var pageMax = 1;
 var updateId = 0;
-var params = {};
 $(document).ready(function() {
-	resetList();
-	resetPage();
-	$.get('resource/message/getType', function(result) {
-		$(result.data).each(function(i, type) {
-			$('#new-resource-type').append('<option value="' + type.id + '">' + type.name + '</option>');
-			$('#resource-type').append('<option value="' + type.id + '">' + type.name + '</option>');
-			$('#search-type').append('<option value="' + type.id + '">' + type.name + '</option>');
-		});
-	});
-	
-	$('#page-go').click(function() {
-		var p = $('#page-go-index').val();
-		if(p < 1 || p > pageMax) {
-			alert('该页不存在！');
-		} else {
-			pageIndex = parseInt(p);
-			resetList();
-			resetPage();
-		}
-	});
-	
-	$('#sub-update').click(function() {
+	var options = {
+		table : { //表格
+			title : '资源信息管理', //表格标题
+			insertBtnText : '新建资源', //新建按钮内容
+			column : [{
+				name : 'ID'
+			}, {
+				name : '资源名'
+			}, {
+				name : 'URL'
+			}, {
+				name : '类型'
+			}, {
+				name : '描述'
+			}, {
+				name : '选项',
+				width : '100px'
+			}],
+			ajax : {
+				url : 'resource/message/getPage', //请求地址
+				success : function(result) {
+					pageNumber = Math.ceil(result.data.pageNumber / pageSize);
+					var table = '';
+					$(result.data.list).each(function(i, resource) {
+						table += '<tr>' +
+								 '<td>' + resource.id + '</td>' +
+								 '<td>' + resource.name + '</td>' +
+								 '<td>' + resource.url + '</td>' +
+								 '<td>' + resource.typeName + '</td>' +
+								 '<td>' + resource.des + '</td>' +
+								 '<td><button class="btn-xs btn-primary" onclick="showUpdateModal(' + replaceQuotes(JSON.stringify(resource)) + ')">修改</button>&nbsp;' + 
+								 '<button class="btn-xs btn-danger" onclick="showDeleteModal(' + replaceQuotes(JSON.stringify(resource)) + ')">删除</button></td>'
+					});
+					$('#manageUI-table-tbody').append(table);
+					refreshNumber();
+				}
+			}
+		},
+		canInsert : true, 
+		insertModal : {
+			title : '新增资源', 
+			body : '<label for="new-resource-name">资源名</label>' +
+	        	   '<input class="form-control" id="new-resource-name" type="text">' +
+	        	   '<label for="new-resource-url">URL</label>' +
+	        	   '<input class="form-control" id="new-resource-url" type="text">' +
+	        	   '<label for="new-resource-type">类型</label>' +
+	        	   '<select class="form-control" id="new-resource-type"><option value="">-- 请选择 --</option></select>' +
+	        	   '<label for="new-resource-des">描述</label>' +
+	        	   '<textarea class="form-control" id="new-resource-des" rows="3" style="resize: none;"></textarea>',
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+	        		 '<button type="button" class="btn btn-primary" onclick="insert()">新建资源</button>'
+		},		
+		canDelete : true, 
+		deleteModal : {
+			title : '删除资源', 
+			body : '<label id="resource-delete-label" for="confirm-delete">请输入"立即删除"以确定删除资源</label>' +
+		           '<input class="form-control" id="confirm-delete" type="text">', 
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+		        	 '<button type="button" class="btn btn-danger" onclick="deleteResource()">删除</button>' 
+		},
+		canUpdate : true,
+		updateModal : { 
+			title : '修改资源', 
+			body : '<label for="resource-name">资源名</label>' +
+				   '<input class="form-control" id="resource-name" type="text">' +
+				   '<label for="resource-url">URL</label>' +
+				   '<input class="form-control" id="resource-url" type="text">' +
+				   '<label for="resource-type">类型</label>' +
+				   '<select class="form-control" id="resource-type"><option value="">-- 请选择 --</option></select>' +
+				   '<label for="resource-des">描述</label>' +
+				   '<textarea class="form-control" id="resource-des" rows="3" style="resize: none;"></textarea>',				   
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+					 '<button type="button" class="btn btn-primary" onclick="update()">提交更改</button>'
+		},
+		easySearchParam : ['name', 'url'],
+		complexSearch : true,
+		complexSearchItems : [{
+			name : 'ID',
+			param : 'id',
+			type : 'string'
+		}, {
+			name : '资源名',
+			param : 'name',
+			type : 'string'
+		}, {
+			name : 'URL',
+			param : 'url',
+			type : 'string'
+		}, {
+			name : '资源类型',
+			param : 'type',
+			type : 'select',
+			url : 'resource/message/getTypes'
+		}]
+	}
+	$('#resource-message-manageUI').manageUI(options);
+});
+
+function insert() {
+	var newName = $('#new-resource-name').val();
+	if(isEmpty($('#new-resource-type').val())) {
+		alert('请选择类型！');
+	} else if(newName == '' && newName == null) {
+		alert('资源名不能为空！');
+	} else if (newName.length >=30) {
+		alert('资源名过长！');
+	} else if($('#new-resource-des').val().length >= 200) {
+		alert('资源描述过长！');
+	} else {
 		$.ajax({
 			type : 'POST',
-			url : 'resource/message/update',
+			url : 'resource/message/insert',
 			data : JSON.stringify({
-				'id' : updateId,
-				'name' : $('#resource-name').val(),
-				'url' : $('#resource-url').val(),
-				'type' : $('#resource-type').val(),
-				'describe' : $('#resource-des').val()}),
+				'name' : $('#new-resource-name').val(), 
+				'url' : $('#new-resource-url').val(), 
+				'type' : $('#new-resource-type').val(), 
+				'describe' : $('#new-resource-des').val()
+			}),
 			contentType : 'application/json',
 			success : function(result) {
 				if(result.code == '200') {
-					$('#resource-update').modal('hide');
-					resetList();
+					$('#insert').modal('hide');
+					$('#new-resource-name').val('');
+					$('#new-resource-url').val('');
+					$('#new-resource-type').val('');
+					$('#new-resource-des').val('');
+					refreshPage();
 				} else {
-					alert(result.object);
+					validateErrorFrame(result.msg);
 				}
 			}
 		});
-	});
-	
-	$('#sub-delete').click(function() {
-		if($('#confirm-delete').val() == '立即删除') {
-			$.post('resource/message/delete', {'id' : updateId}, function(result) {
-				if(result.code == '200') {
-					$('#resource-delete').modal('hide');
-					resetList();
-					resetPage();
-				}
-			});
-		} else {
-			alert('请确认是否正确输入"立即删除"');
-		}
-	});
-	
-	$('#sub-new').click(function() {
-		var newName = $('#new-resource-name').val();
-		if(isEmpty($('#new-resource-type').val())) {
-			alert('请选择类型！');
-		} else if(newName == '' && newName == null) {
-			alert('资源名不能为空！');
-		} else if (newName.length >=30) {
-			alert('资源名过长！');
-		} else if($('#new-resource-des').val().length >= 200) {
-			alert('资源描述过长！');
-		} else {
-			$.ajax({
-				type : 'POST',
-				url : 'resource/message/insert',
-				data : JSON.stringify({
-					'name' : $('#new-resource-name').val(), 
-					'url' : $('#new-resource-url').val(), 
-					'type' : $('#new-resource-type').val(), 
-					'describe' : $('#new-resource-des').val()
-				}),
-				contentType : 'application/json',
-				success : function(result) {
-					if(result.code == '200') {
-						$('#new-resource').modal('hide');
-						$('#new-resource-name').val('');
-						$('#new-resource-url').val('');
-						$('#new-resource-type').val('');
-						$('#new-resource-des').val('');
-						resetList();
-						resetPage();
-					} else {
-						alert(result.object);
-					}
-				}
-			});
-		}
-	});
-});
-
-function onEasySearch() {
-	params = {};
-	if(!isEmpty($('#easy-search').val())) {
-		params.name = $('#easy-search').val();
-	} 
-	pageIndex = 1;
-	resetPage();
-	resetList();
+	}
 }
 
-function onComplexSearch() {
-	params = {};
-	if(!isEmpty($('#search-id').val())) {
-		params.id = $('#search-id').val();
-	}
-	if(!isEmpty($('#search-name').val())) {
-		params.name = $('#search-name').val();
-	}
-	if(!isEmpty($('#search-url').val())) {
-		params.url = $('#search-url').val();
-	}
-	if(!isEmpty($('#search-type').val())) {
-		params.type = $('#search-type').val();
-	}
-	pageIndex = 1;
-	resetPage();
-	resetList();
-}
-
-function resetList() {
-	$('#resource-list').html('');
-	params.pageIndex = pageIndex;
-	$.post('resource/message/getPage', params, function(result) {
-		var table = '';
-		$(result.data).each(function(i, resource) {
-			table += '<tr>' +
-					 '<td>' + resource.id + '</td>' +
-					 '<td>' + resource.name + '</td>' +
-					 '<td>' + resource.url + '</td>' +
-					 '<td>' + resource.typeName + '</td>' +
-					 '<td>' + resource.des + '</td>' +
-					 '<td><button class="btn-xs btn-primary" onclick="roleUpdate(' + replaceQuotes(JSON.stringify(resource)) + ')">修改</button>&nbsp;' + 
-					 '<button class="btn-xs btn-danger" onclick="roleDelete(' + replaceQuotes(JSON.stringify(resource)) + ')">删除</button></td>'
-		});
-		$('#resource-list').append(table);
+function showDeleteModal(resource) {
+	updateId = resource.id;
+	$('#resource-delete-label').text('请输入"立即删除"以确定删除资源:' + resource.name + resource.url);
+	$('#delete').modal({
+		backdrop: 'static'
 	});
 }
 
-function resetPage() {
-	$('#pagination').html('');
-	$.post('resource/message/getNumber', params, function(result) {
-		pageNumber = result.data;
-		pageMax = pageNumber;
-		$('#page-number').text('共' + pageNumber + '页');
-		var pagination = '';
-		if(pageIndex >= 3) {
-			pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
-		}
-		if(pageIndex >= 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex - 1) + ')">&lt;</a></li>';
-		}
-		var startIndex = 1;
-		if(pageIndex - 4 > 1) {
-			startIndex = pageIndex - 4; 
-		}
-		var endIndex = pageNumber;
-		if(pageIndex + 4 < pageNumber) {
-			endIndex = pageIndex + 4;
-		}
-		for(var i = startIndex; i <= endIndex; i++) {
-			if(i == pageIndex){
-				pagination += '<li class="active"><a href="#">' + i + '</a></li>';
+function deleteResource() {
+	if($('#confirm-delete').val() == '立即删除') {
+		$.post('resource/message/delete', {'id' : updateId}, function(result) {
+			if(result.code == '200') {
+				$('#delete').modal('hide');
+				refreshPage();
 			} else {
-				pagination += '<li><a href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
+				validateErrorFrame(result.msg);
 			}
-		}
-		if(pageIndex <= pageNumber - 1) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex + 1) + ')">&gt;</a></li>';
-		}
-		if(pageIndex <= pageNumber - 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
-		}
-		$('#pagination').append(pagination);
-	});
+		});
+	} else {
+		validateErrorFrame('请确认是否正确输入"立即删除"');
+	}
 }
 
-function changePage(index) {
-	pageIndex = index;
-	resetList();
-	resetPage()
-}
-
-function roleUpdate(resource) {
+function showUpdateModal(resource) {
 	updateId = resource.id;
 	$('#resource-name').val(resource.name);
 	$('#resource-url').val(resource.url);
 	$('#resource-des').val(resource.des);
 	$('#resource-type').val(resource.type);
-	$('#resource-update').modal({
+	$('#update').modal({
 		backdrop: 'static'
 	});
 }
 
-function roleDelete(resource) {
-	updateId = resource.id;
-	$('#resource-delete-label').text('请输入"立即删除"以确定删除资源:' + resource.name + resource.url);
-	$('#resource-delete').modal({
-		backdrop: 'static'
+function update() {
+	$.ajax({
+		type : 'POST',
+		url : 'resource/message/update',
+		data : JSON.stringify({
+			'id' : updateId,
+			'name' : $('#resource-name').val(),
+			'url' : $('#resource-url').val(),
+			'type' : $('#resource-type').val(),
+			'describe' : $('#resource-des').val()}),
+		contentType : 'application/json',
+		success : function(result) {
+			if(result.code == '200') {
+				$('#update').modal('hide');
+				refreshPage();
+			} else {
+				validateErrorFrame(result.msg);
+			}
+		}
 	});
-}
-
-function refresh() {
-	params = {};
-	pageIndex = 1;
-	resetList();
-	resetPage();
-	$('#easy-search').val('');
-	$('#search-id').val('');
-	$('#search-name').val('');
-	$('#search-url').val('');
-	$('#search-type').val('');
 }

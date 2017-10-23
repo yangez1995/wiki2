@@ -10,5 +10,5 @@ public interface ResourceTypeMapper {
 	public void delete(@Param("id")String id);
 	public void update(Map<String, Object> map);
 	public List<Object> getPage(Map<String, Object> map);
-	public int getNumber();
+	public int getNumber(Map<String, Object> map);
 }

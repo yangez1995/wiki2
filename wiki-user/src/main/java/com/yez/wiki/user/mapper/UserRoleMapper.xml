@@ -88,6 +88,6 @@
 	</select>
 	
 	<select id="getRoles" resultType="java.util.HashMap">
-		SELECT role_id AS id,role_name AS name FROM t_role
+		SELECT role_id AS value,role_name AS name FROM t_role
 	</select>
 </mapper>

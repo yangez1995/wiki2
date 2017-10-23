@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Authority;
 import com.yez.wiki.factory.AuthorityFactory;
+import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.AuthorityMapper;
 import com.yez.wiki.user.service.IAuthorityService;
-import com.yez.wiki.util.PageUtil;
 import com.yez.wiki.util.StringUtil;
 
 @Service
@@ -72,12 +72,7 @@ public class AuthorityService implements IAuthorityService {
 	
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(authorityMapper.getPage(map));
-	}
-	
-	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(authorityMapper.getNumber(map), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(authorityMapper.getPage(map), authorityMapper.getNumber(map)));
 	}
 	
 	@Override

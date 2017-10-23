@@ -1,0 +1,67 @@
+<script src="../resources/js/admin/roleAuthManage.js"></script>
+<table class="table table-striped table-bordered">
+<caption>角色权限管理</caption>
+<thead>
+  <tr>
+  <th width="100px">ID</th>
+  <th width="200px">角色名</th>
+  <th>权限</th>
+  <th width="55px">选项</th>
+  </tr>
+</thead>
+<tbody id="role-auth-list">
+</tbody>
+</table>
+<div class="input-group" style="width: 170px;float: left;">
+  <span id="page-number" class="input-group-addon"></span>
+  <input type="text" class="form-control" id="page-go-index" placeholder="页数" onkeydown="onlyNum()">
+  <span class="input-group-btn">
+    <button class="btn btn-default" id="page-go" type="button">Go!</button>
+  </span>
+</div>
+<ul id="pagination" class="pagination" style="margin: 0px;float: right;"></ul>
+<div class="modal fade" id="set-auth" tabindex="-1" role="dialog" aria-labelledby="setAuthLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetAll()">&times;</button>
+        <h4 class="modal-title" id="setAuthLabel">角色权限设置</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered model-table">
+        <thead>
+        <tr>
+          <th>权限名</th>
+          <th>权限代码</th>
+          <th width="43px">选项</th>
+        </tr>
+        </thead>
+        <tbody id="set-auth-list">
+        </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-defult" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="updateAuth()">确认</button>
+        <button type="button" class="btn btn-info" onclick="chooseAddAuth()">添加权限</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="add-auth" tabindex="-1" role="dialog" aria-labelledby="addAuthLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="addAuthLabel">添加权限</h4>
+      </div>
+      <div class="modal-body">
+        <select class="form-control" id="other-auths"></select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-defult" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="addAuth()">添加权限</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>

@@ -42,14 +42,10 @@ public class AdminResourcesTypeController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
-	public ResponseMessage getPage(int pageIndex) {
+	public ResponseMessage getPage(int pageIndex, String id, String name) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10);
+		MapFactory.machiningInt(map, "id", id);
+		MapFactory.machiningString(map, "name", name);
 		return resourceTypeService.getPage(map);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.GET)
-	public ResponseMessage getNumber() {
-		return resourceTypeService.getNumber();
 	}
 }

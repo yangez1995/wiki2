@@ -1,164 +1,148 @@
-var pageIndex = 1;
-var pageMax = 1;
 var updateId = 0;
 $(document).ready(function() {
-	resetList();
-	resetPage();
-	
-	$('#page-go').click(function() {
-		var p = $('#page-go-index').val();
-		if(p < 1 || p > pageMax) {
-			alert('该页不存在！');
-		} else {
-			pageIndex = parseInt(p);
-			resetList();
-			resetPage();
-		}
-	});
-	
-	$('#sub-update').click(function() {
-		var newName = $('#type-name').val();
-		if(newName == '' && newName == null) {
-			alert('名称不能为空！');
-		} else if (newName.length >=30) {
-			alert('名称过长！');
-		}
-		$.ajax({
-			type : 'POST',
-			url : 'resource/type/update',
-			data : { 'id' : updateId, 'name' : $('#type-name').val() },
-			success : function(result) {
-				if(result.what == 200) {
-					$('#type-update').modal('hide');
-					resetList();
-				} else if(result.what == 400) {
-					alert(result.object);
+	var options = {
+		table : { //表格
+			title : '资源类别管理', //表格标题
+			insertBtnText : '新建类别', //新建按钮内容
+			column : [{
+				name : 'ID'
+			}, {
+				name : '名称'
+			}, {
+				name : '选项',
+				width : '100px'
+			}],
+			ajax : {
+				url : 'resource/type/getPage', //请求地址
+				success : function(result) {
+					pageNumber = Math.ceil(result.data.pageNumber / pageSize);
+					var table = '';
+					$(result.data.list).each(function(i, type) {
+						table += '<tr>' +
+								 '<td>' + type.id + '</td>' +
+								 '<td>' + type.name + '</td>' +
+								 '<td><button class="btn-xs btn-primary" onclick="showUpdateModal(' + replaceQuotes(JSON.stringify(type)) + ')">修改</button>&nbsp;' + 
+								 '<button class="btn-xs btn-danger" onclick="showDeleteModal(' + replaceQuotes(JSON.stringify(type)) + ')">删除</button></td>'
+					});
+					$('#manageUI-table-tbody').append(table);
+					refreshNumber();
 				}
 			}
-		});
-	});
-	
-	$('#sub-delete').click(function() {
-		if($('#confirm-delete').val() == '立即删除') {
-			$.post('resource/type/delete', {'id' : updateId}, function(result) {
-				if(result.what == 200) {
-					$('#type-delete').modal('hide');
-					$('#confirm-delete').val('');
-					resetList();
-					resetPage();
-				}
-			});
-		} else {
-			alert('请确认是否正确输入"立即删除"');
-		}
-	});
-	
-	$('#sub-new').click(function() {
-		var newName = $('#new-type-name').val();
-		var newId = $('#new-type-id').val();
-		if(newId == '' && newId == null) {
-			alert('ID不能为空！');
-		} else if(newId.length != 2) {
-			alert('ID为两位字符！');
-		} else if(newName == '' && newName == null) {
-			alert('名称不能为空！');
-		} else if (newName.length >=30) {
-			alert('名称过长！');
-		} else {
-			$.ajax({
-				type : 'POST',
-				url : 'resource/type/insert',
-				data : {
-					'id' : $('#new-type-id').val(), 
-					'name' : $('#new-type-name').val()
-				},
-				success : function(result) {
-					if(result.code == '200') {
-						$('#new-type').modal('hide');
-						$('#new-type-name').val('');
-						$('#new-type-id').val('');
-						resetList();
-						resetPage();
-					} else if(result.what == 400) {
-						alert(result.object);
-					}
-				}
-			});
-		}
-	});
+		},
+		canInsert : true, 
+		insertModal : {
+			title : '新增资源', 
+			body : '<label for="new-type-id">ID</label>' +
+	        	   '<input class="form-control" id="new-type-id" type="text">' +
+	        	   '<label for="new-type-name">名称</label>' +
+	        	   '<input class="form-control" id="new-type-name" type="text">',
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+	        		 '<button type="button" class="btn btn-primary" onclick="insert()">新建</button>'
+		},		
+		canDelete : true, 
+		deleteModal : {
+			title : '删除资源', 
+			body : '<label id="resource-delete-label" for="confirm-delete">请输入"立即删除"以确定删除资源</label>' +
+		           '<input class="form-control" id="confirm-delete" type="text">', 
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+		        	 '<button type="button" class="btn btn-danger" onclick="deleteType()">删除</button>' 
+		},
+		canUpdate : true,
+		updateModal : { 
+			title : '修改资源', 
+			body : '<label for="type-name">名称</label>' +
+	        	   '<input class="form-control" id="type-name" type="text">',				   
+			footer : '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+					 '<button type="button" class="btn btn-primary" onclick="update()">提交更改</button>'
+		},	
+		easySearchParam : ['id','name'],
+	}
+	$('#resource-type-manageUI').manageUI(options);
 });
 
-function resetList() {
-	$('#resource-type-list').html('');
-	$.post('resource/type/getPage', {'pageIndex' : pageIndex}, function(result) {
-		var table = '';
-		$(result.data).each(function(i, type) {
-			table += '<tr>' +
-					 '<td>' + type.id + '</td>' +
-					 '<td>' + type.name + '</td>' +
-					 '<td><button class="btn-xs btn-primary" onclick="typeUpdate(' + replaceQuotes(JSON.stringify(type)) + ')">修改</button>&nbsp;' + 
-					 '<button class="btn-xs btn-danger" onclick="typeDelete(' + replaceQuotes(JSON.stringify(type)) + ')">删除</button></td>'
-		});
-		$('#resource-type-list').append(table);
-	});
-}
-
-function resetPage() {
-	$('#pagination').html('');
-	$.get('resource/type/getNumber',function(result) {
-		var pageNumber = result.data;
-		pageMax = pageNumber;
-		$('#page-number').text('共' + pageNumber + '页');
-		var pagination = '';
-		if(pageIndex >= 3) {
-			pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
-		}
-		if(pageIndex >= 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex - 1) + ')">&lt;</a></li>';
-		}
-		var startIndex = 1;
-		if(pageIndex - 4 > 1) {
-			startIndex = pageIndex - 4; 
-		}
-		var endIndex = pageNumber;
-		if(pageIndex + 4 < pageNumber) {
-			endIndex = pageIndex + 4;
-		}
-		for(var i = startIndex; i <= endIndex; i++) {
-			if(i == pageIndex){
-				pagination += '<li class="active"><a href="#">' + i + '</a></li>';
-			} else {
-				pagination += '<li><a href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
+function insert() {
+	var newName = $('#new-type-name').val();
+	var newId = $('#new-type-id').val();
+	if(newId == '' && newId == null) {
+		alert('ID不能为空！');
+	} else if(newId.length != 2) {
+		alert('ID为两位字符！');
+	} else if(newName == '' && newName == null) {
+		alert('名称不能为空！');
+	} else if (newName.length >=30) {
+		alert('名称过长！');
+	} else {
+		$.ajax({
+			type : 'POST',
+			url : 'resource/type/insert',
+			data : {
+				'id' : $('#new-type-id').val(), 
+				'name' : $('#new-type-name').val()
+			},
+			success : function(result) {
+				if(result.code == '200') {
+					$('#insert').modal('hide');
+					$('#new-type-name').val('');
+					$('#new-type-id').val('');
+					refreshPage();
+				} else if(result.what == 400) {
+					validateErrorFrame(result.msg);
+				}
 			}
-		}
-		if(pageIndex <= pageNumber - 1) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex + 1) + ')">&gt;</a></li>';
-		}
-		if(pageIndex <= pageNumber - 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
-		}
-		$('#pagination').append(pagination);
-	});
+		});
+	}
 }
 
-function changePage(index) {
-	pageIndex = index;
-	resetList();
-	resetPage()
-}
-
-function typeUpdate(type) {
-	updateId = type.id;
-	$('#type-name').val(type.name);
-	$('#type-update').modal({
-		backdrop: 'static'
-	});
-}
-
-function typeDelete(type) {
+function showDeleteModal(type) {
 	updateId = type.id;
 	$('#type-delete-label').text('请输入"立即删除"以确定删除资源:' + type.name);
-	$('#type-delete').modal({
+	$('#delete').modal({
 		backdrop: 'static'
+	});
+}
+
+function deleteType() {
+	if($('#confirm-delete').val() == '立即删除') {
+		$.post('resource/type/delete', {'id' : updateId}, function(result) {
+			if(result.code == '200') {
+				$('#delete').modal('hide');
+				$('#confirm-delete').val('');
+				refreshPage();
+			} else {
+				validateErrorFrame(result.msg);
+			}
+		});
+	} else {
+		validateErrorFrame('请确认是否正确输入"立即删除"');
+	}
+}
+
+function showUpdateModal(type) {
+	updateId = type.id;
+	$('#type-name').val(type.name);
+	$('#update').modal({
+		backdrop: 'static'
+	});
+}
+
+function update() {
+	var newName = $('#type-name').val();
+	if(newName == '' && newName == null) {
+		alert('名称不能为空！');
+	} else if (newName.length >=30) {
+		alert('名称过长！');
+	}
+	$.ajax({
+		type : 'POST',
+		url : 'resource/type/update',
+		data : { 'id' : updateId, 'name' : $('#type-name').val() },
+		success : function(result) {
+			if(result.code == '200') {
+				$('#update').modal('hide');
+				refreshPage();
+			} else {
+				validateErrorFrame(result.msg);
+			}
+		}
 	});
 }

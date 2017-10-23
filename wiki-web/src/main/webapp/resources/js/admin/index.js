@@ -9,10 +9,10 @@ $(document).ready(function() {
 	$('#content').css({'width': w,'height': h});
 	$('#content').load('../resources/page/admin/userAccountManage.html');
 	
-	/*$.get('getOnLoginUserMessage', function(data) {
+	$.get('getOnLoginUserMessage', function(data) {
 		$('#on-login-name').text(data.nickname);
 		$('#on-login-role').text(data.role);
-	});*/
+	});
 	
 	$('.nav-dl dt').click(function() {
 		$('.nav-dl').removeClass('dl-act');
@@ -51,14 +51,6 @@ $(document).ready(function() {
 		$('#content').load('../resources/page/admin/userChartManage.html');
 	});
 	
-	$('#au-chart-min').click(function() {
-		$('#content').load('../resources/page/admin/activeUserChartManage.html');
-		$('#min-nav-btn').trigger('click');
-	});
-	$('#au-chart').click(function() {
-		$('#content').load('../resources/page/admin/activeUserChartManage.html');
-	});
-	
 	$('#r-msg-min').click(function() {
 		$('#content').load('../resources/page/admin/roleMessageManage.html');
 		$('#min-nav-btn').trigger('click');
@@ -76,11 +68,11 @@ $(document).ready(function() {
 	});
 	
 	$('#auth-msg-min').click(function() {
-		$('#content').load('../resources/page/admin/authorityManage.html');
+		$('#content').load('../resources/page/admin/authorityMessageManage.html');
 		$('#min-nav-btn').trigger('click');
 	});
 	$('#auth-msg').click(function() {
-		$('#content').load('../resources/page/admin/authorityManage.html');
+		$('#content').load('../resources/page/admin/authorityMessageManage.html');
 	});
 	
 	$('#res-msg-min').click(function() {

@@ -9,7 +9,6 @@ import com.yez.wiki.entity.user.OneToMoreIds;
 public interface IResourceAuthService {
 	public ResponseMessage update(OneToMoreIds ids);
 	public ResponseMessage getPage(Map<String, Object> map);
-	public ResponseMessage getNumber(Map<String, Object> map);
 	public ResponseMessage getOtherAuths(List<Integer> list);
 	public ResponseMessage getAllAuths();
 }

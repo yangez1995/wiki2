@@ -12,6 +12,7 @@
 	<resultMap type="com.yez.wiki.entity.user.Authority" id="AuthMap">
 		<id column="authority_id" property="id" jdbcType="INTEGER"/>
 		<result column="authority_name" property="name" jdbcType="VARCHAR"/>
+		<result column="authority_mark" property="mark" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<insert id="addAuths" parameterType="java.util.HashMap">
@@ -74,7 +75,7 @@
 	</select>
 	
 	<select id="getAuths" parameterType="java.lang.Integer" resultMap="AuthMap">
-		SELECT authority_id,authority_name FROM t_authority
+		SELECT authority_id,authority_name,authority_mark FROM t_authority
 		WHERE authority_id IN (SELECT authority_id FROM t_resources_authorities
 		WHERE resources_id = #{resources_id, jdbcType=INTEGER})
 	</select>

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Authority;
 import com.yez.wiki.entity.user.OneToMoreIds;
-import com.yez.wiki.entity.user.RoleAuthority;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.RoleAuthMapper;
 import com.yez.wiki.user.service.IRoleAuthService;
@@ -43,17 +42,17 @@ public class RoleAuthService implements IRoleAuthService {
 	}
 	
 	@Override
-	public List<RoleAuthority> getPage(Map<String, Object> map) {
-		return roleAuthMapper.getPage(map);
-	}
-
-	@Override
-	public int getCount(Map<String, Object> map) {
-		return roleAuthMapper.getCount(map);
+	public ResponseMessage getPage(Map<String, Object> map) {
+		return ResponseMessage.success(MapFactory.pageAndSize(roleAuthMapper.getPage(map), roleAuthMapper.getCount(map)));
 	}
 
 	@Override
 	public List<Authority> getOtherAuths(List<Integer> list) {
 		return roleAuthMapper.getOtherAuths(list);
+	}
+
+	@Override
+	public List<Object> getAuths() {
+		return roleAuthMapper.getAuths();
 	}
 }

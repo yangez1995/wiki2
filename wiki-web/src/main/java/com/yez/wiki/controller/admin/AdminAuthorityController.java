@@ -1,6 +1,5 @@
 package com.yez.wiki.controller.admin;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.service.IAuthorityService;
 
 @Controller
-@RequestMapping("/admin/auth")
+@RequestMapping("/admin/auth/message")
 public class AdminAuthorityController {
 	@Autowired
 	private IAuthorityService authorityService;
@@ -49,22 +48,12 @@ public class AdminAuthorityController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getPage", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
 	public ResponseMessage getPage(int pageIndex, String id, String name, String mark) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10);
 		MapFactory.machiningInt(map, "id", id);
 		MapFactory.machiningString(map, "name", name);
 		MapFactory.machiningString(map, "mark", mark);
 		return authorityService.getPage(map);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.GET)
-	public ResponseMessage getNumber(String id, String name, String mark) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "name", name);
-		MapFactory.machiningString(map, "mark", mark);
-		return authorityService.getNumber(map);
 	}
 }

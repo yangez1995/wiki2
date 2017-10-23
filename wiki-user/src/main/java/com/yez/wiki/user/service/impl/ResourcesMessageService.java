@@ -1,5 +1,6 @@
 package com.yez.wiki.user.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Resource;
+import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.ResourcesMessageMapper;
 import com.yez.wiki.user.service.IResourcesMessageService;
-import com.yez.wiki.util.PageUtil;
 
 @Service
 public class ResourcesMessageService implements IResourcesMessageService {
@@ -36,16 +37,11 @@ public class ResourcesMessageService implements IResourcesMessageService {
 	
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(resourcesMessageMapper.getPage(map));
+		return ResponseMessage.success(MapFactory.pageAndSize(resourcesMessageMapper.getPage(map), resourcesMessageMapper.getNumber(map)));
 	}
 
 	@Override
-	public ResponseMessage getNumber(Map<String, Object> map) {
-		return ResponseMessage.success(PageUtil.numberToPage(resourcesMessageMapper.getNumber(map), 10));
-	}
-
-	@Override
-	public ResponseMessage getType() {
-		return ResponseMessage.success(resourcesMessageMapper.getType());
+	public List<Object> getType() {
+		return resourcesMessageMapper.getType();
 	}
 }

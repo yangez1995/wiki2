@@ -41,17 +41,6 @@ public class AdminResourceAuthController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.POST)
-	public ResponseMessage getNumber(String id, String name, String url, String authId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "name", name);
-		MapFactory.machiningString(map, "url", url);
-		MapFactory.machiningInt(map, "authId", authId);
-		return resourceAuthService.getNumber(map);
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/getOtherAuths", method = RequestMethod.POST)
 	public ResponseMessage getOtherAuths(@RequestBody List<Map<String, Integer>> ids) {
 		List<Integer> list = new ArrayList<Integer>();

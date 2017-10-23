@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yez.wiki.entity.ResponseMessage;
+import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.ResourceTypeMapper;
 import com.yez.wiki.user.service.IResourceTypeService;
-import com.yez.wiki.util.PageUtil;
 import com.yez.wiki.util.StringUtil;
 
 @Service
@@ -59,11 +59,6 @@ public class ResourceTypeService implements IResourceTypeService {
 	
 	@Override
 	public ResponseMessage getPage(Map<String, Object> map) {
-		return ResponseMessage.success(resourcesTypeMapper.getPage(map));
-	}
-
-	@Override
-	public ResponseMessage getNumber() {
-		return ResponseMessage.success(PageUtil.numberToPage(resourcesTypeMapper.getNumber(), 10));
+		return ResponseMessage.success(MapFactory.pageAndSize(resourcesTypeMapper.getPage(map), resourcesTypeMapper.getNumber(map)));
 	}
 }

@@ -9,7 +9,7 @@ $(document).ready(function() {
 			}, {
 				name : '用户名'
 			}, {
-				name : '角色'
+				name : '权限'
 			}, {
 				name : '选项',
 				width : '55px'

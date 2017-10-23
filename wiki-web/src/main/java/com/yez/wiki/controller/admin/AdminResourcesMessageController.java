@@ -1,6 +1,6 @@
 package com.yez.wiki.controller.admin;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +33,6 @@ public class AdminResourcesMessageController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getNumber", method = RequestMethod.POST)
-	public ResponseMessage getNumber(String id, String name, String url, String type) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		MapFactory.machiningInt(map, "id", id);
-		MapFactory.machiningString(map, "name", name);
-		MapFactory.machiningString(map, "url", url);
-		MapFactory.machiningString(map, "type", type);
-		return resourcesService.getNumber(map);
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public ResponseMessage insert(@RequestBody Resource resource) {
 		return resourcesService.insert(resource);
@@ -62,8 +51,8 @@ public class AdminResourcesMessageController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/getType", method = RequestMethod.GET)
-	public ResponseMessage getType() {
+	@RequestMapping(value = "/getTypes", method = RequestMethod.GET)
+	public List<Object> getType() {
 		return resourcesService.getType();
 	}
 }

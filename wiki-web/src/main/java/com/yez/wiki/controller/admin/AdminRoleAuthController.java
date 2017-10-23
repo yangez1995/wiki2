@@ -1,7 +1,6 @@
 package com.yez.wiki.controller.admin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.entity.user.Authority;
 import com.yez.wiki.entity.user.OneToMoreIds;
-import com.yez.wiki.entity.user.RoleAuthority;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.service.IRoleAuthService;
-import com.yez.wiki.util.PageUtil;
 
 @Controller
 @RequestMapping("/admin/role/auth")
@@ -31,21 +28,13 @@ public class AdminRoleAuthController {
 	 * @return List<RoleAuthority> 角色权限信息列表
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getPage", method = RequestMethod.GET)
-	public List<RoleAuthority> getPage(int pageIndex) {
+	@RequestMapping(value = "/getPage", method = RequestMethod.POST)
+	public ResponseMessage getPage(int pageIndex, String id, String roleName, String authId) {
 		Map<String, Object> map = MapFactory.pageMap(pageIndex, 10);
+		MapFactory.machiningInt(map, "id", id);
+		MapFactory.machiningString(map, "roleName", roleName);
+		MapFactory.machiningInt(map, "authId", authId);
 		return roleAuthService.getPage(map);
-	}
-	
-	/**
-	 * 获取符合条件的角色信息总数
-	 * @return int 获取符合条件的角色信息总数
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/getCount", method = RequestMethod.GET)
-	public int getCount() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		return PageUtil.numberToPage(roleAuthService.getCount(map), 10);
 	}
 	
 	/**
@@ -76,5 +65,11 @@ public class AdminRoleAuthController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public ResponseMessage update(@RequestBody OneToMoreIds ids) {
 		return roleAuthService.update(ids);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getAuths", method = RequestMethod.GET)
+	public List<Object> getAuths() {
+		return roleAuthService.getAuths();
 	}
 }

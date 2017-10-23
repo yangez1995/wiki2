@@ -1,90 +1,78 @@
-var pageIndex = 1;
-var pageMax = 1;
-var nowSetRoleId = 0;
+var nowSetId = 0;
+
 $(document).ready(function() {
-	resetList();
-	resetPage();
-	
-	$('#page-go').click(function() {
-		var p = $('#page-go-index').val();
-		if(p < 1 || p > pageMax) {
-			alert('该页不存在！');
-		} else {
-			pageIndex = parseInt(p);
-			resetList();
-			resetPage();
-		}
-	});
+	var options = {
+		table : { //表格
+			title : '角色权限管理', //表格标题
+			column : [{
+				name : 'ID'
+			}, {
+				name : '角色名'
+			}, {
+				name : '权限'
+			}, {
+				name : '选项',
+				width : '55px'
+			}],
+			ajax : {
+				url : 'role/auth/getPage', //请求地址
+				success : function(result) {
+					pageNumber = Math.ceil(result.data.pageNumber / pageSize);
+					var table = '';
+					$(result.data.list).each(function(i, role) {
+						table += '<tr><td>' + role.id + '</td>' +
+								 '<td>' + role.name + '</td>' + 
+								 '<td>';
+						$(role.authorities).each(function(j, authority) {
+							table += '<span class="label label-primary" style="line-height: 20px;">' + authority.name + '</span>&nbsp;';
+						});
+						table += '</td>' +
+								 '<td><button class="btn-xs btn-primary" onclick="showUpdateModal(' + replaceQuotes(JSON.stringify(role)) + ')">设置</button></td>'
+					});
+					$('#manageUI-table-tbody').append(table);
+					refreshNumber();
+				}
+			}
+		},
+		easySearchParam : ['roleName'],
+		complexSearch : true,
+		complexSearchItems : [{
+			name : 'ID',
+			param : 'id',
+			type : 'string'
+		}, {
+			name : '角色名',
+			param : 'roleName',
+			type : 'string'
+		}, {
+			name : '权限',
+			param : 'auth',
+			type : 'select',
+			url : 'role/auth/getAuths'
+		}],
+		canUpdate : true, 
+		updateModal : { 
+			title : '设置角色',
+			body : '<table class="table table-striped table-bordered model-table">' +
+					   '<thead><tr>' + 
+					   	   '<th>权限名</th>' + 
+					   	   '<th>权限代码</th>' +
+					   	   '<th width="43px">选项</th>' +
+					   '</tr></thead>' +
+					   '<tbody id="set-auth-list"></tbody>' +
+				   '</table>', 
+			footer : '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="updateAuth()">确认</button>' +
+					 '<button type="button" class="btn btn-info" onclick="chooseAddAuth()">添加权限</button>'
+		},
+	}
+	$('#role-auth-manageUI').manageUI(options);
 });
 
-function resetAll() {
-	resetList();
-	resetPage();
-}
-
-function resetList() {
-	$('#role-auth-list').html('');
-	$.get('role/auth/getPage', {'pageIndex' : pageIndex}, function(data) {
-		var table = '';
-		$(data).each(function(i, role) {
-			table += '<tr><td>' + role.id + '</td>' +
-					 '<td>' + role.name + '</td>' + 
-					 '<td>';
-			$(role.authorities).each(function(j, authority) {
-				table += '<span class="label label-primary" style="line-height: 20px;">' + authority.name + '</span>&nbsp;';
-			});
-			table += '</td>' +
-					 '<td><button class="btn-xs btn-primary" onclick="setAuth(' + replaceQuotes(JSON.stringify(role)) + ')">设置</button></td>'
-		});
-		$('#role-auth-list').append(table);
-	});
-}
-
-function resetPage() {
-	$('#pagination').html('');
-	$.get('role/auth/getCount',function(pageNumber) {
-		pageMax = pageNumber;
-		$('#page-number').text('共' + pageNumber + '页');
-		var pagination = '';
-		if(pageIndex >= 3) {
-			pagination += '<li><a href="#" onclick="changePage(1)">&laquo;</a></li>';
-		}
-		if(pageIndex >= 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex - 1) + ')">&lt;</a></li>';
-		}
-		var startIndex = 1;
-		if(pageIndex - 4 > 1) {
-			startIndex = pageIndex - 4; 
-		}
-		var endIndex = pageNumber;
-		if(pageIndex + 4 < pageNumber) {
-			endIndex = pageIndex + 4;
-		}
-		for(var i = startIndex; i <= endIndex; i++) {
-			if(i == pageIndex){
-				pagination += '<li class="active"><a href="#">' + i + '</a></li>';
-			} else {
-				pagination += '<li><a href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
-			}
-		}
-		if(pageIndex <= pageNumber - 1) {
-			pagination += '<li><a href="#" onclick="changePage(' + (pageIndex + 1) + ')">&gt;</a></li>';
-		}
-		if(pageIndex <= pageNumber - 2) {
-			pagination += '<li><a href="#" onclick="changePage(' + pageNumber + ')">&raquo;</a></li>';
-		}
-		$('#pagination').append(pagination);
-	});
-}
-
-function changePage(index) {
-	pageIndex = index;
-	resetList();
-	resetPage();
-}
-
-function setAuth(role) {
-	nowSetRoleId = role.id;
+/**
+ * 点击设置按钮，加载角色权限信息并弹出角色设置模态框
+ */
+function showUpdateModal(role) {
+	nowSetId = role.id;
 	$('#set-auth-list').html('');
 	var table = '';
 	$(role.authorities).each(function(i, authority){
@@ -95,15 +83,19 @@ function setAuth(role) {
 				 '</tr>'
 	});
 	$('#set-auth-list').html(table);
-	$('#set-auth').modal({
+	$('#update').modal({
 		backdrop: 'static'
 	});
 }
-
+/**
+ * 移除权限
+ */
 function removeAuth(e) {
 	$(e).parent().parent().remove();
 }
-
+/**
+ * 选择添加权限，确定可添加权限并弹出模态框。
+ */
 function chooseAddAuth() {
 	var ids = [];
 	$('#set-auth-list').find('tr').each(function(i, tr) {
@@ -127,7 +119,9 @@ function chooseAddAuth() {
 		}
 	});
 }
-
+/**
+ * 添加权限
+ */
 function addAuth() {
 	if($('#other-auths').val() != '' && $('#other-auths').val() != null) {
 		var arr = $('#other-auths').val().split(',');
@@ -147,7 +141,7 @@ function updateAuth() {
 		ids.push($(tr).attr('id'));
 	});
 	var params = {};
-	params.id = nowSetRoleId;
+	params.id = nowSetId;
 	params.ids = ids;
 	$.ajax({
 		type : 'POST',
@@ -157,7 +151,7 @@ function updateAuth() {
 		data : JSON.stringify(params),
 		success : function(result) {
 			if(result.code == '200') {
-				resetAll();
+				refreshPage();
 			}
 		}
 	});
