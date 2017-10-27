@@ -39,10 +39,10 @@ CREATE TABLE t_resources (
 );
 
 CREATE TABLE t_role_level (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  role_id INT NOT NULL,
-  level INT NOT NULL
+  role_id INT PRIMARY KEY,
+  level TINYINT UNSIGNED NOT NULL
 );
+ALTER TABLE t_role_level ADD CONSTRAINT del_role_level FOREIGN KEY (role_id) REFERENCES t_role(role_id) ON DELETE CASCADE;
 
 CREATE TABLE t_resource_type (
   id CHAR(2) PRIMARY KEY,

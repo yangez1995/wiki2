@@ -112,7 +112,7 @@ function chooseAddRole() {
 		success : function(result) {
 			$('#other-roles').html('');
 			$(result.data).each(function(i, role) {
-				$('#other-roles').append('<option value="' + role.id + '">' + role.name + '</option>');
+				$('#other-roles').append('<option value="' + role.value + '">' + role.name + '</option>');
 			});
 			$('#add-role').modal({
 				backdrop: 'static'

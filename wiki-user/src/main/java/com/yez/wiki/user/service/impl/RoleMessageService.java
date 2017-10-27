@@ -41,7 +41,7 @@ public class RoleMessageService implements IRoleMessageService {
 		
 		Role role = RoleFactory.product(name, describe);
 		roleMapper.insert(role);
-		
+		roleMapper.insertLevel(role.getId());
 		return ResponseMessage.success();
 	}
 	

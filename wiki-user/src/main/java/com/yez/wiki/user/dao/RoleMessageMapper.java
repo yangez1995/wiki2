@@ -12,8 +12,13 @@ public interface RoleMessageMapper {
 	 * 新建角色
 	 * @param role 要新建的角色信息
 	 */
-	public void insert(Role role);
+	public int insert(Role role);
 	
+	/**
+	 * 新建角色级别
+	 * @param id 角色的id
+	 */
+	public void insertLevel(@Param("id")int id);
 	/**
 	 * 删除角色信息
 	 */

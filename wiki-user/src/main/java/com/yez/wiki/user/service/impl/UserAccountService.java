@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.yez.wiki.entity.ResponseMessage;
 import com.yez.wiki.factory.MapFactory;
 import com.yez.wiki.user.dao.UserAccountMapper;
+import com.yez.wiki.user.security.SpringSecuritySessionUtil;
+import com.yez.wiki.user.service.IAdminRoleService;
 import com.yez.wiki.user.service.IUserAccountService;
 /**
  * 用户帐号Service接口实现类
@@ -23,6 +25,8 @@ public class UserAccountService implements IUserAccountService {
 	 */
 	@Autowired
 	private UserAccountMapper userAccountMapper;
+	@Autowired
+	private IAdminRoleService adminRoleService;
 
 	/*-- UPDATE --*/
 	/**
@@ -32,6 +36,9 @@ public class UserAccountService implements IUserAccountService {
 	 */
 	@Override
 	public ResponseMessage lock(int id) {
+		if(!adminRoleService.isHasAuthority(SpringSecuritySessionUtil.getOnLogUserIdWithOutException(), id)) {
+			return ResponseMessage.fail("你的级别不足以锁定该用户");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("locked", true);
@@ -46,6 +53,9 @@ public class UserAccountService implements IUserAccountService {
 	 */
 	@Override
 	public ResponseMessage unlock(int id) {
+		if(!adminRoleService.isHasAuthority(SpringSecuritySessionUtil.getOnLogUserIdWithOutException(), id)) {
+			return ResponseMessage.fail("你的级别不足以解锁该用户");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("locked", false);

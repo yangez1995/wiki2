@@ -24,6 +24,10 @@ public class SpringSecuritySessionUtil {
 		return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 	}
 	
+	public static int getOnLogUserIdWithOutException(){
+		return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static List<String> getOnLogUserAuths() throws NoUserLoginException {
 		if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {

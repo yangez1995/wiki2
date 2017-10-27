@@ -37,4 +37,10 @@
 			AND locked = #{locked, jdbcType=TINYINT}
 		</if>
 	</select>
+	
+	<select id="getSeniorAdminList" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT user_id FROM t_user_roles 
+		WHERE role_id = #{sysAdminSeniorRoleId, jdbcType=INTEGER}
+		OR role_id = #{superAdminRoleId, jdbcType=INTEGER}
+	</select>
 </mapper>
