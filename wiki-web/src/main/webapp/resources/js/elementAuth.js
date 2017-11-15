@@ -1,4 +1,8 @@
 $(document).ready(function() {
+	checkElementAuth();
+});
+
+function checkElementAuth() {
 	var elements = [];
 	$('security-element').each(function() {
 		var element = {};
@@ -11,7 +15,12 @@ $(document).ready(function() {
 		contentType:"application/json",
 		data : JSON.stringify(elements),
 		success : function(result) {
-			
+			$('security-element').each(function() {
+				var url = $(this).attr('url');
+				if(!result[url]) {
+					$(this).remove();
+				}
+			});
 		}
 	});
-});
+}

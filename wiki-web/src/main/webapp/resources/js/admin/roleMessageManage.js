@@ -24,10 +24,11 @@ $(document).ready(function() {
 								 '<td>' + roleMessage.name + '</td>' +
 								 '<td>' + roleMessage.describe + '</td>' +
 								 '<td><button class="btn-xs btn-primary" onclick="showUpdateModal(' + replaceQuotes(JSON.stringify(roleMessage)) + ')">修改</button>&nbsp;' + 
-								 '<button class="btn-xs btn-danger" onclick="showDeletemodal(' + replaceQuotes(JSON.stringify(roleMessage)) + ')">删除</button></td></tr>'
+								 '<security-element url="/admin/user/role/delete"><button class="btn-xs btn-danger" onclick="showDeletemodal(' + replaceQuotes(JSON.stringify(roleMessage)) + ')">删除</button></security-element></td></tr>'
 					});
 					$('#manageUI-table-tbody').append(table);
 					refreshNumber();
+					checkElementAuth();
 				}
 			}
 		},

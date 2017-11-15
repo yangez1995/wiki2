@@ -64,6 +64,10 @@ public class SecurityMetadataSourceImpl implements FilterInvocationSecurityMetad
             		if("*".equals(resURLArr[i])) {
             			continue;
             		}
+            		if(i >= urlArr.length) {
+            			key = false;
+            			break;
+            		}
             		if(!resURLArr[i].equals(urlArr[i])) {
             			key = false;
             			break;
@@ -74,6 +78,7 @@ public class SecurityMetadataSourceImpl implements FilterInvocationSecurityMetad
             	}
             }
         } catch(ArrayIndexOutOfBoundsException e) {
+        	e.printStackTrace();
         	return null;
         }
 		return null;
